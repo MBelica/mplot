@@ -1,0 +1,5 @@
+compile:
+javac -cp "lib/*" -d "bin/" src/*.java
+run: (e.g. MPlotTest1)
+java -cp "bin/:lib/*" MPlotTest1
+
