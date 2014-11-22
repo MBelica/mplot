@@ -1,14 +1,34 @@
-compile:
+##########
+## MPlot #
+##########
+
+# Compile
 javac -cp "lib/*" -d "bin/" src/*.java
 run: (e.g. MPlotTest1)
-java -cp "bin/:lib/*" MPlotTest1
+java -cp "bin/:lib/*" test
 
-Idea for function clf
+
+# Structure
+MPlot (+)
+    * main file
+    * contains only static to be called by user
+Utilities (-)
+    * contains all function want to call from several files
+    * or could belong into MPlot but aren't mentioned for users
+Figure (-)
+    * creates simple Frame
+Data (-)
+    * responsible for conversion of user input into datatable
+Plot (-)
+    * main file for creating plot including points and lines
+
+
+# Idea for function clf
 closing a frame is pretty simple. Is this really necessary?
 clf could also close all frames..
 
 
-Idea for function hold
+# Idea for function hold
 for each plot check if plot exists in newest frame
     * no: plot
     * yes: check if hold has been callen
