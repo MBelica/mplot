@@ -3,3 +3,14 @@ javac -cp "lib/*" -d "bin/" src/*.java
 run: (e.g. MPlotTest1)
 java -cp "bin/:lib/*" MPlotTest1
 
+Idea for function clf
+closing a frame is pretty simple. Is this really necessary?
+clf could also close all frames..
+
+
+Idea for function hold
+for each plot check if plot exists in newest frame
+    * no: plot
+    * yes: check if hold has been callen
+        - no: clear frame and repaint
+        - yes: draw both
