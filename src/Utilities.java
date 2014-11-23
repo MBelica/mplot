@@ -19,6 +19,7 @@ class Utilities {
         MPlot.currentFigureIndex  = -1;
     }
 
+
     public static Shape drawDiagonalCross (final float l, final float t) {
 
         final GeneralPath p0 = new GeneralPath();

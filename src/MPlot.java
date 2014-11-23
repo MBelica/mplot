@@ -29,7 +29,6 @@ public class MPlot {
         new Plot(Data.dress(x, y), currentFigure, linespec);
     }
 
-
     public static void clf () {
 
         Figure currentFigure = figures.get(currentFigureIndex);
