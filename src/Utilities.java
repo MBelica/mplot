@@ -2,6 +2,7 @@ package edu.kit.math.mplot;
 
 
 import java.awt.*;
+import java.util.ArrayList;
 import java.awt.geom.GeneralPath;
 
 
