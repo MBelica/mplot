@@ -22,7 +22,7 @@ public class MPlot {
         currentFigureIndex = figures.size()-1;
     }
 
-    public static void plot (dyouble[] x, double[] y, String linespec) {
+    public static void plot (double[] x, double[] y, String linespec) {
 
         Figure currentFigure = figures.get(currentFigureIndex);
 

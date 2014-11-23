@@ -3,10 +3,11 @@ package edu.kit.math.mplot;
 
 import java.util.ArrayList;
 
-public class Utilities {
+
+class Utilities {
 
 
-    protected static void initSystem () {
+    static void initSystem () {
 
         MPlot.initialized         = true;
         MPlot.figures             = new ArrayList<Figure>();

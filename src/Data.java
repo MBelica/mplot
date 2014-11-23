@@ -7,7 +7,7 @@ import de.erichseifert.gral.data.DataTable;
 class Data {
 
 
-    protected static DataTable dress (double[] x, double[] y) {
+    static DataTable dress (double[] x, double[] y) {
 
         DataTable data =  new DataTable(Double.class, Double.class);
         for (int i = 0; i < x.length; i++) {
