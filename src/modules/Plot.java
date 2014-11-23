@@ -1,73 +1,124 @@
 package edu.kit.math.mplot;
 
 
-import java.awt.Color;
+import java.awt.*;
+import java.awt.geom.Ellipse2D;
+import java.awt.geom.Rectangle2D;
+
 import de.erichseifert.gral.data.DataTable;
 import de.erichseifert.gral.plots.XYPlot;
 import de.erichseifert.gral.plots.lines.DefaultLineRenderer2D;
 import de.erichseifert.gral.plots.lines.LineRenderer;
+import de.erichseifert.gral.plots.points.PointRenderer;
 import de.erichseifert.gral.ui.InteractivePanel;
 
 
 class Plot {
 
-
+    protected Color color;
     protected enum lineStyle  { solid, dashed, dashdot, dotted, plain }; protected lineStyle lStyle;
     protected enum markerStyle { point, plus, circle, asterisk, cross }; protected markerStyle mStyle;
-    protected enum colorStyle  { black, red, green, blue, cyan, magenta, yellow, white }; protected colorStyle  cStyle;
-
 
     Plot (DataTable data, Figure currentFigure, String args) {
 
+        parseLinespecs(args);
         XYPlot plot         = new XYPlot(data);
         LineRenderer lines  = new DefaultLineRenderer2D();
-        Color color         = new Color(0.0f, 0.3f, 1.0f);
-
-        linespecs(args);
 
         currentFigure.getContentPane().add(new InteractivePanel(plot));
 
-        linefRenderer(data, plot, lines, color);
-        pointfRenderer(data, plot, lines, color);
+        setLineRenderer(data, plot, lines);
+        setPointRenderer(data, plot, lines);
 
         currentFigure.revalidate();
         currentFigure.repaint();
     }
 
-    private void linefRenderer (DataTable data, XYPlot plot, LineRenderer lines, Color color) {
+     // Die folgenden beiden Methoden machen noch nicht was sie sollen, sie Rendern irgendwie... exakte formen und Farben müssen noch gesetzt werden
+    private void setLineRenderer (DataTable data, XYPlot plot, LineRenderer lines) {
 
-        plot.setLineRenderer(data, lines);
-        plot.getLineRenderer(data).setColor(color);
+        switch (lStyle) {
+
+            case solid:
+                plot.setLineRenderer(data, lines);
+                plot.getLineRenderer(data).setColor(color);
+                break;
+            case dashed:
+                plot.setLineRenderer(data, lines);
+                plot.getLineRenderer(data).setColor(color);
+                break;
+            case dashdot:
+                plot.setLineRenderer(data, lines);
+                plot.getLineRenderer(data).setColor(color);
+                break;
+            case dotted:
+                plot.setLineRenderer(data, lines);
+                plot.getLineRenderer(data).setColor(color);
+                break;
+            case plain:
+                break;
+            default:
+                plot.setLineRenderer(data, lines);
+                plot.getLineRenderer(data).setColor(color);
+                break;
+        }
     }
 
 
-    private void pointfRenderer (DataTable data, XYPlot plot, LineRenderer lines, Color color) {
+    private void setPointRenderer (DataTable data, XYPlot plot, LineRenderer lines) {
 
-        plot.getPointRenderer(data).setColor(color);
+        PointRenderer pointRenderer = plot.getPointRenderer(data);
+        switch (mStyle) {
+
+            case  point:
+                pointRenderer.setShape(new Ellipse2D.Double(-1.0, -1.0, 2.0, 2.0));
+                pointRenderer.setColor(color);
+                break;
+            case plus:
+                pointRenderer.setShape(new Ellipse2D.Double(-4.0, -4.0, 8.0, 8.0));
+                pointRenderer.setColor(color);
+                break;
+            case circle:
+                pointRenderer.setShape(new Ellipse2D.Double(-4.0, -4.0, 8.0, 8.0));
+                pointRenderer.setColor(color);
+                break;
+            case asterisk:
+                pointRenderer.setShape(new Rectangle2D.Double(-2.5, -2.5, 5, 5));
+                pointRenderer.setColor(color);
+                break;
+            case cross:
+                pointRenderer.setShape(new Rectangle2D.Double(-2.5, -2.5, 5, 5));
+                pointRenderer.setColor(color);
+                break;
+            default:
+                pointRenderer.setShape(new Ellipse2D.Double(-1.0, -1.0, 2.0, 2.0));
+                pointRenderer.setColor(color);
+                break;
+        }
     }
 
-    private void linespecs (String ls) {
+    private void parseLinespecs (String ls) {
 
         /** Line Style Specifiers **/
-        if      (ls.indexOf("--") > -1) lStyle = lineStyle.dashed;    // Dashed line
-        else if (ls.indexOf("-.") > -1) lStyle = lineStyle.dashdot;   // Dash-dot line
-        else if (ls.indexOf(":")  > -1) lStyle = lineStyle.dotted;    // Dotted line
-        else if (ls.indexOf(" ")  > -1) lStyle = lineStyle.plain;     // Plain
-        else lStyle = lineStyle.solid;   // Solid line (default)
+        if      (ls.indexOf("--") > -1) lStyle = lineStyle.dashed;           // Dashed line
+        else if (ls.indexOf("-.") > -1) lStyle = lineStyle.dashdot;          // Dash-dot line
+        else if (ls.indexOf(":")  > -1) lStyle = lineStyle.dotted;           // Dotted line
+        else if (ls.indexOf(" ")  > -1) lStyle = lineStyle.plain;            // Plain
+        else lStyle = lineStyle.solid;               // Solid line (default)
         /** Marker Specifiers **/
-        if      (ls.indexOf("+") > -1) mStyle = markerStyle.plus;     // Plus sign
-        else if (ls.indexOf("o") > -1) mStyle = markerStyle.circle;   // Circle
-        else if (ls.indexOf("*") > -1) mStyle = markerStyle.asterisk; // Asterisk
-        else if (ls.indexOf("x") > -1) mStyle = markerStyle.cross;    // Cross
-        else  mStyle = markerStyle.point; // Point (default)
+        if      (ls.indexOf("+") > -1) mStyle = markerStyle.plus;            // Plus sign
+        else if (ls.indexOf("o") > -1) mStyle = markerStyle.circle;          // Circle
+        else if (ls.indexOf("*") > -1) mStyle = markerStyle.asterisk;        // Asterisk
+        else if (ls.indexOf("x") > -1) mStyle = markerStyle.cross;           // Cross
+        else  mStyle = markerStyle.point;            // Point (default)
         /** Color Specifiers **/
-        if      (ls.indexOf("r") > -1) cStyle = colorStyle.red;       // Red
-        else if (ls.indexOf("g") > -1) cStyle = colorStyle.green;     // Green
-        else if (ls.indexOf("b") > -1) cStyle = colorStyle.blue;      // Blue
-        else if (ls.indexOf("c") > -1) cStyle = colorStyle.cyan;      // Cyan
-        else if (ls.indexOf("m") > -1) cStyle = colorStyle.magenta;   // Magenta
-        else if (ls.indexOf("y") > -1) cStyle = colorStyle.yellow;    // Yellow
-        else if (ls.indexOf("w") > -1) cStyle = colorStyle.white;     // White
-        else  cStyle = colorStyle.black;  // Black (default)
+        if      (ls.indexOf("r") > -1) color = new Color (1.0f, 0.0f, 0.0f); // Red
+        else if (ls.indexOf("g") > -1) color = new Color (0.0f, 1.0f, 0.0f); // Green
+        else if (ls.indexOf("b") > -1) color = new Color (0.0f, 0.0f, 1.0f); // Blue
+        else if (ls.indexOf("c") > -1) color = new Color (0.0f, 1.0f, 1.0f); // Cyan
+        else if (ls.indexOf("m") > -1) color = new Color (1.0f, 0.0f, 1.0f); // Magenta
+        else if (ls.indexOf("y") > -1) color = new Color (1.0f, 1.0f, 0.0f); // Yellow
+        else if (ls.indexOf("w") > -1) color = new Color (1.0f, 1.0f, 1.0f); // White
+        else  color = new Color (0.0f, 0.0f, 0.0f);  // Black (default)
     }
 }

@@ -15,7 +15,7 @@ public class test {
 
         // Zur Demonstration öffne Fenster, plotte gegeben Punkte und schließe aktuellstes Fenster - mit Pausen, damits besser aussieht
         MPlot.figure();             java.lang.Thread.sleep(1000);
-        MPlot.plot(x, y, "r--+");   java.lang.Thread.sleep(1000);
+        MPlot.plot(x, y, "r-o");   java.lang.Thread.sleep(1000);
         MPlot.clf();                java.lang.Thread.sleep(1000);
     }
 }

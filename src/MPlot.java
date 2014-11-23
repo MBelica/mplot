@@ -38,5 +38,4 @@ public class MPlot {
         currentFigure.dispose();
         currentFigureIndex--;
     }
-
 }
