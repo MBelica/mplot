@@ -2,6 +2,7 @@ package edu.kit.math.mplot;
 
 
 import java.awt.*;
+import java.awt.geom.Area;
 import java.awt.geom.Ellipse2D;
 import java.awt.geom.Rectangle2D;
 
@@ -17,7 +18,7 @@ class Plot {
 
     protected Color color;
     protected enum lineStyle  { solid, dashed, dashdot, dotted, plain }; protected lineStyle lStyle;
-    protected enum markerStyle { point, plus, circle, asterisk, cross }; protected markerStyle mStyle;
+    protected enum markerStyle { point, plus, circle, asterisk, cross, dot }; protected markerStyle mStyle;
 
     Plot (DataTable data, Figure currentFigure, String args) {
 
@@ -45,14 +46,17 @@ class Plot {
                 break;
             case dashed:
                 plot.setLineRenderer(data, lines);
+                lines.setStroke(new BasicStroke(2.0f, BasicStroke.CAP_BUTT, BasicStroke.JOIN_MITER, 10.0f, new float[] {10.0f,10.0f}, 0.0f));
                 plot.getLineRenderer(data).setColor(color);
                 break;
             case dashdot:
                 plot.setLineRenderer(data, lines);
+                lines.setStroke(new BasicStroke(2.0f, BasicStroke.CAP_BUTT, BasicStroke.JOIN_MITER, 10.0f, new float[] {10.0f,10.0f,2.0f,10.0f}, 0.0f));
                 plot.getLineRenderer(data).setColor(color);
                 break;
             case dotted:
                 plot.setLineRenderer(data, lines);
+                lines.setStroke(new BasicStroke(2.0f, BasicStroke.CAP_BUTT, BasicStroke.JOIN_MITER, 10.0f, new float[] {2.0f,10.0f}, 0.0f));
                 plot.getLineRenderer(data).setColor(color);
                 break;
             case plain:
@@ -70,24 +74,29 @@ class Plot {
         PointRenderer pointRenderer = plot.getPointRenderer(data);
         switch (mStyle) {
 
-            case  point:
+            case point:
                 pointRenderer.setShape(new Ellipse2D.Double(-1.0, -1.0, 2.0, 2.0));
                 pointRenderer.setColor(color);
                 break;
             case plus:
-                pointRenderer.setShape(new Ellipse2D.Double(-4.0, -4.0, 8.0, 8.0));
+                pointRenderer.setShape(Utilities.drawPlus(2, 1));
                 pointRenderer.setColor(color);
                 break;
             case circle:
-                pointRenderer.setShape(new Ellipse2D.Double(-4.0, -4.0, 8.0, 8.0));
-                pointRenderer.setColor(color);
+                Area circle = new Area(new Ellipse2D.Double(-2.0, -2.0, 4.0, 4.0));
+                circle.subtract(new Area(new Ellipse2D.Double(-1.0, -1.0, 2.0, 2.0)));
+                pointRenderer.setShape(circle);
                 break;
             case asterisk:
-                pointRenderer.setShape(new Rectangle2D.Double(-2.5, -2.5, 5, 5));
+                pointRenderer.setShape(Utilities.drawAsterisk(2, 1));
                 pointRenderer.setColor(color);
                 break;
             case cross:
-                pointRenderer.setShape(new Rectangle2D.Double(-2.5, -2.5, 5, 5));
+                pointRenderer.setShape(Utilities.drawDiagonalCross(2, 1));
+                pointRenderer.setColor(color);
+                break;
+            case dot:
+                pointRenderer.setShape(new Ellipse2D.Double(-2.0, -2.0, 4.0, 4.0));
                 pointRenderer.setColor(color);
                 break;
             default:
@@ -110,6 +119,7 @@ class Plot {
         else if (ls.indexOf("o") > -1) mStyle = markerStyle.circle;          // Circle
         else if (ls.indexOf("*") > -1) mStyle = markerStyle.asterisk;        // Asterisk
         else if (ls.indexOf("x") > -1) mStyle = markerStyle.cross;           // Cross
+        else if (ls.indexOf("q") > -1) mStyle = markerStyle.dot;             // dot
         else  mStyle = markerStyle.point;            // Point (default)
         /** Color Specifiers **/
         if      (ls.indexOf("r") > -1) color = new Color (1.0f, 0.0f, 0.0f); // Red

@@ -42,3 +42,6 @@ for each plot check if plot exists in newest frame
     * yes: check if hold has been callen
         - no: clear frame and repaint
         - yes: draw both
+
+# Dispose
+Depending on how many graphs active dispose or close
