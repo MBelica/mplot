@@ -1,6 +1,14 @@
-##########
-## MPlot #
-##########
+#############################################################
+##  MPlot                                                  ##
+##                                                         ##
+##                                                         ##
+#############################################################
+
+
+# General
+Compiled with Java 1.7
+UML Diagram: https://repository.genmymodel.com/ProxiStyx/matlabinterface
+
 
 # Compile
 javac -cp "lib/*" -d "bin/" src/*.java
