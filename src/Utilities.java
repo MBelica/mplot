@@ -7,7 +7,7 @@ import java.util.ArrayList;
 class Utilities {
 
 
-    static void initSystem () {
+    protected static void initSystem () {
 
         MPlot.initialized         = true;
         MPlot.figures             = new ArrayList<Figure>();
