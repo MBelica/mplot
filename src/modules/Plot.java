@@ -4,8 +4,6 @@ package edu.kit.math.mplot;
 import java.awt.*;
 import java.awt.geom.Area;
 import java.awt.geom.Ellipse2D;
-import java.awt.geom.Rectangle2D;
-
 import de.erichseifert.gral.data.DataTable;
 import de.erichseifert.gral.plots.XYPlot;
 import de.erichseifert.gral.plots.lines.DefaultLineRenderer2D;
@@ -67,7 +65,6 @@ class Plot {
                 break;
         }
     }
-
 
     private void setPointRenderer (DataTable data, XYPlot plot, LineRenderer lines) {
 
