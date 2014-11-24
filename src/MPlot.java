@@ -11,6 +11,7 @@ public class MPlot {
 
     // ToDo: create list of lists to handle connected figures and plots; merging and deleting those should be then be easy
     static List<Figure> figures;
+    static List<DataLists> dataList = new ArrayList<DataLists>();
     static int currentFigureIndex;
 
     /** Initialize variables if necessary; create figure and update index, new figure should be active **/

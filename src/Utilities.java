@@ -1,9 +1,9 @@
 package edu.kit.math.mplot;
 
-
 import java.awt.*;
-import java.util.ArrayList;
+import java.util.*;
 import java.awt.geom.GeneralPath;
+import java.util.List;
 
 
 class Utilities {
@@ -83,3 +83,10 @@ class Utilities {
         return p0;
     }
 }
+
+
+class DataLists {
+    static List<Figure> figures;
+    static List<Plot>plots;
+}
+
