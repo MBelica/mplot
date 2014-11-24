@@ -12,6 +12,7 @@ public class MPlot {
     static List<Figure> figures;
     static int currentFigureIndex;
 
+    /** Initialize variables if necessary; create figure and update index, new figure should be active **/
     public static void figure () {
 
         if (!initialized) Utilities.initSystem();
@@ -24,6 +25,7 @@ public class MPlot {
         System.out.println(figures);
     }
 
+    /** Create plot instance to plot function into currentFigure **/
     public static void plot (double[] x, double[] y, String linespec) {
 
         Figure currentFigure = figures.get(currentFigureIndex);
@@ -35,7 +37,6 @@ public class MPlot {
     public static void clf (int... indexVarArgs) {
 
         int index;
-
         if (indexVarArgs.length == 0) {
             index = currentFigureIndex;
         } else index = indexVarArgs[0];
