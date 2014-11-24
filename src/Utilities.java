@@ -19,7 +19,7 @@ class Utilities {
         MPlot.currentFigureIndex  = -1;
     }
 
-
+    // the next 3 methods draw shapes found in matlab, asterisk and plus still has to be written but do we really want this?
     public static Shape drawDiagonalCross (final float l, final float t) {
 
         final GeneralPath p0 = new GeneralPath();

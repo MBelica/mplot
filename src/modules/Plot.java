@@ -33,7 +33,6 @@ class Plot {
         currentFigure.repaint();
     }
 
-     // Die folgenden beiden Methoden machen noch nicht was sie sollen, sie Rendern irgendwie... exakte formen und Farben müssen noch gesetzt werden
     private void setLineRenderer (DataTable data, XYPlot plot, LineRenderer lines) {
 
         switch (lStyle) {
