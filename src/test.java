@@ -20,15 +20,10 @@ public class test {
         MPlot.plot(x, y, "b--.");       java.lang.Thread.sleep(1000);
         MPlot.figure();  /* Figure 2 */ java.lang.Thread.sleep(1000);
         MPlot.plot(x, y, "b--.");       java.lang.Thread.sleep(1000);
-        MPlot.figure();  /* Figure 3 */ java.lang.Thread.sleep(1000);
-        MPlot.plot(x, y, "b--.");   java.lang.Thread.sleep(1000);
-        MPlot.figure();  /* Figure 4 */ java.lang.Thread.sleep(1000);
-        MPlot.plot(x, y, "b--.");   java.lang.Thread.sleep(1000);
-
-        MPlot.clf();                java.lang.Thread.sleep(1000);
-        MPlot.test(2); /** Delete Figure with nbr 2 */ java.lang.Thread.sleep(1000);
-        MPlot.clf();                java.lang.Thread.sleep(1000);
-        MPlot.clf();                java.lang.Thread.sleep(1000);
-        MPlot.clf();                java.lang.Thread.sleep(1000);
+        /* clf figure with index 1 */
+        MPlot.clf(1);                   java.lang.Thread.sleep(1000);
+        /* clf active figure */
+        MPlot.clf();                    java.lang.Thread.sleep(1000);
+        MPlot.clf();                    java.lang.Thread.sleep(1000);
     }
 }

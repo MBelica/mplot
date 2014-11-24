@@ -21,7 +21,7 @@ public class MPlot {
         figures.add(newFigure);
         currentFigureIndex = figures.size()-1;
 
-        System.out.println("Figure erstellt mit Index:" + String.valueOf(currentFigureIndex));
+        System.out.println("Figure with index:" + String.valueOf(currentFigureIndex) + "created");
         System.out.println(figures);
     }
 
@@ -32,17 +32,25 @@ public class MPlot {
         new Plot(Data.dress(x, y), currentFigure, linespec);
     }
 
+    //** Delete the active figure **/
     public static void clf () {
+        if (currentFigureIndex >= 0) {
+            Figure currentFigure = figures.get(currentFigureIndex);
 
-        Figure currentFigure = figures.get(currentFigureIndex);
+            currentFigure.setVisible(false);
+            currentFigure.dispose();
+            figures.remove(currentFigureIndex);
+            currentFigureIndex = figures.size() - 1;
 
-        currentFigure.setVisible(false);
-        currentFigure.dispose();
-        figures.remove(currentFigureIndex);
-        currentFigureIndex = figures.size()-1;
+            System.out.println("Active figure deleted.");
+        } else {
+
+            System.out.println("No figures created yet").
+        }
     }
 
-    public static void test (int index) {
+    //** Delete a certain figure **/
+    public static void clf (int index) {
 
         if (index <= currentFigureIndex) {
 
@@ -52,6 +60,8 @@ public class MPlot {
             currentFigure.dispose();
             figures.remove(index);
             currentFigureIndex = figures.size() - 1;
+
+            System.out.println("Figure with index " + index + "deleted.");
         } else {
 
             System.out.println("Figure with index " + index + "does not exist.");
