@@ -1,6 +1,6 @@
 package edu.kit.math.mplot;
 
-
+import javax.swing.JFrame;
 import java.awt.*;
 import java.awt.geom.Area;
 import java.awt.geom.Ellipse2D;
@@ -33,7 +33,6 @@ class Plot {
         currentFigure.repaint();
     }
 
-     // Die folgenden beiden Methoden machen noch nicht was sie sollen, sie Rendern irgendwie... exakte formen und Farben müssen noch gesetzt werden
     private void setLineRenderer (DataTable data, XYPlot plot, LineRenderer lines) {
 
         switch (lStyle) {
