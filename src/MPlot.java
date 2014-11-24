@@ -31,28 +31,17 @@ public class MPlot {
         new Plot(Data.dress(x, y), currentFigure, linespec);
     }
 
-    /** Delete the active figure **/
-    public static void clf () {
-        if (currentFigureIndex >= 0) {
-            Figure currentFigure = figures.get(currentFigureIndex);
+    /** Delete a figure, with no argument delete active figure else delete figure with given index **/
+    public static void clf (int... indexVarArgs) {
 
-            currentFigure.setVisible(false);
-            currentFigure.dispose();
-            figures.remove(currentFigureIndex);
-            currentFigureIndex = figures.size() - 1;
+        int index;
 
-            System.out.println("Active figure deleted. Current figures: #" + (currentFigureIndex+1));
-            System.out.println(figures);
-        } else {
+        if (indexVarArgs.length == 0) {
+            index = currentFigureIndex;
+        } else index = indexVarArgs[0];
 
-            System.out.println("No figures created yet");
-        }
-    }
 
-    /** Delete a certain figure **/
-    public static void clf (int index) {
-
-        if (index <= currentFigureIndex) {
+        if ((index < figures.size()) && (currentFigureIndex >= 0))  {
 
             Figure currentFigure = figures.get(index);
 
