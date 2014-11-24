@@ -17,9 +17,9 @@ public class test {
         MPlot.figure(); /* Figure 0 */  java.lang.Thread.sleep(1000);
         MPlot.plot(x, y, "b--.");       java.lang.Thread.sleep(1000);
         MPlot.figure(); /* Figure 1 */  java.lang.Thread.sleep(1000);
-        MPlot.plot(x, x, "b--.");       java.lang.Thread.sleep(1000);
+        MPlot.plot(x, x, "g-q");       java.lang.Thread.sleep(1000);
         MPlot.figure();  /* Figure 2 */ java.lang.Thread.sleep(1000);
-        MPlot.plot(x, y, "b--.");       java.lang.Thread.sleep(1000);
+        MPlot.plot(x, y, "c-o");       java.lang.Thread.sleep(1000);
 
         /* clf figure with index 1 => figure with index 2 has now index 1 */
         MPlot.clf(1);                   java.lang.Thread.sleep(1000);
