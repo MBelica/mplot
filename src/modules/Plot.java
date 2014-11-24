@@ -1,6 +1,6 @@
 package edu.kit.math.mplot;
 
-
+import javax.swing.JFrame;
 import java.awt.*;
 import java.awt.geom.Area;
 import java.awt.geom.Ellipse2D;

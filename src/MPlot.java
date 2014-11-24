@@ -20,6 +20,9 @@ public class MPlot {
         Figure newFigure = new Figure();
         figures.add(newFigure);
         currentFigureIndex = figures.size()-1;
+
+        System.out.println("Figure erstellt mit Index:" + String.valueOf(currentFigureIndex));
+        System.out.println(figures);
     }
 
     public static void plot (double[] x, double[] y, String linespec) {
@@ -35,6 +38,23 @@ public class MPlot {
 
         currentFigure.setVisible(false);
         currentFigure.dispose();
-        currentFigureIndex--;
+        figures.remove(currentFigureIndex);
+        currentFigureIndex = figures.size()-1;
+    }
+
+    public static void test (int index) {
+
+        if (index <= currentFigureIndex) {
+
+            Figure currentFigure = figures.get(index);
+
+            currentFigure.setVisible(false);
+            currentFigure.dispose();
+            figures.remove(index);
+            currentFigureIndex = figures.size() - 1;
+        } else {
+
+            System.out.println("Figure with index " + index + "does not exist.");
+        }
     }
 }
