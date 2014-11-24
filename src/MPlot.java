@@ -9,6 +9,7 @@ public class MPlot {
 
     static boolean initialized = false;
 
+    // ToDo: create list of lists to handle connected figures and plots; merging and deleting those should be then be easy
     static List<Figure> figures;
     static int currentFigureIndex;
 
@@ -32,6 +33,7 @@ public class MPlot {
         if (linespecVarArgs.length == 0) {
             linespec = "";
         } else linespec = linespecVarArgs[0];
+
 
         Figure currentFigure = figures.get(currentFigureIndex);
 
