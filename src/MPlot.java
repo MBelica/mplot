@@ -26,7 +26,12 @@ public class MPlot {
     }
 
     /** Create plot instance to plot function into currentFigure **/
-    public static void plot (double[] x, double[] y, String linespec) {
+    public static void plot (double[] x, double[] y, String... linespecVarArgs) {
+
+        String linespec;
+        if (linespecVarArgs.length == 0) {
+            linespec = "";
+        } else linespec = linespecVarArgs[0];
 
         Figure currentFigure = figures.get(currentFigureIndex);
 
