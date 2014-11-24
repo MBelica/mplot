@@ -63,11 +63,18 @@ public class MPlot {
     public static void set (int index, String action) {
 
         //No switch through Strings
-        if (action == "setActive") {
-            currentFigureIndex = index;
+        if (action == "figureActive") {
 
-            System.out.println("Figure with index " + index + " set as active. Current figures: #" + (currentFigureIndex+1));
-            System.out.println(figures);
+            if ((index < figures.size()) && (currentFigureIndex >= 0))  {
+
+                currentFigureIndex = index;
+
+                System.out.println("Figure with index " + index + " set as active. Current figures: #" + (currentFigureIndex+1));
+                System.out.println(figures);
+            } else {
+
+                System.out.println("Figure with index " + index + " does not exist.");
+            }
         }
 
     }
