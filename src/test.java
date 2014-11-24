@@ -13,7 +13,7 @@ public class test {
             y[i] = Math.pow(x[i],2);
         }
 
-        // Zur Demonstration öffne Fenster, plotte gegeben Punkte und schließe aktuellstes Fenster - mit Pausen, damits besser aussieht
+        // open 3 figures and plot (for better identification plotted once (x,x) )
         MPlot.figure(); /* Figure 0 */  java.lang.Thread.sleep(1000);
         MPlot.plot(x, y, "b--.");       java.lang.Thread.sleep(1000);
         MPlot.figure(); /* Figure 1 */  java.lang.Thread.sleep(1000);
