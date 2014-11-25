@@ -9,23 +9,49 @@ public class MPlot {
 
     static boolean initialized = false;
 
-    // ToDo: create list of lists to handle connected figures and plots; merging and deleting those should be then be easy
-    static List<Figure> figures;
-    static List<DataLists> dataList = new ArrayList<DataLists>();
+    static ArrayList<Integer> figureIndexList = new ArrayList<Integer>();
+    static ArrayList<ArrayList> objectList = new ArrayList<ArrayList>();
 
+    static int activeFigureIndex;
     static int currentFigureIndex;
 
+
     /** Initialize variables if necessary; create figure and update index, new figure should be active **/
-    public static void figure () {
+    public static void figure (int... indexVarArgs) {
 
-        if (!initialized) Utilities.initSystem();
+        if ( (indexVarArgs.length != 0) && (figureIndexList.indexOf(indexVarArgs[0]) > -1) ) {
 
-        Figure newFigure = new Figure();
-        figures.add(newFigure);
-        currentFigureIndex = figures.size()-1;
+            activeFigureIndex = indexVarArgs[0];
+            System.out.println("Figure " + indexVarArgs[0] + "set active. activeFigureIndex: "+ activeFigureIndex + ", currentFigureIndex: " + currentFigureIndex);
+            // Fenster in den Vordergrund bringen!
+        }
+        else{
 
-        System.out.println("Figure with index " + String.valueOf(currentFigureIndex) + " created");
-        Utilities.printFigureList(figures);
+            if (!initialized) Utilities.initSystem();
+
+
+            if (indexVarArgs.length == 0) {
+                currentFigureIndex++;
+                activeFigureIndex = currentFigureIndex;
+            }
+            else if (indexVarArgs[0] >= currentFigureIndex) {
+                activeFigureIndex = indexVarArgs[0];
+                currentFigureIndex = indexVarArgs[0];
+            } else activeFigureIndex = indexVarArgs[0];
+            figureIndexList.add(activeFigureIndex);
+
+            System.out.println("CurrentFigureIndex:" + figureIndexList);
+
+            Figure newFigure = new Figure();
+            ArrayList tempArrayList = new ArrayList();
+            tempArrayList.add(currentFigureIndex);
+            tempArrayList.add(newFigure);
+            objectList.add(tempArrayList);
+
+
+            System.out.println("New figure with index " + String.valueOf(activeFigureIndex) + " created. activeFigureIndex: " + activeFigureIndex + ", currentFigureIndex:" + currentFigureIndex);
+            Utilities.printArrayList(objectList);
+        }
     }
 
     /** Create plot instance to plot function into currentFigure **/
@@ -37,9 +63,18 @@ public class MPlot {
         } else linespec = linespecVarArgs[0];
 
 
-        Figure currentFigure = figures.get(currentFigureIndex);
+        for (int i = 0; i < objectList.size(); i++) {
 
-        new Plot(Data.dress(x, y), currentFigure, linespec);
+            if (((Integer) objectList.get(i).get(0)) == activeFigureIndex ) {
+
+                Figure currentFigure = (Figure) objectList.get(i).get(1);
+                objectList.get(i).add(new Plot(Data.dress(x, y), currentFigure, linespec));
+
+                System.out.println("New plot created and associated with figure " + i +". activeFigureIndex: " + activeFigureIndex + ", currentFigureIndex:" + currentFigureIndex);
+            } else if (i == (objectList.size()-1)) System.out.println("Error! No figure for activeFigureIndex found.");
+        }
+
+        Utilities.printArrayList(objectList);
     }
 
     /** Delete a figure, with no argument delete active figure else delete figure with given index **/
@@ -47,46 +82,43 @@ public class MPlot {
 
         int index;
         if (indexVarArgs.length == 0) {
-            index = currentFigureIndex;
+            index = activeFigureIndex;
         } else index = indexVarArgs[0];
 
 
-        if ((index < figures.size()) && (currentFigureIndex >= 0))  {
+        if ((index <= currentFigureIndex) && (objectList.size() > 0))  {
 
-            Figure currentFigure = figures.get(index);
+            for (int i = 0; i < objectList.size(); i++) {
 
-            currentFigure.setVisible(false);
-            currentFigure.dispose();
-            figures.remove(index);
+                if (((Integer) objectList.get(i).get(0)) == index ) {
 
-            if (index == currentFigureIndex) currentFigureIndex = figures.size() - 1;
-             else if (index < currentFigureIndex) currentFigureIndex--;
+                    Figure figureToCLF = (Figure) objectList.get(i).get(1);
+                    figureToCLF.setVisible(false);
+                    figureToCLF.dispose();
+                    //ToDo Plots removen!
+                    objectList.remove(i);
+                    figureIndexList.remove(new Integer(index));
 
-            System.out.println("Figure with index " + index + " deleted.");
-            Utilities.printFigureList(figures);
+                    if(index == activeFigureIndex)  {
+                        activeFigureIndex  = Utilities.getNewestIndex();
+                        System.out.println("Just deleted activeFigureIndex. New: " + activeFigureIndex);
+                    }
+                    if(index == currentFigureIndex) {
+                        currentFigureIndex = Utilities.getNewestIndex();
+                        System.out.println("Just deleted currentFigureIndex. New: " + currentFigureIndex);
+                    }
+
+                    System.out.println("CurrentFigureIndex:" + figureIndexList);
+
+                    System.out.println("Figure with index " + i + " deleted. activeFigureIndex: " + activeFigureIndex + ", currentFigureIndex:" + currentFigureIndex);
+                    Utilities.printArrayList(objectList);
+                }
+            }
         } else {
 
             System.out.println("Figure with index " + index + " does not exist.");
         }
     }
 
-    /** As in matlab a general set function to manipulate with the figures **/
-    public static void set (int index, String action) {
 
-        //No switch through Strings
-        if (action == "figureActive") {
-
-            if ((index < figures.size()) && (currentFigureIndex >= 0))  {
-
-                currentFigureIndex = index;
-
-                System.out.println("Figure with index " + index + " set as active.");
-                Utilities.printFigureList(figures);
-            } else {
-
-                System.out.println("Figure with index " + index + " does not exist.");
-            }
-        }
-
-    }
 }
