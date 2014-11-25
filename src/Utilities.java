@@ -40,7 +40,6 @@ class Utilities {
 
         int index;
 
-        System.out.println(MPlot.figureIndexList.size());
         if (MPlot.figureIndexList.size() > 0) {
             index = (Integer) MPlot.figureIndexList.get( ( (Integer) MPlot.figureIndexList.size() ) - 1 );
         } else index = -1;
@@ -57,6 +56,43 @@ class Utilities {
         } else index = -1;
 
         return index;
+    }
+
+    // check which index (position in ArrayList) has the figure with given id
+    protected static int idToIndex (int givenId) {
+
+        int index = 0;
+        int id = (Integer) MPlot.objectList.get(index).get(0);
+
+        while (id != givenId ) {
+
+            index++;
+            id = (Integer) MPlot.objectList.get(index).get(0);
+
+            if ( index >= MPlot.objectList.size() ) {
+                index = -1;
+                break;
+            }
+        }
+
+        return index;
+    }
+
+    // Check if user has passed parameters or not, once for 'int' once for 'String'
+    protected static boolean isVarArgsSet (int... VarArgs) {
+
+        if (VarArgs.length != 0) return true;
+            else return false;
+    }
+    protected static boolean isVarArgsSet (String... VarArgs) {
+        if (VarArgs.length != 0) return true;
+            else return false;
+    }
+
+    // Check if given index is associated with a figure
+    protected static boolean isIndexInUse (int id) {
+        if (MPlot.figureIndexList.indexOf(id) > -1) return true;
+            else return false;
     }
 
     // the next 3 methods draw shapes found in matlab, asterisk and plus still has to be written but do we really want this?

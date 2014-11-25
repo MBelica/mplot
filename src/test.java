@@ -13,26 +13,23 @@ public class test {
             y[i] = Math.pow(x[i],2);
         }
 
-        // open 3 figures and plot (for better identification plotted once (x,x) )
-        MPlot.figure(); /* Figure 0 */  java.lang.Thread.sleep(1000);
-        MPlot.plot(x, y, "b--.");       java.lang.Thread.sleep(1000);
 
-        MPlot.plot(x, x, "g--q");       java.lang.Thread.sleep(1000);
-        MPlot.figure(); /* Figure 1 */  java.lang.Thread.sleep(1000);
-        MPlot.plot(x, x, "g-q");        java.lang.Thread.sleep(1000);
-        MPlot.figure();  /* Figure 2 */ java.lang.Thread.sleep(1000);
-        MPlot.plot(x, y);               java.lang.Thread.sleep(1000);
-        MPlot.figure(10);               java.lang.Thread.sleep(1000);
-        MPlot.plot(x, x, "b--.");       java.lang.Thread.sleep(1000);
-       /* set figure 0 active => figure with index 1 has still index 1 */
-        MPlot.figure(0);
-        /* clf figure with index 1 => figure with index 2 has now index 1 */
-        MPlot.clf(1);                   java.lang.Thread.sleep(1000);
-
-        /* clf active figure, thats figure 0 => figure 1 has now index 0 */
-        MPlot.clf();                    java.lang.Thread.sleep(1000);
-        /* clf last figure */
-        MPlot.clf();                    java.lang.Thread.sleep(1000);
-        MPlot.clf();                    java.lang.Thread.sleep(1000);
+        // open 2 figures and plot (for better identification plotted once (x,x) )
+        MPlot.figure(); /* Figure 0 */              java.lang.Thread.sleep(1000);
+        MPlot.plot(x, y, "b--.");                   java.lang.Thread.sleep(1000);
+        MPlot.figure(); /* Figure 1 */              java.lang.Thread.sleep(1000);
+        MPlot.plot(x, x); /* without linespecs */   java.lang.Thread.sleep(1000);
+        /* set figure 0 active */
+        MPlot.figure(0);                            java.lang.Thread.sleep(1000);
+        /* create a new figure with index 5 */
+        MPlot.figure(5);                            java.lang.Thread.sleep(1000);
+        MPlot.plot(x, y, "c-.q");                   java.lang.Thread.sleep(1000);
+        /* figure with id 100 does not exist, output error msg and keep going */
+        MPlot.clf(100);                             java.lang.Thread.sleep(1000);
+        /* close figure with id 5 */
+        MPlot.clf(5);                               java.lang.Thread.sleep(1000);
+        /* and close the rest of them again */
+        MPlot.clf();                                java.lang.Thread.sleep(1000);
+        MPlot.clf();                                java.lang.Thread.sleep(1000);
     }
 }
