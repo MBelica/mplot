@@ -19,6 +19,21 @@ class Utilities {
         MPlot.currentFigureIndex  = -1;
     }
 
+    protected static void printFigureList (List<Figure> figures) {
+
+        int i = 0;
+        ListIterator<Figure> li = figures.listIterator();
+        System.out.println("Current Figures (#"+ figures.size() +"):");
+        while(li.hasNext()) {
+
+            System.out.println("    Figure with index " + i + ": " + li.next());
+
+            i++;
+        }
+
+        System.out.println();
+    }
+
     // the next 3 methods draw shapes found in matlab, asterisk and plus still has to be written but do we really want this?
     public static Shape drawDiagonalCross (final float l, final float t) {
 

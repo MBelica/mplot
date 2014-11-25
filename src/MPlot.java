@@ -12,6 +12,7 @@ public class MPlot {
     // ToDo: create list of lists to handle connected figures and plots; merging and deleting those should be then be easy
     static List<Figure> figures;
     static List<DataLists> dataList = new ArrayList<DataLists>();
+
     static int currentFigureIndex;
 
     /** Initialize variables if necessary; create figure and update index, new figure should be active **/
@@ -24,7 +25,7 @@ public class MPlot {
         currentFigureIndex = figures.size()-1;
 
         System.out.println("Figure with index " + String.valueOf(currentFigureIndex) + " created");
-        System.out.println(figures);
+        Utilities.printFigureList(figures);
     }
 
     /** Create plot instance to plot function into currentFigure **/
@@ -57,10 +58,12 @@ public class MPlot {
             currentFigure.setVisible(false);
             currentFigure.dispose();
             figures.remove(index);
-            currentFigureIndex = figures.size() - 1;
 
-            System.out.println("Figure with index " + index + " deleted. Current figures: #" + (currentFigureIndex+1));
-            System.out.println(figures);
+            if (index == currentFigureIndex) currentFigureIndex = figures.size() - 1;
+             else if (index < currentFigureIndex) currentFigureIndex--;
+
+            System.out.println("Figure with index " + index + " deleted.");
+            Utilities.printFigureList(figures);
         } else {
 
             System.out.println("Figure with index " + index + " does not exist.");
@@ -77,8 +80,8 @@ public class MPlot {
 
                 currentFigureIndex = index;
 
-                System.out.println("Figure with index " + index + " set as active. Current figures: #" + (currentFigureIndex+1));
-                System.out.println(figures);
+                System.out.println("Figure with index " + index + " set as active.");
+                Utilities.printFigureList(figures);
             } else {
 
                 System.out.println("Figure with index " + index + " does not exist.");
