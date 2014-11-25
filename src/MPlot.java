@@ -9,15 +9,15 @@ public class MPlot {
 
     static boolean initialized = false;
 
-    static ArrayList<ArrayList> objectList    = new ArrayList<ArrayList>(); // this is my "book-keeping-list" I can here quickly check how many figures are open, what ids are already assigned, which is the highest/newest index etc.
     static ArrayList<Integer> figureIndexList = new ArrayList<Integer>(); // this is the new ArrayList it does not only contain the figures but also linked with each figure its identifier (id) and p.r.n the associated plots
+    static ArrayList<ArrayList> objectList    = new ArrayList<ArrayList>(); // this is my "book-keeping-list" I can here quickly check how many figures are open, what ids are already assigned, which is the highest/newest index etc.
 
     static int activeFigureIndex;  // index of active figure
     static int currentFigureIndex; // highest index of all
 
 
     /** Initialize variables if necessary; create figure and update index, new figure should be active **/
-    public static void figure (int... indexVarArgs) {
+    public static int figure (int... indexVarArgs) {
 
         if (!initialized) Utilities.initSystem();
 
@@ -50,6 +50,8 @@ public class MPlot {
             System.out.println("New figure with index " + String.valueOf(activeFigureIndex) + " created. activeFigureIndex: " + activeFigureIndex + ", currentFigureIndex:" + currentFigureIndex);
             Utilities.printArrayList(objectList);
         }
+
+        return activeFigureIndex;
     }
 
     /** Create plot instance to plot function into currentFigure **/
