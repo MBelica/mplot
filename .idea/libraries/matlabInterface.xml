@@ -1,9 +1,0 @@
-<component name="libraryTable">
-  <library name="matlabInterface">
-    <CLASSES>
-      <root url="jar://$PROJECT_DIR$/#outdated/bin/matlabInterface.jar!/" />
-    </CLASSES>
-    <JAVADOC />
-    <SOURCES />
-  </library>
-</component>
