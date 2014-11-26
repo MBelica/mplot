@@ -7,7 +7,8 @@ import java.util.*;
 public class MPlot {
 
 
-    private GrootManager grootHandle;
+
+    private GRootManager grootHandle;
     private Utilities utilitiesHandle;
 
 
@@ -23,7 +24,7 @@ public class MPlot {
         if (!initialized) {
 
             utilitiesHandle = new Utilities(this);
-            grootHandle     = new GrootManager();
+            grootHandle     = new GRootManager();
 
             utilitiesHandle.initSystem();
         }
@@ -45,8 +46,8 @@ public class MPlot {
 
         if (grootHandle.isIndexInUse(index)) { // user wants to set a figure active
 
-
-            Figure tempFigure = (Figure)  grootHandle.getFigureToIndex(index);
+            int id = grootHandle.getIdToIndex(index);
+            Figure tempFigure = grootHandle.getFigureToId(id);
 
             activeFigureIndex = index; // set index active
             tempFigure.toFront(); // place in front
@@ -65,10 +66,10 @@ public class MPlot {
             ArrayList tempArrayList = new ArrayList();
                 tempArrayList.add(currentFigureIndex);
                 tempArrayList.add(newFigure);
-            grootHandle.groot.add(tempArrayList);
+            grootHandle.groot.add(tempArrayList); // ToDO: outsource into GRoot?
 
             System.out.println("New figure with index " + String.valueOf(activeFigureIndex) + " created. activeFigureIndex: " + activeFigureIndex + ", currentFigureIndex: " + currentFigureIndex);
-            grootHandle.printGrootList();
+            grootHandle.printGRootList();
         }
 
         return activeFigureIndex;
@@ -87,17 +88,18 @@ public class MPlot {
     public void plot (double[] x, double[] y, String linespec) {
 
         // Check under all created objects whose index contains the activeFigureIndex and therefore also the figure we want to plot in
-        int indexHandle = grootHandle.getIdToIndex(activeFigureIndex);
-        if ( indexHandle > -1 ) { // if we've found an index (entry in groot) we are going to plot
+        int id = grootHandle.getIdToIndex(activeFigureIndex);
+        if ( id > -1 ) { // if we've found an index (entry in groot) we are going to plot
 
-            // ToDo: Resolve grootHandle.groot
-            Figure currentFigure = (Figure) grootHandle.groot.get(indexHandle).get(1);
-            grootHandle.groot.get(indexHandle).add(new Plot(Data.dress(x, y), currentFigure, linespec)); // add plot into groot under the figure
+            Figure currentFigure = grootHandle.getFigureToId(id);
+            Plot currentPlot     = new Plot(Data.dress(x, y), currentFigure, linespec);
 
-            System.out.println("New plot created and associated with figure " + indexHandle +". activeFigureIndex: " + activeFigureIndex + ", currentFigureIndex: " + currentFigureIndex);
-        } else if (indexHandle == (grootHandle.groot.size()-1)) System.out.println("Error! No figure for activeFigureIndex found.");
+            grootHandle.addPlotToId(id, currentPlot);
 
-        grootHandle.printGrootList();
+            System.out.println("New plot created and associated with figure " + activeFigureIndex +". activeFigureIndex: " + activeFigureIndex + ", currentFigureIndex: " + currentFigureIndex);
+        } else if (id == (grootHandle.size()-1)) System.out.println("Error! No figure for activeFigureIndex found.");
+
+        grootHandle.printGRootList();
     }
 
 
@@ -112,7 +114,7 @@ public class MPlot {
 
     public void clf (int id) {
 
-        if ((id <= currentFigureIndex) && (grootHandle.groot.size() > 0))  {  // to be sure check if index is smaller then highest possible index and check if we have objects at all
+        if ((id <= currentFigureIndex) && (grootHandle.size() > 0))  {  // to be sure check if index is smaller then highest possible index and check if we have objects at all
             // lets search if we find the object to clear
             int indexHandle = grootHandle.getIdToIndex(id);
             if ( indexHandle > -1 ) { // > -1 means we found the element
@@ -120,7 +122,7 @@ public class MPlot {
                 grootHandle.clfFigureWithIndex(indexHandle);
 
                 System.out.println("Figure with index " + id + " cleared. activeFigureIndex: " + activeFigureIndex + ", currentFigureIndex:" + currentFigureIndex);
-                grootHandle.printGrootList();
+                grootHandle.printGRootList();
             } else System.out.println("Error! Nothing cleared - figure with index " + id + " does not exist.");
         } else System.out.println("Error! Nothing cleared - figure with index " + id + " does not exist.");
     }
@@ -139,20 +141,19 @@ public class MPlot {
     public int close (int id) {
 
         // to be sure check if index is smaller then highest possible index and check if we have objects at all... this might be redundant though
-        if ((id <= currentFigureIndex) && (grootHandle.groot.size() > 0))  {
+        if ((id <= currentFigureIndex) && (grootHandle.size() > 0))  {
             // lets search if we find the object to delete if not simple error output
             int indexHandle = grootHandle.getIdToIndex(id);
             if ( indexHandle > -1 ) { // > -1 means we found the element
 
-                grootHandle.closeFigureWithIndex(indexHandle);
-                grootHandle.figureIndexList.remove(new Integer(id)); // ToDo: Outsorce into GrootManager
+                grootHandle.closeFigureWithIndex(id, indexHandle);
 
                 // We have to reset both indices, set active as the newester and current as the highest if changed
                 if(id == activeFigureIndex)  activeFigureIndex  = grootHandle.getNewestIndex();
                 if(id == currentFigureIndex) currentFigureIndex = grootHandle.getHighestIndex();
 
                 System.out.println("Figure with index " + id + " deleted. activeFigureIndex: " + activeFigureIndex + ", currentFigureIndex:" + currentFigureIndex);
-                grootHandle.printGrootList();
+                grootHandle.printGRootList();
 
                 return 1;
             } else return 0;
@@ -171,7 +172,7 @@ public class MPlot {
             activeFigureIndex = currentFigureIndex = -1;
 
             System.out.println("All figures deleted. activeFigureIndex: " + activeFigureIndex + ", currentFigureIndex:" + currentFigureIndex);
-            grootHandle.printGrootList();
+            grootHandle.printGRootList();
 
             return 1;
         } else return 0;

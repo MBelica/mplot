@@ -5,7 +5,7 @@ import java.awt.*;
 import java.util.*;
 
 
-public class GrootManager {
+public class GRootManager {
 
 
 
@@ -13,8 +13,8 @@ public class GrootManager {
     protected ArrayList<ArrayList> groot = new ArrayList<ArrayList>(); // this is the new ArrayList it does not only contain the figures but also linked with each figure its identifier (id) and p.r.n the associated plots
 
 
-
-    protected void printGrootList () {
+    // Output whole GRoot pretty formatted
+    protected void printGRootList () {
 
         ListIterator<ArrayList> li = groot.listIterator();
         System.out.println("Current Figures (#"+ groot.size() +"):");
@@ -31,12 +31,19 @@ public class GrootManager {
         System.out.println();
     }
 
-    protected Figure getFigureToIndex (int index) {
+    // add Plot into GRoot under given ID, for now small but I think necessary if adding more than one plot into one figure
+    protected void addPlotToId (int id, Plot currentPlot) {
 
-        int id = getIdToIndex(index);
+        groot.get(id).add(currentPlot); //
+    }
+
+    // returns the figure to given id (remember id = position in groot and not the "handle"
+    protected Figure getFigureToId (int id) {
+
         return (Figure) groot.get(id).get(1);
     }
 
+    // clear a figure
     protected void clfFigureWithIndex (int index) {
 
         // Delete figure in this id
@@ -46,7 +53,8 @@ public class GrootManager {
         figureToCLF.getContentPane().repaint();
     }
 
-    protected void closeFigureWithIndex (int index) {
+    // close a figure I think that it not necessary to get both id and index => use getIdToIndex => ToDo
+    protected void closeFigureWithIndex (int id, int index) {
 
         // Delete figure in this id
         Figure figureToClose = (Figure) groot.get(index).get(1);
@@ -56,8 +64,10 @@ public class GrootManager {
         // Remove entry in ArrayList
         groot.remove(index);
         // As last we remove the entry in our book-keeping-list
+        figureIndexList.remove(new Integer(id));
     }
 
+    // close all active figures
     protected void closeAllFigures() {
 
         // shouldn't do this with a loop instead use javas listiterator
@@ -73,6 +83,7 @@ public class GrootManager {
         figureIndexList.clear(); // Remove all entries in our book-keeping-list
     }
 
+    // also simple method maybe superfluous...
     protected void addIndexIntoFIL(int index) {
 
         figureIndexList.add(index);
@@ -99,7 +110,14 @@ public class GrootManager {
         return index;
     }
 
-    protected int getNewestIndex() {
+    // get size of groot size I call it often O wanted to outsorce it
+    protected int size () {
+
+        return groot.size();
+    }
+
+    // get newest index for activeFigureIndex
+    protected int getNewestIndex () {
 
         int index;
 
@@ -110,6 +128,7 @@ public class GrootManager {
         return index;
     }
 
+    // get highest active index for currentFigureIndex
     protected int getHighestIndex () {
 
         int index;
