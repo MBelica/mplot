@@ -3,23 +3,25 @@ package edu.kit.math.mplot;
 
 import java.awt.*;
 import java.util.*;
-import java.awt.geom.GeneralPath;
 
 
 class Utilities {
 
+    MPlot superHandle;
 
-    private static final float SQRT2 = (float) Math.pow(2.0, 0.5);
+    protected Utilities (MPlot handleParameter) {
 
-
-    protected static void initSystem () {
-
-        MPlot.initialized         = true;
-        MPlot.activeFigureIndex   = -1;
-        MPlot.currentFigureIndex  = -1;
+        this.superHandle = handleParameter;
     }
 
-    protected static void printArrayList (ArrayList<ArrayList> array) {
+    protected void initSystem () {
+
+        superHandle.initialized        = true;
+        superHandle.activeFigureIndex  = -1;
+        superHandle.currentFigureIndex = -1;
+    }
+
+    protected void printArrayList (ArrayList<ArrayList> array) {
 
         ListIterator<ArrayList> li = array.listIterator();
         System.out.println("Current Figures (#"+ array.size() +"):");
@@ -36,41 +38,41 @@ class Utilities {
         System.out.println();
     }
 
-    protected static int getNewestIndex() {
+    protected int getNewestIndex() {
 
         int index;
 
-        if (MPlot.figureIndexList.size() > 0) {
-            index = (Integer) MPlot.figureIndexList.get( ( (Integer) MPlot.figureIndexList.size() ) - 1 );
+        if (superHandle.figureIndexList.size() > 0) {
+            index = (Integer) superHandle.figureIndexList.get( ( (Integer) superHandle.figureIndexList.size() ) - 1 );
         } else index = -1;
 
         return index;
     }
 
-    protected static int getHighestIndex () {
+    protected int getHighestIndex () {
 
         int index;
 
-        if (MPlot.figureIndexList.size() > 0) {
-            index = Collections.max(MPlot.figureIndexList);
+        if (superHandle.figureIndexList.size() > 0) {
+            index = Collections.max(superHandle.figureIndexList);
         } else index = -1;
 
         return index;
     }
 
     // check which index (position in ArrayList) has the figure with given id
-    protected static int idToIndex (int givenId) {
+    protected int idToIndex (int givenId) {
 
         int index = 0;
         if (isIndexInUse(givenId)) { // this line fixes bug occuring if givenId < currentIndex but not in use
 
-            int id = (Integer) MPlot.groot.get(index).get(0);
+            int id = (Integer) superHandle.groot.get(index).get(0);
             while (id != givenId) {
 
                 index++;
-                id = (Integer) MPlot.groot.get(index).get(0);
+                id = (Integer) superHandle.groot.get(index).get(0);
 
-                if (index >= MPlot.groot.size()) {
+                if (index >= superHandle.groot.size()) {
                     index = -1;
                     break;
                 }
@@ -80,84 +82,20 @@ class Utilities {
     }
 
     // Check if user has passed parameters or not, once for 'int' once for 'String'
-    protected static boolean isVarArgsSet (int... VarArgs) {
+    protected boolean isVarArgsSet (int... VarArgs) {
 
         if (VarArgs.length != 0) return true;
             else return false;
     }
-    protected static boolean isVarArgsSet (String... VarArgs) {
+    protected boolean isVarArgsSet (String... VarArgs) {
         if (VarArgs.length != 0) return true;
             else return false;
     }
 
     // Check if given index is associated with a figure
-    protected static boolean isIndexInUse (int id) {
-        if (MPlot.figureIndexList.indexOf(id) > -1) return true;
+    protected boolean isIndexInUse (int id) {
+        if (superHandle.figureIndexList.indexOf(id) > -1) return true;
             else return false;
-    }
-
-    // the next 3 methods draw shapes found in matlab, asterisk and plus still has to be written but do we really want this?
-    static Shape drawDiagonalCross (final float l, final float t) {
-
-        final GeneralPath p0 = new GeneralPath();
-
-        p0.moveTo(-l - t, -l + t);
-        p0.lineTo(-l + t, -l - t);
-        p0.lineTo(0.0f, -t * SQRT2);
-        p0.lineTo(l - t, -l - t);
-        p0.lineTo(l + t, -l + t);
-        p0.lineTo(t * SQRT2, 0.0f);
-        p0.lineTo(l + t, l - t);
-        p0.lineTo(l - t, l + t);
-        p0.lineTo(0.0f, t * SQRT2);
-        p0.lineTo(-l + t, l + t);
-        p0.lineTo(-l - t, l - t);
-        p0.lineTo(-t * SQRT2, 0.0f);
-        p0.closePath();
-
-        return p0;
-    }
-
-    static Shape drawAsterisk (final float l, final float t) {
-
-        final GeneralPath p0 = new GeneralPath();
-
-        p0.moveTo(-l - t, -l + t);
-        p0.lineTo(-l + t, -l - t);
-        p0.lineTo(0.0f, -t * SQRT2);
-        p0.lineTo(l - t, -l - t);
-        p0.lineTo(l + t, -l + t);
-        p0.lineTo(t * SQRT2, 0.0f);
-        p0.lineTo(l + t, l - t);
-        p0.lineTo(l - t, l + t);
-        p0.lineTo(0.0f, t * SQRT2);
-        p0.lineTo(-l + t, l + t);
-        p0.lineTo(-l - t, l - t);
-        p0.lineTo(-t * SQRT2, 0.0f);
-        p0.closePath();
-
-        return p0;
-    }
-
-    static Shape drawPlus (final float l, final float t) {
-
-        final GeneralPath p0 = new GeneralPath();
-
-        p0.moveTo(-l - t, -l + t);
-        p0.lineTo(-l + t, -l - t);
-        p0.lineTo(0.0f, -t * SQRT2);
-        p0.lineTo(l - t, -l - t);
-        p0.lineTo(l + t, -l + t);
-        p0.lineTo(t * SQRT2, 0.0f);
-        p0.lineTo(l + t, l - t);
-        p0.lineTo(l - t, l + t);
-        p0.lineTo(0.0f, t * SQRT2);
-        p0.lineTo(-l + t, l + t);
-        p0.lineTo(-l - t, l - t);
-        p0.lineTo(-t * SQRT2, 0.0f);
-        p0.closePath();
-
-        return p0;
     }
 }
 

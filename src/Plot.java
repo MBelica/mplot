@@ -10,13 +10,17 @@ import de.erichseifert.gral.plots.lines.DefaultLineRenderer2D;
 import de.erichseifert.gral.plots.lines.LineRenderer;
 import de.erichseifert.gral.plots.points.PointRenderer;
 import de.erichseifert.gral.ui.InteractivePanel;
+import java.awt.geom.GeneralPath;
+
+class Plot extends MPlot {
 
 
-class Plot {
+    private static final float SQRT2 = (float) Math.pow(2.0, 0.5);
 
     protected Color color;
     protected enum lineStyle  { solid, dashed, dashdot, dotted, plain }; protected lineStyle lStyle;
     protected enum markerStyle { point, plus, circle, asterisk, cross, dot }; protected markerStyle mStyle;
+
 
     Plot (DataTable data, Figure currentFigure, String args) {
 
@@ -75,7 +79,7 @@ class Plot {
                 pointRenderer.setColor(color);
                 break;
             case plus:
-                pointRenderer.setShape(Utilities.drawPlus(2, 1));
+                pointRenderer.setShape(drawPlus(2, 1));
                 pointRenderer.setColor(color);
                 break;
             case circle:
@@ -84,11 +88,11 @@ class Plot {
                 pointRenderer.setShape(circle);
                 break;
             case asterisk:
-                pointRenderer.setShape(Utilities.drawAsterisk(2, 1));
+                pointRenderer.setShape(drawAsterisk(2, 1));
                 pointRenderer.setColor(color);
                 break;
             case cross:
-                pointRenderer.setShape(Utilities.drawDiagonalCross(2, 1));
+                pointRenderer.setShape(drawDiagonalCross(2, 1));
                 pointRenderer.setColor(color);
                 break;
             case dot:
@@ -126,5 +130,69 @@ class Plot {
         else if (ls.indexOf("y") > -1) color = new Color (1.0f, 1.0f, 0.0f); // Yellow
         else if (ls.indexOf("w") > -1) color = new Color (1.0f, 1.0f, 1.0f); // White
         else  color = new Color (0.0f, 0.0f, 0.0f);  // Black (default)
+    }
+
+    // the next 3 methods draw shapes found in matlab, asterisk and plus still has to be written but do we really want this?
+    private static final Shape drawDiagonalCross (final float l, final float t) {
+
+        final GeneralPath p0 = new GeneralPath();
+
+        p0.moveTo(-l - t, -l + t);
+        p0.lineTo(-l + t, -l - t);
+        p0.lineTo(0.0f, -t * SQRT2);
+        p0.lineTo(l - t, -l - t);
+        p0.lineTo(l + t, -l + t);
+        p0.lineTo(t * SQRT2, 0.0f);
+        p0.lineTo(l + t, l - t);
+        p0.lineTo(l - t, l + t);
+        p0.lineTo(0.0f, t * SQRT2);
+        p0.lineTo(-l + t, l + t);
+        p0.lineTo(-l - t, l - t);
+        p0.lineTo(-t * SQRT2, 0.0f);
+        p0.closePath();
+
+        return p0;
+    }
+
+    private static final Shape drawAsterisk (final float l, final float t) {
+
+        final GeneralPath p0 = new GeneralPath();
+
+        p0.moveTo(-l - t, -l + t);
+        p0.lineTo(-l + t, -l - t);
+        p0.lineTo(0.0f, -t * SQRT2);
+        p0.lineTo(l - t, -l - t);
+        p0.lineTo(l + t, -l + t);
+        p0.lineTo(t * SQRT2, 0.0f);
+        p0.lineTo(l + t, l - t);
+        p0.lineTo(l - t, l + t);
+        p0.lineTo(0.0f, t * SQRT2);
+        p0.lineTo(-l + t, l + t);
+        p0.lineTo(-l - t, l - t);
+        p0.lineTo(-t * SQRT2, 0.0f);
+        p0.closePath();
+
+        return p0;
+    }
+
+    private static final Shape drawPlus (final float l, final float t) {
+
+        final GeneralPath p0 = new GeneralPath();
+
+        p0.moveTo(-l - t, -l + t);
+        p0.lineTo(-l + t, -l - t);
+        p0.lineTo(0.0f, -t * SQRT2);
+        p0.lineTo(l - t, -l - t);
+        p0.lineTo(l + t, -l + t);
+        p0.lineTo(t * SQRT2, 0.0f);
+        p0.lineTo(l + t, l - t);
+        p0.lineTo(l - t, l + t);
+        p0.lineTo(0.0f, t * SQRT2);
+        p0.lineTo(-l + t, l + t);
+        p0.lineTo(-l - t, l - t);
+        p0.lineTo(-t * SQRT2, 0.0f);
+        p0.closePath();
+
+        return p0;
     }
 }
