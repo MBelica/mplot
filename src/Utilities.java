@@ -3,7 +3,9 @@ package edu.kit.math.mplot;
 
 class Utilities {
 
+
     MPlot superHandle;
+
 
     protected Utilities (MPlot handleParameter) {
 
