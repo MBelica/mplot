@@ -6,13 +6,10 @@ import java.util.*;
 
 public class MPlot {
 
-
+    private GrootManager grootHandle;
     private Utilities utilitiesHandle;
 
     protected boolean initialized = false;
-
-    protected ArrayList<Integer> figureIndexList = new ArrayList<Integer>();   // this is my "book-keeping-list" I can quickly check how many figures are open, what ids are already assigned, which is the highest/newest index etc.
-    protected ArrayList<ArrayList> groot         = new ArrayList<ArrayList>(); // this is the new ArrayList it does not only contain the figures but also linked with each figure its identifier (id) and p.r.n the associated plots
 
     protected int activeFigureIndex;  // index of active figure
     protected int currentFigureIndex; // highest index of all
@@ -23,118 +20,145 @@ public class MPlot {
         if (!initialized) {
 
             utilitiesHandle = new Utilities(this);
+            grootHandle     = new GrootManager();
+
             utilitiesHandle.initSystem();
         }
     }
 
-    public int figure (int... indexVarArgs) {
+    /****
+     *
+     * @param indexVarArgs
+     * @return
+     */
+    public int figure () {
 
-        if ( utilitiesHandle.isVarArgsSet(indexVarArgs) && utilitiesHandle.isIndexInUse(indexVarArgs[0])) { // user wants to set a figure as active since index-parameter is given but is already assigned
+        activeFigureIndex = ++currentFigureIndex;
+        return figure(activeFigureIndex);
+    }
 
-            int tempIndex     = (Integer) indexVarArgs[0];
-            Figure tempFigure = (Figure)  groot.get( utilitiesHandle.idToIndex(tempIndex) ).get(1);
+    public int figure (int index) {
 
-            activeFigureIndex = tempIndex; // set index active
+        if (grootHandle.isIndexInUse(index)) { // user wants to set a figure active
+
+
+            Figure tempFigure = (Figure)  grootHandle.getFigureToIndex(index);
+
+            activeFigureIndex = index; // set index active
             tempFigure.toFront(); // place in front
             tempFigure.repaint();
 
-            System.out.println("Figure " + tempIndex + " set active. activeFigureIndex: "+ activeFigureIndex + ", currentFigureIndex: " + currentFigureIndex);
+            System.out.println("Figure " + index + " set active. activeFigureIndex: "+ activeFigureIndex + ", currentFigureIndex: " + currentFigureIndex);
         }
         else{ // user wants to create new figure
-            // check if index-parameter has been passed and act appropriately
-            if (indexVarArgs.length == 0) activeFigureIndex = ++currentFigureIndex; // no index given => currentFigureIndex is highest index existent therefore neww index will be currentFigureIndex + 1
-             else if (indexVarArgs[0] >= currentFigureIndex) currentFigureIndex = activeFigureIndex = indexVarArgs[0]; // in case that the index is higher then everything else set active&currentFigureIndex = index
-             else activeFigureIndex = indexVarArgs[0]; // user gave us an and really wants to create a new figure, set index as active
+
+            activeFigureIndex = index;
+            if (index > currentFigureIndex) currentFigureIndex =  activeFigureIndex;
 
             // for book-keeping take a note that we created a new figure and then create & add elements into our groot
-            figureIndexList.add(activeFigureIndex);
+            grootHandle.addIndexIntoFIL(activeFigureIndex);
             Figure newFigure = new Figure();
             ArrayList tempArrayList = new ArrayList();
                 tempArrayList.add(currentFigureIndex);
                 tempArrayList.add(newFigure);
-            groot.add(tempArrayList);
+            grootHandle.groot.add(tempArrayList);
 
             System.out.println("New figure with index " + String.valueOf(activeFigureIndex) + " created. activeFigureIndex: " + activeFigureIndex + ", currentFigureIndex: " + currentFigureIndex);
-            utilitiesHandle.printArrayList(groot);
+            grootHandle.printGrootList();
         }
 
         return activeFigureIndex;
     }
 
-    public void plot (double[] x, double[] y, String... linespecVarArgs) {
 
-        String linespec;
-        if (!utilitiesHandle.isVarArgsSet(linespecVarArgs)) {
-            linespec = "";
-        } else linespec = linespecVarArgs[0];
 
-        // Check under all created objects whose index contains the activeFigureIndex and therefore also the figure we want to plot in
-        int indexHandle = utilitiesHandle.idToIndex(activeFigureIndex);
-        if ( indexHandle > -1 ) { // if we've found an index (entry in groot) we are going to plot
-
-            Figure currentFigure = (Figure) groot.get(indexHandle).get(1);
-            groot.get(indexHandle).add(new Plot(Data.dress(x, y), currentFigure, linespec)); // add plot into groot under the figure
-
-            System.out.println("New plot created and associated with figure " + indexHandle +". activeFigureIndex: " + activeFigureIndex + ", currentFigureIndex: " + currentFigureIndex);
-        } else if (indexHandle == (groot.size()-1)) System.out.println("Error! No figure for activeFigureIndex found.");
-
-        utilitiesHandle.printArrayList(groot);
+    /****
+     *  Plot: plot x, y into active figure. If no linespec is given use standards = ""
+     */
+    public void plot (double[] x, double[] y) {
+        plot (x, y, "");
     }
 
-    public void clf (int... idVarArgs) {
+    public void plot (double[] x, double[] y, String linespec) {
 
-        int id;
-        if (!utilitiesHandle.isVarArgsSet(idVarArgs)) { // if none is given clf active figure
-            id = activeFigureIndex;
-        } else id = idVarArgs[0];
+        // Check under all created objects whose index contains the activeFigureIndex and therefore also the figure we want to plot in
+        int indexHandle = grootHandle.idToIndex(activeFigureIndex);
+        if ( indexHandle > -1 ) { // if we've found an index (entry in groot) we are going to plot
 
-        // to be sure check if index is smaller then highest possible index and check if we have objects at all
-        if ((id <= currentFigureIndex) && (groot.size() > 0))  {
+            // ToDo: Resolve grootHandle.groot
+            Figure currentFigure = (Figure) grootHandle.groot.get(indexHandle).get(1);
+            grootHandle.groot.get(indexHandle).add(new Plot(Data.dress(x, y), currentFigure, linespec)); // add plot into groot under the figure
+
+            System.out.println("New plot created and associated with figure " + indexHandle +". activeFigureIndex: " + activeFigureIndex + ", currentFigureIndex: " + currentFigureIndex);
+        } else if (indexHandle == (grootHandle.groot.size()-1)) System.out.println("Error! No figure for activeFigureIndex found.");
+
+        grootHandle.printGrootList();
+    }
+
+
+
+    /****
+     *  Clf: clear a figure, i.e. removing all plots inside etc, without parameter clf active else clf given
+     */
+    public void clf () {
+
+        clf (activeFigureIndex);
+    }
+
+    public void clf (int id) {
+
+        if ((id <= currentFigureIndex) && (grootHandle.groot.size() > 0))  {  // to be sure check if index is smaller then highest possible index and check if we have objects at all
             // lets search if we find the object to clear
-            int indexHandle = utilitiesHandle.idToIndex(id);
+            int indexHandle = grootHandle.idToIndex(id);
             if ( indexHandle > -1 ) { // > -1 means we found the element
 
                 // Delete figure in this id
-                Figure figureToCLF = (Figure) groot.get(indexHandle).get(1);
+                Figure figureToCLF = (Figure) grootHandle.groot.get(indexHandle).get(1);
                 figureToCLF.getContentPane().removeAll();
                 figureToCLF.getContentPane().revalidate();
                 figureToCLF.getContentPane().repaint();
 
                 System.out.println("Figure with index " + id + " cleared. activeFigureIndex: " + activeFigureIndex + ", currentFigureIndex:" + currentFigureIndex);
-                utilitiesHandle.printArrayList(groot);
+                grootHandle.printGrootList();
             } else System.out.println("Error! Nothing cleared - figure with index " + id + " does not exist.");
         } else System.out.println("Error! Nothing cleared - figure with index " + id + " does not exist.");
     }
 
-    public int close (int... idVarArgs) { // since first confused clf and close here is the real close function
 
-        int id;
-        if (!utilitiesHandle.isVarArgsSet(idVarArgs)) { // if no parameter is given close active figure
-            id = activeFigureIndex;
-        } else id = idVarArgs[0];
+
+    /****
+     *  Close: closing the figure, either with id to close, without which will close active or with string "all" to close all figures
+     * @return 1 if close successful , 0 if not
+     */
+    public int close () {
+
+        return close(activeFigureIndex);
+    }
+
+    public int close (int id) {
 
         // to be sure check if index is smaller then highest possible index and check if we have objects at all
-        if ((id <= currentFigureIndex) && (groot.size() > 0))  {
+        if ((id <= currentFigureIndex) && (grootHandle.groot.size() > 0))  {
             // lets search if we find the object to delete if not simple error output
-            int indexHandle = utilitiesHandle.idToIndex(id);
+            int indexHandle = grootHandle.idToIndex(id);
             if ( indexHandle > -1 ) {
 
                 // Delete figure in this id
-                Figure figureToClose = (Figure) groot.get(indexHandle).get(1);
+                Figure figureToClose = (Figure) grootHandle.groot.get(indexHandle).get(1);
                 figureToClose.setVisible(false);
                 figureToClose.dispose();
                 // Plots are going to be deleted by javas garbage-collector
                 // Remove entry in ArrayList
-                groot.remove(indexHandle);
+                grootHandle.groot.remove(indexHandle);
                 // As last we remove the entry in our book-keeping-list
-                figureIndexList.remove(new Integer(id));
+                grootHandle.figureIndexList.remove(new Integer(id));
 
                 // We have to reset both indices, set active as the newester and current as the highest if changed
-                if(id == activeFigureIndex)  activeFigureIndex  = utilitiesHandle.getNewestIndex();
-                if(id == currentFigureIndex) currentFigureIndex = utilitiesHandle.getHighestIndex();
+                if(id == activeFigureIndex)  activeFigureIndex  = grootHandle.getNewestIndex();
+                if(id == currentFigureIndex) currentFigureIndex = grootHandle.getHighestIndex();
 
                 System.out.println("Figure with index " + id + " deleted. activeFigureIndex: " + activeFigureIndex + ", currentFigureIndex:" + currentFigureIndex);
-                utilitiesHandle.printArrayList(groot);
+                grootHandle.printGrootList();
                 return 1;
             } else return 0;
         } else {
@@ -143,27 +167,27 @@ public class MPlot {
             return 0;
         }
     }
+
     public int close (String param) { // overload close method for the possibility to close all
 
         if (param == "all") {
 
             // shouldn't do this with a loop instead use javas listiterator
-            for (int indexHandle = 0; indexHandle < groot.size(); indexHandle++) {
+            for (int indexHandle = 0; indexHandle < grootHandle.groot.size(); indexHandle++) {
                 // Delete figure in this id
-                Figure figureToClose = (Figure) groot.get(indexHandle).get(1);
+                Figure figureToClose = (Figure) grootHandle.groot.get(indexHandle).get(1);
                 figureToClose.setVisible(false);
                 figureToClose.dispose();
                 // Plots are going to be deleted by javas garbage-collector
             }
 
-            //  reset both indices
             activeFigureIndex = currentFigureIndex = -1;
 
-            groot.clear(); // Remove all entries in ArrayList
-            figureIndexList.clear(); // Remove all entries in our book-keeping-list
+            grootHandle.groot.clear(); // Remove all entries in ArrayList
+            grootHandle.figureIndexList.clear(); // Remove all entries in our book-keeping-list
 
             System.out.println("All figures deleted. activeFigureIndex: " + activeFigureIndex + ", currentFigureIndex:" + currentFigureIndex);
-            utilitiesHandle.printArrayList(groot);
+            grootHandle.printGrootList();
 
             return 1;
         } else return 0;
