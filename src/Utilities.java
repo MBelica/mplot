@@ -62,19 +62,20 @@ class Utilities {
     protected static int idToIndex (int givenId) {
 
         int index = 0;
-        int id = (Integer) MPlot.objectList.get(index).get(0);
+        if (isIndexInUse(givenId)) { // this line fixes bug occuring if givenId < currentIndex but not in use
 
-        while (id != givenId ) {
+            int id = (Integer) MPlot.groot.get(index).get(0);
+            while (id != givenId) {
 
-            index++;
-            id = (Integer) MPlot.objectList.get(index).get(0);
+                index++;
+                id = (Integer) MPlot.groot.get(index).get(0);
 
-            if ( index >= MPlot.objectList.size() ) {
-                index = -1;
-                break;
+                if (index >= MPlot.groot.size()) {
+                    index = -1;
+                    break;
+                }
             }
-        }
-
+        } else index = -1;
         return index;
     }
 
