@@ -5,20 +5,21 @@ import java.awt.*;
 import java.util.*;
 
 
-public class GRootManager { // ToDo: sort and clean this file
+class GRootManager { // ToDo: sort and clean this file
 
 
 
-    protected ArrayList<Integer> figureIndexList = new ArrayList<Integer>();   // this is my "book-keeping-list" I can quickly check how many figures are open, what ids are already assigned, which is the highest/newest index etc.
+    private ArrayList<Integer> figureIndexList = new ArrayList<Integer>();   // this is my "book-keeping-list" I can quickly check how many figures are open, what ids are already assigned, which is the highest/newest index etc.
     protected ArrayList<ArrayList> groot = new ArrayList<ArrayList>(); // this is the new ArrayList it does not only contain the figures but also linked with each figure its identifier (id) and p.r.n the associated plots
 
 
 
     // add new Figure and add entry into our figureIndexList
-    protected void addNewFigureIntoGRoot (int id, Figure paramFigure) {
+    protected void addNewFigureIntoGRoot (int id, String tag, Figure paramFigure) {
 
         ArrayList tempArrayList = new ArrayList();
         tempArrayList.add(id);
+        tempArrayList.add(tag);
         tempArrayList.add(paramFigure);
 
         figureIndexList.add(id);
@@ -35,7 +36,7 @@ public class GRootManager { // ToDo: sort and clean this file
     protected void clfFigureWithIndex (int index) {
 
         // Delete figure in this id
-        Figure figureToCLF = (Figure) groot.get(index).get(1);
+        Figure figureToCLF = (Figure) groot.get(index).get(2);
         figureToCLF.getContentPane().removeAll();
         figureToCLF.getContentPane().revalidate();
         figureToCLF.getContentPane().repaint();
@@ -45,7 +46,7 @@ public class GRootManager { // ToDo: sort and clean this file
     protected void closeFigureWithIndex (int id, int index) {
 
         // Delete figure in this id
-        Figure figureToClose = (Figure) groot.get(index).get(1);
+        Figure figureToClose = (Figure) groot.get(index).get(2);
         figureToClose.setVisible(false);
         figureToClose.dispose();
         // Plots are going to be deleted by javas garbage-collector
@@ -61,7 +62,7 @@ public class GRootManager { // ToDo: sort and clean this file
         // shouldn't do this with a loop instead use javas listiterator
         for (int index = 0; index < groot.size(); index++) {
             // Delete figure in this id
-            Figure figureToClose = (Figure) groot.get(index).get(1);
+            Figure figureToClose = (Figure) groot.get(index).get(2);
             figureToClose.setVisible(false);
             figureToClose.dispose();
             // Plots are going to be deleted by javas garbage-collector
@@ -80,7 +81,34 @@ public class GRootManager { // ToDo: sort and clean this file
     // returns the figure to given id (remember id = position in groot and not the "handle"
     protected Figure getFigureToIndex (int index) {
 
-        return (Figure) groot.get(index).get(1);
+        return (Figure) groot.get(index).get(2);
+    }
+
+    // ToDo !
+    protected int getIdToTag(String givenTag) {
+
+        if ( (givenTag != "") && (groot.size() > 0) ) {
+
+            int id = 0;
+            int index = 0;
+
+            String tag = (String) groot.get(index).get(1);
+            while (tag != givenTag) { // ToDo: replace with do while
+
+                index++;
+                if (index >= groot.size()) {
+                    id = -1;
+                    break;
+                }
+                tag = (String) groot.get(index).get(1);
+            }
+
+            if (id > -1) {
+                id = (Integer) groot.get(index).get(0);
+            }
+
+            return id;
+        } else return -1;
     }
 
     // check which index (position in ArrayList) has the figure with given id
@@ -142,7 +170,11 @@ public class GRootManager { // ToDo: sort and clean this file
         while(li.hasNext()) {
 
             ArrayList content = li.next();
-            System.out.println("   - Figure with index " + content.get(0) + ": " + content.get(1));
+
+            System.out.print("   - Figure with index " + content.get(0));
+            if (content.get(1) != "") System.out.print(" and tag '"+ content.get(1) +"'");
+            System.out.print(": " + content.get(2) + "\n");
+
             if (content.size() > 2) {
                 System.out.println("     Associated plots:");
                 for (int i = 2; i < content.size(); i++) System.out.println("        * " + content.get(i));

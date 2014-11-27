@@ -51,16 +51,17 @@ public class MPlot {
         return figure(id, "");
     }
 
-    public String figure (String name) { // das hier habe ich neu erstellt, da dies auch in matlab möglich ist, vor allem sind einige der punkte bei figure(property) eben auf diesen name handle bezogen
+    public String figure (String tag) { // das hier habe ich neu erstellt, da dies auch in matlab möglich ist, vor allem sind einige der punkte bei figure(property) eben auf diesen name handle bezogen
 
-        activeFigureId = ++currentFigureId;
-        figure(activeFigureId, name);
-        return name;
+        if (groot.getIdToTag(tag) > -1) activeFigureId = groot.getIdToTag(tag);
+            else activeFigureId = ++currentFigureId;
+
+        figure(activeFigureId, tag);
+
+        return tag;
     }
 
-    public int figure (int id, String name) {
-
-        // Todo: implement name parameter... add into groot, add into outputs, shifts etc...
+    public int figure (int id, String tag) {
 
         if (groot.isIdInUse(id)) { // user wants to set a figure active
 
@@ -72,10 +73,10 @@ public class MPlot {
 
             if (id > currentFigureId) currentFigureId =  id;
 
-            Figure newFigure = new Figure();
-            groot.addNewFigureIntoGRoot(id, newFigure);
+            Figure newFigure = new Figure(id, tag);
+            groot.addNewFigureIntoGRoot(id, tag, newFigure);
 
-            if (debug) System.out.println("New figure with index " + String.valueOf(id) + " created. activeFigureId: " + activeFigureId + ", currentFigureId: " + currentFigureId);
+            if (debug) System.out.print("New figure with index " + String.valueOf(id) + " created. activeFigureId: " + activeFigureId + ", currentFigureId: " + currentFigureId);
             if (debug) groot.printGRootList();
         }
 
@@ -86,8 +87,8 @@ public class MPlot {
 
         activeFigureId = ++currentFigureId;
 
-        Figure newFigure = new Figure(propertyVarArgs);
-        groot.addNewFigureIntoGRoot(activeFigureId, newFigure);
+        Figure newFigure = new Figure(activeFigureId, propertyVarArgs);
+        groot.addNewFigureIntoGRoot(activeFigureId, newFigure.name, newFigure);
 
         if (debug) System.out.println("New figure with index " + String.valueOf(activeFigureId) + " created. activeFigureId: " + activeFigureId + ", currentFigureId: " + currentFigureId);
         if (debug) groot.printGRootList();
