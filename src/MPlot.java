@@ -11,14 +11,14 @@ public class MPlot {
     static final boolean debug = true;
 
 
-    private GRootManager grootHandle;
+    private GRootManager groot;
     private Utilities utilitiesHandle;
 
 
     protected boolean initialized = false;
 
-    protected int activeFigureIndex;  // index of active figure
-    protected int currentFigureIndex; // highest index of all
+    protected int activeFigureId;  // contains id of active figure
+    protected int currentFigureId; // contains highest id of all existent figures
 
 
 
@@ -26,8 +26,8 @@ public class MPlot {
 
         if (!initialized) {
 
+            groot           = new GRootManager();
             utilitiesHandle = new Utilities(this);
-            grootHandle     = new GRootManager();
 
             utilitiesHandle.initSystem();
         }
@@ -41,45 +41,58 @@ public class MPlot {
      */
     public int figure () {
 
-        activeFigureIndex = ++currentFigureIndex;
-        return figure(activeFigureIndex);
+        activeFigureId = ++currentFigureId;
+        return figure(activeFigureId, "");
     }
 
-    public int figure (int index) { // ToDo: Clean figure!
+    public int figure (int id) {
 
-        if (grootHandle.isIndexInUse(index)) { // user wants to set a figure active
+        activeFigureId = id;
+        return figure(id, "");
+    }
 
-            activeFigureIndex = index; // set index active
-            grootHandle.setFigureActive(index);
+    public String figure (String name) { // das hier habe ich neu erstellt, da dies auch in matlab möglich ist, vor allem sind einige der punkte bei figure(property) eben auf diesen name handle bezogen
 
-            if (debug) System.out.println("Figure " + index + " set active. activeFigureIndex: "+ activeFigureIndex + ", currentFigureIndex: " + currentFigureIndex);
+        activeFigureId = ++currentFigureId;
+        figure(activeFigureId, name);
+        return name;
+    }
+
+    public int figure (int id, String name) {
+
+        // Todo: implement name parameter... add into groot, add into outputs, shifts etc...
+
+        if (groot.isIdInUse(id)) { // user wants to set a figure active
+
+            groot.setFigureActive(id);
+
+            if (debug) System.out.println("Figure " + id + " set active. activeFigureId: "+ activeFigureId + ", currentFigureId: " + currentFigureId);
         }
         else{ // user wants to create new figure
 
-            activeFigureIndex = index;
-            if (index > currentFigureIndex) currentFigureIndex =  activeFigureIndex;
+            if (id > currentFigureId) currentFigureId =  id;
 
             Figure newFigure = new Figure();
-            grootHandle.addNewFigureIntoGRoot(index, newFigure);
+            groot.addNewFigureIntoGRoot(id, newFigure);
 
-            if (debug) System.out.println("New figure with index " + String.valueOf(activeFigureIndex) + " created. activeFigureIndex: " + activeFigureIndex + ", currentFigureIndex: " + currentFigureIndex);
-            if (debug) grootHandle.printGRootList();
+            if (debug) System.out.println("New figure with index " + String.valueOf(id) + " created. activeFigureId: " + activeFigureId + ", currentFigureId: " + currentFigureId);
+            if (debug) groot.printGRootList();
         }
 
-        return activeFigureIndex;
+        return activeFigureId;
     }
 
     public int figure (String... propertyVarArgs) {
 
-        activeFigureIndex = ++currentFigureIndex;
+        activeFigureId = ++currentFigureId;
 
-        Figure newFigure = new Figure("a", "b", "c", "d");
-        grootHandle.addNewFigureIntoGRoot(activeFigureIndex, newFigure);
+        Figure newFigure = new Figure(propertyVarArgs);
+        groot.addNewFigureIntoGRoot(activeFigureId, newFigure);
 
-        if (debug) System.out.println("New figure with index " + String.valueOf(activeFigureIndex) + " created. activeFigureIndex: " + activeFigureIndex + ", currentFigureIndex: " + currentFigureIndex);
-        if (debug) grootHandle.printGRootList();
+        if (debug) System.out.println("New figure with index " + String.valueOf(activeFigureId) + " created. activeFigureId: " + activeFigureId + ", currentFigureId: " + currentFigureId);
+        if (debug) groot.printGRootList();
 
-        return activeFigureIndex;
+        return activeFigureId;
     }
 
 
@@ -94,17 +107,17 @@ public class MPlot {
 
     public void plot (double[] x, double[] y, String linespec) {
 
-        // Check under all created objects whose index contains the activeFigureIndex and therefore also the figure we want to plot in
-        int id = grootHandle.getIdToIndex(activeFigureIndex);
-        if ( id > -1 ) { // if we've found an index (entry in groot) we are going to plot
+        // Check under all created objects whose index contains the activeFigureId and therefore also the figure we want to plot in
+        int index = groot.getIndexToId(activeFigureId);
+        if ( index > -1 ) { // if we've found an index (entry in groot) we are going to plot
 
-            Plot newPlot = new Plot(Data.dress(x, y), grootHandle.getFigureToId(id), linespec);
-            grootHandle.addPlotToGRoot(id, newPlot);
+            Plot newPlot = new Plot(Data.dress(x, y), groot.getFigureToIndex(index), linespec);
+            groot.addPlotToGRoot(index, newPlot);
 
-            if (debug) System.out.println("New plot created and associated with figure " + activeFigureIndex +". activeFigureIndex: " + activeFigureIndex + ", currentFigureIndex: " + currentFigureIndex);
-        } else if (id == (grootHandle.size()-1)) System.out.println("Error! No figure for activeFigureIndex found.");
+            if (debug) System.out.println("New plot created and associated with figure " + activeFigureId +". activeFigureId: " + activeFigureId + ", currentFigureId: " + currentFigureId);
+        } else if (index == (groot.size()-1)) System.out.println("Error! No figure for activeFigureId found.");
 
-        if (debug) grootHandle.printGRootList();
+        if (debug) groot.printGRootList();
     }
 
 
@@ -114,20 +127,20 @@ public class MPlot {
      */
     public void clf () {
 
-        clf (activeFigureIndex);
+        clf (activeFigureId);
     }
 
     public void clf (int id) {
 
-        if ((id <= currentFigureIndex) && (grootHandle.size() > 0))  {  // to be sure check if index is smaller then highest possible index and check if we have objects at all
+        if ((id <= currentFigureId) && (groot.size() > 0))  {  // to be sure check if index is smaller then highest possible index and check if we have objects at all
             // lets search if we find the object to clear
-            int indexHandle = grootHandle.getIdToIndex(id);
+            int indexHandle = groot.getIndexToId (id);
             if ( indexHandle > -1 ) { // > -1 means we found the element
 
-                grootHandle.clfFigureWithIndex(indexHandle);
+                groot.clfFigureWithIndex(indexHandle);
 
-                if (debug) System.out.println("Figure with index " + id + " cleared. activeFigureIndex: " + activeFigureIndex + ", currentFigureIndex:" + currentFigureIndex);
-                if (debug) grootHandle.printGRootList();
+                if (debug) System.out.println("Figure with index " + id + " cleared. activeFigureId: " + activeFigureId + ", currentFigureId:" + currentFigureId);
+                if (debug) groot.printGRootList();
             } else System.out.println("Error! Nothing cleared - figure with index " + id + " does not exist.");
         } else System.out.println("Error! Nothing cleared - figure with index " + id + " does not exist.");
     }
@@ -140,25 +153,25 @@ public class MPlot {
      */
     public int close () {
 
-        return close(activeFigureIndex);
+        return close(activeFigureId);
     }
 
     public int close (int id) {
 
         // to be sure check if index is smaller then highest possible index and check if we have objects at all... this might be redundant though
-        if ((id <= currentFigureIndex) && (grootHandle.size() > 0))  {
+        if ((id <= currentFigureId) && (groot.size() > 0))  {
             // lets search if we find the object to delete if not simple error output
-            int indexHandle = grootHandle.getIdToIndex(id);
-            if ( indexHandle > -1 ) { // > -1 means we found the element
+            int index = groot.getIndexToId(id);
+            if ( index > -1 ) { // > -1 means we found the element
 
-                grootHandle.closeFigureWithIndex(id, indexHandle);
+                groot.closeFigureWithIndex(id, index);
 
                 // We have to reset both indices, set active as the newester and current as the highest if changed
-                if(id == activeFigureIndex)  activeFigureIndex  = grootHandle.getNewestIndex();
-                if(id == currentFigureIndex) currentFigureIndex = grootHandle.getHighestIndex();
+                if(id == activeFigureId)  activeFigureId  = groot.getNewestId();
+                if(id == currentFigureId) currentFigureId = groot.getHighestId();
 
-                if (debug) System.out.println("Figure with index " + id + " deleted. activeFigureIndex: " + activeFigureIndex + ", currentFigureIndex:" + currentFigureIndex);
-                if (debug) grootHandle.printGRootList();
+                if (debug) System.out.println("Figure with index " + id + " deleted. activeFigureId: " + activeFigureId + ", currentFigureId:" + currentFigureId);
+                if (debug) groot.printGRootList();
 
                 return 1;
             } else return 0;
@@ -173,11 +186,11 @@ public class MPlot {
 
         if (param == "all") {
 
-            grootHandle.closeAllFigures();
-            activeFigureIndex = currentFigureIndex = -1;
+            groot.closeAllFigures();
+            activeFigureId = currentFigureId = -1;
 
-            if (debug) System.out.println("All figures deleted. activeFigureIndex: " + activeFigureIndex + ", currentFigureIndex:" + currentFigureIndex);
-            if (debug) grootHandle.printGRootList();
+            if (debug) System.out.println("All figures deleted. activeFigureId: " + activeFigureId + ", currentFigureId:" + currentFigureId);
+            if (debug) groot.printGRootList();
 
             return 1;
         } else return 0;

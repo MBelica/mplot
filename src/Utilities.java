@@ -14,9 +14,9 @@ class Utilities {
 
     protected void initSystem () {
 
-        superHandle.initialized        = true;
-        superHandle.activeFigureIndex  = -1;
-        superHandle.currentFigureIndex = -1;
+        superHandle.initialized     = true;
+        superHandle.activeFigureId  = -1;
+        superHandle.currentFigureId = -1;
     }
 
 }

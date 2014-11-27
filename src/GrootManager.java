@@ -15,20 +15,20 @@ public class GRootManager { // ToDo: sort and clean this file
 
 
     // add new Figure and add entry into our figureIndexList
-    protected void addNewFigureIntoGRoot(int index, Figure paramFigure) {
+    protected void addNewFigureIntoGRoot (int id, Figure paramFigure) {
 
         ArrayList tempArrayList = new ArrayList();
-        tempArrayList.add(index);
+        tempArrayList.add(id);
         tempArrayList.add(paramFigure);
 
-        figureIndexList.add(index);
+        figureIndexList.add(id);
         groot.add(tempArrayList);
     }
 
     // add Plot into GRoot under given ID, for now small but I think necessary if adding more than one plot into one figure
-    protected void addPlotToGRoot (int id, Plot currentPlot) {
+    protected void addPlotToGRoot (int index, Plot currentPlot) {
 
-        groot.get(id).add(currentPlot);
+        groot.get(index).add(currentPlot);
     }
 
     // clear a figure
@@ -41,7 +41,7 @@ public class GRootManager { // ToDo: sort and clean this file
         figureToCLF.getContentPane().repaint();
     }
 
-    // close a figure I think that it not necessary to get both id and index => use getIdToIndex => ToDo
+    // ToDo close a figure I think that it not necessary to get both id and index => use getIdToIndex =>
     protected void closeFigureWithIndex (int id, int index) {
 
         // Delete figure in this id
@@ -52,16 +52,16 @@ public class GRootManager { // ToDo: sort and clean this file
         // Remove entry in ArrayList
         groot.remove(index);
         // As last we remove the entry in our book-keeping-list
-        figureIndexList.remove(new Integer(id));
+        figureIndexList.remove(new Integer(id)); // ToDo geht hier nicht auch einfach index anstatt new Integer(id)
     }
 
     // close all active figures
-    protected void closeAllFigures() {
+    protected void closeAllFigures () {
 
         // shouldn't do this with a loop instead use javas listiterator
-        for (int indexHandle = 0; indexHandle < groot.size(); indexHandle++) {
+        for (int index = 0; index < groot.size(); index++) {
             // Delete figure in this id
-            Figure figureToClose = (Figure) groot.get(indexHandle).get(1);
+            Figure figureToClose = (Figure) groot.get(index).get(1);
             figureToClose.setVisible(false);
             figureToClose.dispose();
             // Plots are going to be deleted by javas garbage-collector
@@ -72,22 +72,22 @@ public class GRootManager { // ToDo: sort and clean this file
     }
 
     // returns the figure to given id (remember id = position in groot and not the "handle"
-    protected Figure getFigureToIndex (int index) {
+    protected Figure getFigureToId (int id) {
 
-       return getFigureToId (getIdToIndex(index));
+       return getFigureToIndex (getIndexToId(id));
     }
 
     // returns the figure to given id (remember id = position in groot and not the "handle"
-    protected Figure getFigureToId (int id) {
+    protected Figure getFigureToIndex (int index) {
 
-        return (Figure) groot.get(id).get(1);
+        return (Figure) groot.get(index).get(1);
     }
 
     // check which index (position in ArrayList) has the figure with given id
-    protected int getIdToIndex (int givenId) {
+    protected int getIndexToId (int givenId) {
 
         int index = 0;
-        if (isIndexInUse(givenId)) { // this line fixes bug occuring if givenId < currentIndex but not in use
+        if (isIdInUse(givenId)) { // this line fixes bug occuring if givenId < currentIndex but not in use
 
             int id = (Integer) groot.get(index).get(0);
             while (id != givenId) {
@@ -104,32 +104,32 @@ public class GRootManager { // ToDo: sort and clean this file
         return index;
     }
 
-    // get highest active index for currentFigureIndex
-    protected int getHighestIndex () {
+    // get highest active index for currentFigureId
+    protected int getHighestId () {
 
-        int index;
+        int id;
 
         if (figureIndexList.size() > 0) {
-            index = Collections.max(figureIndexList);
-        } else index = -1;
+            id = Collections.max(figureIndexList);
+        } else id = -1;
 
-        return index;
+        return id;
     }
 
-    // get newest index for activeFigureIndex
-    protected int getNewestIndex () {
+    // get newest index for activeFigureId
+    protected int getNewestId () {
 
-        int index;
+        int id;
 
         if (figureIndexList.size() > 0) {
-            index = (Integer) figureIndexList.get( ( (Integer) figureIndexList.size() ) - 1 );
-        } else index = -1;
+            id = (Integer) figureIndexList.get( ( (Integer) figureIndexList.size() ) - 1 );
+        } else id = -1;
 
-        return index;
+        return id;
     }
 
     // Check if given index is associated with a figure
-    protected boolean isIndexInUse (int id) {
+    protected boolean isIdInUse (int id) {
         if (figureIndexList.indexOf(id) > -1) return true;
         else return false;
     }
@@ -153,7 +153,7 @@ public class GRootManager { // ToDo: sort and clean this file
     }
 
     // get figure with given index to front
-    protected void setFigureActive(int index) {
+    protected void setFigureActive (int index) {
 
         Figure tempFigure = getFigureToIndex(index);
         tempFigure.toFront(); // place in front
