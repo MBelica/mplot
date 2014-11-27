@@ -8,6 +8,9 @@ public class MPlot {
 
 
 
+    static final boolean debug = true;
+
+
     private GRootManager grootHandle;
     private Utilities utilitiesHandle;
 
@@ -42,35 +45,39 @@ public class MPlot {
         return figure(activeFigureIndex);
     }
 
-    public int figure (int index) {
+    public int figure (int index) { // ToDo: Clean figure!
 
         if (grootHandle.isIndexInUse(index)) { // user wants to set a figure active
 
-            int id = grootHandle.getIdToIndex(index);
-            Figure tempFigure = grootHandle.getFigureToId(id);
-
             activeFigureIndex = index; // set index active
-            tempFigure.toFront(); // place in front
-            tempFigure.repaint();
+            grootHandle.setFigureActive(index);
 
-            System.out.println("Figure " + index + " set active. activeFigureIndex: "+ activeFigureIndex + ", currentFigureIndex: " + currentFigureIndex);
+            if (debug) System.out.println("Figure " + index + " set active. activeFigureIndex: "+ activeFigureIndex + ", currentFigureIndex: " + currentFigureIndex);
         }
         else{ // user wants to create new figure
 
             activeFigureIndex = index;
             if (index > currentFigureIndex) currentFigureIndex =  activeFigureIndex;
 
-            // for book-keeping take a note that we created a new figure and then create & add elements into our groot
-            grootHandle.addIndexIntoFIL(activeFigureIndex);
             Figure newFigure = new Figure();
-            ArrayList tempArrayList = new ArrayList();
-                tempArrayList.add(currentFigureIndex);
-                tempArrayList.add(newFigure);
-            grootHandle.groot.add(tempArrayList); // ToDO: outsource into GRoot?
+            grootHandle.addNewFigureIntoGRoot(index, newFigure);
 
-            System.out.println("New figure with index " + String.valueOf(activeFigureIndex) + " created. activeFigureIndex: " + activeFigureIndex + ", currentFigureIndex: " + currentFigureIndex);
-            grootHandle.printGRootList();
+            if (debug) System.out.println("New figure with index " + String.valueOf(activeFigureIndex) + " created. activeFigureIndex: " + activeFigureIndex + ", currentFigureIndex: " + currentFigureIndex);
+            if (debug) grootHandle.printGRootList();
         }
+
+        return activeFigureIndex;
+    }
+
+    public int figure (String... propertyVarArgs) {
+
+        activeFigureIndex = ++currentFigureIndex;
+
+        Figure newFigure = new Figure("a", "b", "c", "d");
+        grootHandle.addNewFigureIntoGRoot(activeFigureIndex, newFigure);
+
+        if (debug) System.out.println("New figure with index " + String.valueOf(activeFigureIndex) + " created. activeFigureIndex: " + activeFigureIndex + ", currentFigureIndex: " + currentFigureIndex);
+        if (debug) grootHandle.printGRootList();
 
         return activeFigureIndex;
     }
@@ -91,15 +98,13 @@ public class MPlot {
         int id = grootHandle.getIdToIndex(activeFigureIndex);
         if ( id > -1 ) { // if we've found an index (entry in groot) we are going to plot
 
-            Figure currentFigure = grootHandle.getFigureToId(id);
-            Plot currentPlot     = new Plot(Data.dress(x, y), currentFigure, linespec);
+            Plot newPlot = new Plot(Data.dress(x, y), grootHandle.getFigureToId(id), linespec);
+            grootHandle.addPlotToGRoot(id, newPlot);
 
-            grootHandle.addPlotToId(id, currentPlot);
-
-            System.out.println("New plot created and associated with figure " + activeFigureIndex +". activeFigureIndex: " + activeFigureIndex + ", currentFigureIndex: " + currentFigureIndex);
+            if (debug) System.out.println("New plot created and associated with figure " + activeFigureIndex +". activeFigureIndex: " + activeFigureIndex + ", currentFigureIndex: " + currentFigureIndex);
         } else if (id == (grootHandle.size()-1)) System.out.println("Error! No figure for activeFigureIndex found.");
 
-        grootHandle.printGRootList();
+        if (debug) grootHandle.printGRootList();
     }
 
 
@@ -121,8 +126,8 @@ public class MPlot {
 
                 grootHandle.clfFigureWithIndex(indexHandle);
 
-                System.out.println("Figure with index " + id + " cleared. activeFigureIndex: " + activeFigureIndex + ", currentFigureIndex:" + currentFigureIndex);
-                grootHandle.printGRootList();
+                if (debug) System.out.println("Figure with index " + id + " cleared. activeFigureIndex: " + activeFigureIndex + ", currentFigureIndex:" + currentFigureIndex);
+                if (debug) grootHandle.printGRootList();
             } else System.out.println("Error! Nothing cleared - figure with index " + id + " does not exist.");
         } else System.out.println("Error! Nothing cleared - figure with index " + id + " does not exist.");
     }
@@ -152,8 +157,8 @@ public class MPlot {
                 if(id == activeFigureIndex)  activeFigureIndex  = grootHandle.getNewestIndex();
                 if(id == currentFigureIndex) currentFigureIndex = grootHandle.getHighestIndex();
 
-                System.out.println("Figure with index " + id + " deleted. activeFigureIndex: " + activeFigureIndex + ", currentFigureIndex:" + currentFigureIndex);
-                grootHandle.printGRootList();
+                if (debug) System.out.println("Figure with index " + id + " deleted. activeFigureIndex: " + activeFigureIndex + ", currentFigureIndex:" + currentFigureIndex);
+                if (debug) grootHandle.printGRootList();
 
                 return 1;
             } else return 0;
@@ -171,8 +176,8 @@ public class MPlot {
             grootHandle.closeAllFigures();
             activeFigureIndex = currentFigureIndex = -1;
 
-            System.out.println("All figures deleted. activeFigureIndex: " + activeFigureIndex + ", currentFigureIndex:" + currentFigureIndex);
-            grootHandle.printGRootList();
+            if (debug) System.out.println("All figures deleted. activeFigureIndex: " + activeFigureIndex + ", currentFigureIndex:" + currentFigureIndex);
+            if (debug) grootHandle.printGRootList();
 
             return 1;
         } else return 0;

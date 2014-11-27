@@ -5,7 +5,7 @@ import java.awt.*;
 import java.util.*;
 
 
-public class GRootManager {
+public class GRootManager { // ToDo: sort and clean this file
 
 
 
@@ -13,34 +13,22 @@ public class GRootManager {
     protected ArrayList<ArrayList> groot = new ArrayList<ArrayList>(); // this is the new ArrayList it does not only contain the figures but also linked with each figure its identifier (id) and p.r.n the associated plots
 
 
-    // Output whole GRoot pretty formatted
-    protected void printGRootList () {
 
-        ListIterator<ArrayList> li = groot.listIterator();
-        System.out.println("Current Figures (#"+ groot.size() +"):");
-        while(li.hasNext()) {
+    // add new Figure and add entry into our figureIndexList
+    protected void addNewFigureIntoGRoot(int index, Figure paramFigure) {
 
-            ArrayList content = li.next();
-            System.out.println("   - Figure with index " + content.get(0) + ": " + content.get(1));
-            if (content.size() > 2) {
-                System.out.println("     Associated plots:");
-                for (int i = 2; i < content.size(); i++) System.out.println("        * " + content.get(i));
-            } else System.out.println("     No plots associated");
-        }
+        ArrayList tempArrayList = new ArrayList();
+        tempArrayList.add(index);
+        tempArrayList.add(paramFigure);
 
-        System.out.println();
+        figureIndexList.add(index);
+        groot.add(tempArrayList);
     }
 
     // add Plot into GRoot under given ID, for now small but I think necessary if adding more than one plot into one figure
-    protected void addPlotToId (int id, Plot currentPlot) {
+    protected void addPlotToGRoot (int id, Plot currentPlot) {
 
-        groot.get(id).add(currentPlot); //
-    }
-
-    // returns the figure to given id (remember id = position in groot and not the "handle"
-    protected Figure getFigureToId (int id) {
-
-        return (Figure) groot.get(id).get(1);
+        groot.get(id).add(currentPlot);
     }
 
     // clear a figure
@@ -83,10 +71,16 @@ public class GRootManager {
         figureIndexList.clear(); // Remove all entries in our book-keeping-list
     }
 
-    // also simple method maybe superfluous...
-    protected void addIndexIntoFIL(int index) {
+    // returns the figure to given id (remember id = position in groot and not the "handle"
+    protected Figure getFigureToIndex (int index) {
 
-        figureIndexList.add(index);
+       return getFigureToId (getIdToIndex(index));
+    }
+
+    // returns the figure to given id (remember id = position in groot and not the "handle"
+    protected Figure getFigureToId (int id) {
+
+        return (Figure) groot.get(id).get(1);
     }
 
     // check which index (position in ArrayList) has the figure with given id
@@ -110,10 +104,16 @@ public class GRootManager {
         return index;
     }
 
-    // get size of groot size I call it often O wanted to outsorce it
-    protected int size () {
+    // get highest active index for currentFigureIndex
+    protected int getHighestIndex () {
 
-        return groot.size();
+        int index;
+
+        if (figureIndexList.size() > 0) {
+            index = Collections.max(figureIndexList);
+        } else index = -1;
+
+        return index;
     }
 
     // get newest index for activeFigureIndex
@@ -128,21 +128,41 @@ public class GRootManager {
         return index;
     }
 
-    // get highest active index for currentFigureIndex
-    protected int getHighestIndex () {
-
-        int index;
-
-        if (figureIndexList.size() > 0) {
-            index = Collections.max(figureIndexList);
-        } else index = -1;
-
-        return index;
-    }
-
     // Check if given index is associated with a figure
     protected boolean isIndexInUse (int id) {
         if (figureIndexList.indexOf(id) > -1) return true;
         else return false;
+    }
+
+    // Output whole GRoot pretty formatted
+    protected void printGRootList () {
+
+        ListIterator<ArrayList> li = groot.listIterator();
+        System.out.println("Current Figures (#"+ groot.size() +"):");
+        while(li.hasNext()) {
+
+            ArrayList content = li.next();
+            System.out.println("   - Figure with index " + content.get(0) + ": " + content.get(1));
+            if (content.size() > 2) {
+                System.out.println("     Associated plots:");
+                for (int i = 2; i < content.size(); i++) System.out.println("        * " + content.get(i));
+            } else System.out.println("     No plots associated");
+        }
+
+        System.out.println();
+    }
+
+    // get figure with given index to front
+    protected void setFigureActive(int index) {
+
+        Figure tempFigure = getFigureToIndex(index);
+        tempFigure.toFront(); // place in front
+        tempFigure.repaint();
+    }
+
+    // get size of groot size I call it often O wanted to outsorce it
+    protected int size () {
+
+        return groot.size();
     }
 }
