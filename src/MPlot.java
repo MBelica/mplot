@@ -3,6 +3,7 @@ package edu.kit.math.mplot;
 
 import java.util.*;
 
+// ToDO: Interface zur Aufteilung? Package Aufteilung? Fehlerbehebung was passiert wennn Plot aber kein Figure?
 
 public class MPlot {
 
@@ -61,7 +62,7 @@ public class MPlot {
         return tag;
     }
 
-    public int figure (int id, String tag) {
+   private int figure (int id, String tag) {
 
         if (groot.isIdInUse(id)) { // user wants to set a figure active
 

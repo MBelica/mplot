@@ -12,7 +12,7 @@ import de.erichseifert.gral.plots.points.PointRenderer;
 import de.erichseifert.gral.ui.InteractivePanel;
 import java.awt.geom.GeneralPath;
 
-class Plot extends MPlot {
+class Plot {
 
 
     private static final float SQRT2 = (float) Math.pow(2.0, 0.5);
