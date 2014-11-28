@@ -62,7 +62,7 @@ public class MPlot {
         return tag;
     }
 
-   private int figure (int id, String tag) {
+   public int figure (int id, String tag) {
 
         if (groot.isIdInUse(id)) { // user wants to set a figure active
 
@@ -74,8 +74,7 @@ public class MPlot {
 
             if (id > currentFigureId) currentFigureId =  id;
 
-            Figure newFigure = new Figure(id, tag);
-            groot.addNewFigureIntoGRoot(id, tag, newFigure);
+            groot.addNewFigureIntoGRoot(id, tag);
 
             if (debug) System.out.print("New figure with index " + String.valueOf(id) + " created. activeFigureId: " + activeFigureId + ", currentFigureId: " + currentFigureId);
             if (debug) groot.printGRootList();
@@ -87,9 +86,7 @@ public class MPlot {
     public int figure (String... propertyVarArgs) {
 
         activeFigureId = ++currentFigureId;
-
-        Figure newFigure = new Figure(activeFigureId, propertyVarArgs);
-        groot.addNewFigureIntoGRoot(activeFigureId, newFigure.name, newFigure);
+        groot.addNewFigureIntoGRoot(activeFigureId, "", propertyVarArgs);
 
         if (debug) System.out.println("New figure with index " + String.valueOf(activeFigureId) + " created. activeFigureId: " + activeFigureId + ", currentFigureId: " + currentFigureId);
         if (debug) groot.printGRootList();
@@ -113,11 +110,10 @@ public class MPlot {
         int index = groot.getIndexToId(activeFigureId);
         if ( index > -1 ) { // if we've found an index (entry in groot) we are going to plot
 
-            Plot newPlot = new Plot(Data.dress(x, y), groot.getFigureToIndex(index), linespec);
-            groot.addPlotToGRoot(index, newPlot);
+            groot.addPlotToGRoot(index, x, y, linespec);
 
             if (debug) System.out.println("New plot created and associated with figure " + activeFigureId +". activeFigureId: " + activeFigureId + ", currentFigureId: " + currentFigureId);
-        } else if (index == (groot.size()-1)) System.out.println("Error! No figure for activeFigureId found.");
+        } else if (index == (groot.size()-1)) System.out.println("Error! No figure created yet.");
 
         if (debug) groot.printGRootList();
     }
@@ -127,19 +123,26 @@ public class MPlot {
     /****
      *  Clf: clear a figure, i.e. removing all plots inside etc, without parameter clf active else clf given
      */
-    public void clf () {
+    public void clf (String... resetVarArgs) {
 
-        clf (activeFigureId);
+        clf (activeFigureId, resetVarArgs);
     }
 
-    public void clf (int id) {
+    public void clf (String tag, String... resetVarArgs) {
+
+        clf (groot.getIdToTag(tag), resetVarArgs);
+    }
+
+    public void clf (int id, String... resetVarArgs) {
 
         if ((id <= currentFigureId) && (groot.size() > 0))  {  // to be sure check if index is smaller then highest possible index and check if we have objects at all
             // lets search if we find the object to clear
             int indexHandle = groot.getIndexToId (id);
             if ( indexHandle > -1 ) { // > -1 means we found the element
 
-                groot.clfFigureWithIndex(indexHandle);
+                boolean reset = false;
+                if ( ( resetVarArgs.length > 0 ) && (resetVarArgs[0] == "reset") ) reset = true;
+                groot.clfFigureWithIndex(indexHandle, reset);
 
                 if (debug) System.out.println("Figure with index " + id + " cleared. activeFigureId: " + activeFigureId + ", currentFigureId:" + currentFigureId);
                 if (debug) groot.printGRootList();
@@ -159,7 +162,6 @@ public class MPlot {
     }
 
     public int close (int id) {
-
         // to be sure check if index is smaller then highest possible index and check if we have objects at all... this might be redundant though
         if ((id <= currentFigureId) && (groot.size() > 0))  {
             // lets search if we find the object to delete if not simple error output
@@ -177,12 +179,12 @@ public class MPlot {
 
                 return 1;
             } else return 0;
-        } else {
+    } else {
 
-            System.out.println("Error! Nothing closed - figure with index " + id + " does not exist.");
-            return 0;
-        }
+        System.out.println("Error! Nothing closed - figure with index " + id + " does not exist.");
+        return 0;
     }
+}
 
     public int close (String param) { // overload close method for the possibility to close all
 

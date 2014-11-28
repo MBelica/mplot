@@ -6,13 +6,21 @@ import java.awt.*;
 
 class Figure extends JFrame {
 
+    /**
+     *  Figure properties; for nor only figure appearance
+     *  I really don't know any better method than this...
+     *  Not (yet) possible or don't understand or not necessary now:
+     *      DockControls,  MenuBar, ToolBar, Clipping, GraphicsSmoothing, RendererMode, Alphamap, Colormap, Units, SizeChangedFcn, ResizeFcn, OuterPosition
+     **/
+
     protected int id = 0;
     protected String name = "";
 
-    // Loading matlabs default values of figure properties
-    protected boolean numberTitle = true,
-                      visible     = true;
-    protected enum BGColor { none, white }; protected BGColor bgcolor = BGColor.none;
+    //  matlabs figure properties
+    protected String position;
+    protected boolean numberTitle, visible, resize;
+    protected enum BGColor { none }; protected BGColor bgcolor;
+    protected enum Renderer { gral }; protected Renderer renderer;
 
     Figure (int id, String name) {
 
@@ -20,6 +28,7 @@ class Figure extends JFrame {
         this.id = id;
         this.name = name;
 
+        getDefaultProperties();
         setProperties ();
     }
 
@@ -28,11 +37,24 @@ class Figure extends JFrame {
         super();
         this.id = id;
 
+        getDefaultProperties();
         getProperties(propertyVarArgs);
         setProperties ();
     }
 
-    private void getProperties (String... propertyVarArgs) {
+    protected void getDefaultProperties () {
+
+        name = "";
+        position = "[20 20 600 400]";
+        numberTitle = true;
+        visible     = true;
+        resize      = true;
+        bgcolor     = BGColor.none;
+        renderer    = Renderer.gral;
+
+    }
+
+    protected void getProperties (String... propertyVarArgs) {
 
         if (propertyVarArgs.length > 1) {
 
@@ -41,17 +63,37 @@ class Figure extends JFrame {
                 String propertyValue = (String) propertyVarArgs[i];
 
                 switch (propertyName) {
-                    case "name":
-                        if (propertyValue != "") name = propertyValue; // ToDo: set name also in GRoot
-                        break;
-                    case "color":
+
+                    /** Figure Appearance **/
+                    case "Color":
                         bgcolor = BGColor.none; // ToDo: temporary... this is going to be hard
                         break;
-                    case "numberTitle":
-                        if (propertyValue == "false") numberTitle = false;
+                    case "Name":
+                        if (propertyValue != "") name = propertyValue; // ToDo: set name also in GRoot
                         break;
-                    case "visible":
-                        if (propertyValue == "false") visible     = false;
+                    case "NumberTitle":
+                        if (propertyValue == "false") numberTitle = false;
+                            else if (propertyValue == "true") numberTitle = true;
+                        break;
+                    case "Visible":
+                        if (propertyValue == "false") visible = false;
+                            else if (propertyValue == "true") visible = true;
+                        break;
+
+                     /** Axes and Plot Appearance **/
+                    case "Renderer":
+                        if (propertyValue == "gral") renderer = Renderer.gral;
+                        break;
+
+                     /** Location and Size **/
+                    case "Position":
+                        if (propertyValue != "") position = propertyValue; // ToDo: set name also in GRoot
+                        break;
+                    case "Resize":
+                        if (propertyValue == "on") resize = true;
+                            else if (propertyValue == "off") resize = false;
+                        break;
+
                     default:
                         break;
                 }
@@ -59,34 +101,45 @@ class Figure extends JFrame {
         }
     }
 
-    private void setProperties () {
+    protected void setProperties () {
 
-        /**
-         *  Figure properties; for nor only figure appearance
-         *  I really don't know any better method than this...
-         *  Not (yet) possible: DockControls,  MenuBar, ToolBar, Clipping
-         **/
-        setSize(600, 400);
         /** Figure Appearance **/
-          /* Color */
-            switch (bgcolor) { // this is going to be more complex cause of the many possibilities  RGB triplet | short name | long name | 'none' AND that even the plot has to be recolored
-                case white:
-                    getContentPane().setBackground( new Color(1.0f, 1.0f, 1.0f) );
-                    break;
-                default:
-                     break;
-            }
 
-          /*  Name & Number Title */
-            String title = "";
-            if (numberTitle) {
-                title = "Figure " + id;
-                if (name != "") title = title + " - ";
-            }
-            if (name != "") title = title + name;
-            setTitle(title);
+        /* Color */
+        switch (bgcolor) {  // ToDo: thats gonna be work
+            default:
+                break;
+        }
 
-          /*  Visible */
-            setVisible(visible);
+        /* Name & Number Title  */
+        String title = "";
+        if (numberTitle) {
+            title = "Figure " + id;
+            if (name != "") title = title + " - ";
+        }
+        if (name != "") title = title + name;
+        setTitle(title);
+
+        /* Visible */
+        setVisible(visible);
+
+        /** Axes and Plot Appearance **/
+
+        /* Renderer */
+                            // ToDo: well we just have gral...
+
+        /* Position */
+        position = position.replaceAll("\\[", "").replaceAll("\\]","");
+        String[] positionString = position.split("[ ]");
+            int left    = Integer.parseInt(positionString[0]);
+            int bottom  = Integer.parseInt(positionString[1]);
+            int width   = Integer.parseInt(positionString[2]);
+            int height  = Integer.parseInt(positionString[3]);
+
+        setLocation(left, bottom);
+        setSize(width, height);
+
+        /* Resize */
+        setResizable( resize );
     }
 }

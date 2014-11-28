@@ -15,29 +15,44 @@ class GRootManager { // ToDo: sort and clean this file
 
 
     // add new Figure and add entry into our figureIndexList
-    protected void addNewFigureIntoGRoot (int id, String tag, Figure paramFigure) {
+    protected void addNewFigureIntoGRoot (int id, String tag, String... propertyVarArgs) {
+
+        Figure newFigure;
+        if  (propertyVarArgs.length > 0) {
+            newFigure = new Figure(id, propertyVarArgs);
+            tag = newFigure.name;
+        }
+        else {
+            newFigure = new Figure(id, tag);
+        }
 
         ArrayList tempArrayList = new ArrayList();
         tempArrayList.add(id);
         tempArrayList.add(tag);
-        tempArrayList.add(paramFigure);
+        tempArrayList.add(newFigure);
 
         figureIndexList.add(id);
         groot.add(tempArrayList);
     }
 
     // add Plot into GRoot under given ID, for now small but I think necessary if adding more than one plot into one figure
-    protected void addPlotToGRoot (int index, Plot currentPlot) {
+    protected void addPlotToGRoot (int index, double[] x, double[] y, String linespec) {
 
-        groot.get(index).add(currentPlot);
+        Plot newPlot = new Plot(Data.dress(x, y), getFigureToIndex(index), linespec);
+
+        groot.get(index).add(newPlot);
     }
 
     // clear a figure
-    protected void clfFigureWithIndex (int index) {
+    protected void clfFigureWithIndex (int index, boolean reset) {
 
-        // Delete figure in this id
+        // CLF figure in this id
         Figure figureToCLF = (Figure) groot.get(index).get(2);
         figureToCLF.getContentPane().removeAll();
+
+        figureToCLF.getDefaultProperties();
+        figureToCLF.setProperties ();
+
         figureToCLF.getContentPane().revalidate();
         figureToCLF.getContentPane().repaint();
     }
@@ -81,7 +96,7 @@ class GRootManager { // ToDo: sort and clean this file
     // returns the figure to given id (remember id = position in groot and not the "handle"
     protected Figure getFigureToIndex (int index) {
 
-        return (Figure) groot.get(index).get(2);
+            return (Figure) groot.get(index).get(2);
     }
 
     // ToDo !

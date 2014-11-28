@@ -13,17 +13,15 @@ public class test {
             y[i] = Math.pow(x[i],2);
         }
 
-        int sleepTime = 750;
+        int sleepTime = 1750;
 
         MPlot newPlot = new MPlot();
+
         /* Figure 0 */
-            newPlot.figure();                   java.lang.Thread.sleep(sleepTime);
+        newPlot.figure();                   java.lang.Thread.sleep(sleepTime);
             newPlot.plot(x, y, "b--.");         java.lang.Thread.sleep(sleepTime);
-        /* Figure 2. 1 skipped */
-            newPlot.figure(2);                  java.lang.Thread.sleep(sleepTime);
-            newPlot.plot(x, x);                 java.lang.Thread.sleep(sleepTime);
-        /* Figure 3 */
-            newPlot.figure("name","Martin","numberTitle", "false");   java.lang.Thread.sleep(sleepTime);
+        /* Figure 1 */
+        newPlot.figure("Name","Martins Figure","NumberTitle", "false", "Position", "[100 100 750 500]");   java.lang.Thread.sleep(sleepTime);
             newPlot.plot(x, y, "r-*");          java.lang.Thread.sleep(sleepTime);
 
         /* set figure 0 active */
@@ -35,9 +33,9 @@ public class test {
             newPlot.clf(50);                    java.lang.Thread.sleep(sleepTime);
 
         /* clear active figure */
-            newPlot.clf();                      java.lang.Thread.sleep(sleepTime);
-        /* close figure 2 */
-            newPlot.close(2);                   java.lang.Thread.sleep(sleepTime);
+            newPlot.clf(1,"reset");            java.lang.Thread.sleep(sleepTime);
+        /* close active figure  */
+            newPlot.close();                   java.lang.Thread.sleep(sleepTime);
         /* close all other figures */
             newPlot.close("all");               java.lang.Thread.sleep(sleepTime);
     }
