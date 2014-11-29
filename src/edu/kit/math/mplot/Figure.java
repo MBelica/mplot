@@ -2,7 +2,7 @@ package edu.kit.math.mplot;
 
 
 import javax.swing.JFrame;
-import java.awt.*;
+
 
 class Figure extends JFrame {
 

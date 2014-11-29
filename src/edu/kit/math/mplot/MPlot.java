@@ -1,39 +1,13 @@
 package edu.kit.math.mplot;
 
 
-import java.util.*;
-
-// ToDO: Interface zur Aufteilung? Package Aufteilung? Fehlerbehebung was passiert wennn Plot aber kein Figure?
-
 public class MPlot {
 
 
+    private GRootManager groot = new GRootManager();
 
-    static final boolean debug = true;
-
-
-    private GRootManager groot;
-    private Utilities utilitiesHandle;
-
-
-    protected boolean initialized = false;
-
-    protected int activeFigureId;  // contains id of active figure
-    protected int currentFigureId; // contains highest id of all existent figures
-
-
-
-    public MPlot () {
-
-        if (!initialized) {
-
-            groot           = new GRootManager();
-            utilitiesHandle = new Utilities(this);
-
-            utilitiesHandle.initSystem();
-        }
-    }
-
+    protected int activeFigureId = -1;  // contains id of active figure
+    protected int currentFigureId = -1; // contains highest id of all existent figures
 
 
     /****
@@ -64,11 +38,11 @@ public class MPlot {
 
    public int figure (int id, String tag) {
 
-        if (groot.isIdInUse(id)) { // user wants to set a figure active
+        if (groot.getIndexToId(id) > -1) { // user wants to set a figure active
 
             groot.setFigureActive(id);
 
-            if (debug) System.out.println("Figure " + id + " set active. activeFigureId: "+ activeFigureId + ", currentFigureId: " + currentFigureId);
+            Utilities.debugEcho("Figure " + id + " set active. activeFigureId: "+ activeFigureId + ", currentFigureId: " + currentFigureId) ;
         }
         else{ // user wants to create new figure
 
@@ -76,8 +50,8 @@ public class MPlot {
 
             groot.addNewFigureIntoGRoot(id, tag);
 
-            if (debug) System.out.print("New figure with index " + String.valueOf(id) + " created. activeFigureId: " + activeFigureId + ", currentFigureId: " + currentFigureId);
-            if (debug) groot.printGRootList();
+            Utilities.debugEcho("New figure with index " + String.valueOf(id) + " created. activeFigureId: " + activeFigureId + ", currentFigureId: " + currentFigureId);
+            Utilities.debugEchoGRoot(groot);
         }
 
         return activeFigureId;
@@ -88,12 +62,11 @@ public class MPlot {
         activeFigureId = ++currentFigureId;
         groot.addNewFigureIntoGRoot(activeFigureId, "", propertyVarArgs);
 
-        if (debug) System.out.println("New figure with index " + String.valueOf(activeFigureId) + " created. activeFigureId: " + activeFigureId + ", currentFigureId: " + currentFigureId);
-        if (debug) groot.printGRootList();
+        Utilities.debugEcho("New figure with index " + String.valueOf(activeFigureId) + " created. activeFigureId: " + activeFigureId + ", currentFigureId: " + currentFigureId);
+        Utilities.debugEchoGRoot(groot);
 
         return activeFigureId;
     }
-
 
 
     /****
@@ -105,32 +78,36 @@ public class MPlot {
     }
 
     public void plot (double[] x, double[] y, String linespec) {
-
         // Check under all created objects whose index contains the activeFigureId and therefore also the figure we want to plot in
         int index = groot.getIndexToId(activeFigureId);
+
         if ( index > -1 ) { // if we've found an index (entry in groot) we are going to plot
 
             groot.addPlotToGRoot(index, x, y, linespec);
 
-            if (debug) System.out.println("New plot created and associated with figure " + activeFigureId +". activeFigureId: " + activeFigureId + ", currentFigureId: " + currentFigureId);
-        } else if (index == (groot.size()-1)) System.out.println("Error! No figure created yet.");
-
-        if (debug) groot.printGRootList();
+            Utilities.debugEcho("New plot created and associated with figure " + activeFigureId +". activeFigureId: " + activeFigureId + ", currentFigureId: " + currentFigureId);
+        } else if (index == (groot.size()-1)) Utilities.echo("Error! No figure created yet.");
+        Utilities.debugEchoGRoot (groot);
     }
-
 
 
     /****
      *  Clf: clear a figure, i.e. removing all plots inside etc, without parameter clf active else clf given
      */
-    public void clf (String... resetVarArgs) {
+    public void clf () {
 
-        clf (activeFigureId, resetVarArgs);
+        clf (activeFigureId);
     }
 
-    public void clf (String tag, String... resetVarArgs) {
+    public void clf (String... varArgs) {
 
-        clf (groot.getIdToTag(tag), resetVarArgs);
+        if (varArgs.length == 2) {
+            clf(groot.getIdToTag(varArgs[0]), varArgs[1]);
+        }
+        else if ( (varArgs.length == 1) && (varArgs[0] == "reset") ) {
+            clf (activeFigureId, "reset");
+        }
+        else  clf(groot.getIdToTag(varArgs[0]));
     }
 
     public void clf (int id, String... resetVarArgs) {
@@ -144,12 +121,11 @@ public class MPlot {
                 if ( ( resetVarArgs.length > 0 ) && (resetVarArgs[0] == "reset") ) reset = true;
                 groot.clfFigureWithIndex(indexHandle, reset);
 
-                if (debug) System.out.println("Figure with index " + id + " cleared. activeFigureId: " + activeFigureId + ", currentFigureId:" + currentFigureId);
-                if (debug) groot.printGRootList();
-            } else System.out.println("Error! Nothing cleared - figure with index " + id + " does not exist.");
-        } else System.out.println("Error! Nothing cleared - figure with index " + id + " does not exist.");
+                Utilities.debugEcho("Figure with index " + id + " cleared. activeFigureId: " + activeFigureId + ", currentFigureId:" + currentFigureId);
+                Utilities.debugEchoGRoot (groot);
+            } else Utilities.echo("Error! Nothing cleared - figure with index " + id + " does not exist.");
+        } else Utilities.echo("Error! Nothing cleared - figure with index " + id + " does not exist.");
     }
-
 
 
     /****
@@ -168,20 +144,20 @@ public class MPlot {
             int index = groot.getIndexToId(id);
             if ( index > -1 ) { // > -1 means we found the element
 
-                groot.closeFigureWithIndex(id, index);
+                groot.closeFigureWithIndex(index);
 
                 // We have to reset both indices, set active as the newester and current as the highest if changed
                 if(id == activeFigureId)  activeFigureId  = groot.getNewestId();
                 if(id == currentFigureId) currentFigureId = groot.getHighestId();
 
-                if (debug) System.out.println("Figure with index " + id + " deleted. activeFigureId: " + activeFigureId + ", currentFigureId:" + currentFigureId);
-                if (debug) groot.printGRootList();
+                Utilities.debugEcho("Figure with index " + id + " deleted. activeFigureId: " + activeFigureId + ", currentFigureId:" + currentFigureId);
+                Utilities.debugEchoGRoot (groot);
 
                 return 1;
             } else return 0;
     } else {
 
-        System.out.println("Error! Nothing closed - figure with index " + id + " does not exist.");
+        Utilities.echo("Error! Nothing closed - figure with index " + id + " does not exist.");
         return 0;
     }
 }
@@ -193,8 +169,8 @@ public class MPlot {
             groot.closeAllFigures();
             activeFigureId = currentFigureId = -1;
 
-            if (debug) System.out.println("All figures deleted. activeFigureId: " + activeFigureId + ", currentFigureId:" + currentFigureId);
-            if (debug) groot.printGRootList();
+            Utilities.debugEcho("All figures deleted. activeFigureId: " + activeFigureId + ", currentFigureId:" + currentFigureId);
+            Utilities.debugEchoGRoot (groot);
 
             return 1;
         } else return 0;

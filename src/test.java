@@ -13,14 +13,16 @@ public class test {
             y[i] = Math.pow(x[i],2);
         }
 
-        int sleepTime = 1750;
+        int sleepTime = 1500;
 
         MPlot newPlot = new MPlot();
 
         /* Figure 0 */
         newPlot.figure();                   java.lang.Thread.sleep(sleepTime);
             newPlot.plot(x, y, "b--.");         java.lang.Thread.sleep(sleepTime);
-        /* Figure 1 */
+        newPlot.figure();                   java.lang.Thread.sleep(sleepTime);
+            newPlot.plot(x, x, "b--.");         java.lang.Thread.sleep(sleepTime);
+        /* Figure 2 */
         newPlot.figure("Name","Martins Figure","NumberTitle", "false", "Position", "[100 100 750 500]");   java.lang.Thread.sleep(sleepTime);
             newPlot.plot(x, y, "r-*");          java.lang.Thread.sleep(sleepTime);
 
@@ -32,11 +34,11 @@ public class test {
         /* try to clear not existent figure with id 50, output error msg and keep going */
             newPlot.clf(50);                    java.lang.Thread.sleep(sleepTime);
 
+        /* close figure 1 */
+         newPlot.close(1);                   java.lang.Thread.sleep(sleepTime);
         /* clear active figure */
-            newPlot.clf(1,"reset");            java.lang.Thread.sleep(sleepTime);
-        /* close active figure  */
-            newPlot.close();                   java.lang.Thread.sleep(sleepTime);
+         newPlot.clf("reset");            java.lang.Thread.sleep(sleepTime);java.lang.Thread.sleep(sleepTime);
         /* close all other figures */
-            newPlot.close("all");               java.lang.Thread.sleep(sleepTime);
+         newPlot.close("all");               java.lang.Thread.sleep(sleepTime);
     }
 }
