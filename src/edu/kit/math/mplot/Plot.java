@@ -122,7 +122,7 @@ class Plot {
         else if (ls.indexOf("q") > -1) mStyle = markerStyle.dot;             // dot
         else  mStyle = markerStyle.point;            // Point (default)
         /** Color Specifiers **/
-        if (ls.indexOf("#") > -1) {
+        if (ls.indexOf("#MultiplePlots") > -1) {
 
             if (ls.indexOf("1") > -1) color = new Color(1.0f, 0.0f, 0.0f); // Red
             else if (ls.indexOf("2") > -1) color = new Color(0.0f, 1.0f, 0.0f); // Green

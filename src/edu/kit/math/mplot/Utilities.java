@@ -42,11 +42,6 @@ class Utilities {
         }
     }
 
-    protected static void debugEchoGRoot (GRootManager groot) {
-
-        debugEcho( groot.GRootListToString() );
-    }
-
     protected static double[] getIndexVs (double[] y) {
 
         double[] x = new double[y.length];

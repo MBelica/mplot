@@ -1,10 +1,10 @@
 package edu.kit.math.mplot;
 
 
-import de.erichseifert.gral.data.DataTable;
-import de.erichseifert.gral.plots.XYPlot;
-
 import java.util.*;
+
+import de.erichseifert.gral.plots.XYPlot;
+import de.erichseifert.gral.data.DataTable;
 
 
 class GRootManager {
@@ -31,44 +31,27 @@ class GRootManager {
     }
 
     // add Plot into GRoot under given ID, for now small but I think necessary if adding more than one plot into one figure
-    protected void addPlotToGRoot (int index, double[] x, double[] y, String linespec) {
+    protected void addPlotsToGRoot (int index, String linespecsParam, double[]... dataPoints) {
 
         if ( (groot.size() > index) && (groot.get(index).size() > 2) ) {
 
-            Figure figureToPlot = getFigureToIndex(index);
-            figureToPlot.getContentPane().removeAll();
+            int plotAmount = (dataPoints.length/2);
+            DataTable[] data = new DataTable[plotAmount];
+            for (int i = 0; i < (plotAmount); i ++) {
 
+                double[] x = dataPoints[2*i];
+                double[] y = dataPoints[2*i+1];
 
-            DataTable data = Data.dress(x, y);
-            XYPlot plot  = new XYPlot(data);
-
-            if ( groot.get(index).size() > 3) {
-                for (int i = 3; i < groot.get(index).size(); i++ ) groot.get(index).remove(i);
+                if (x.length == y.length) {
+                    data[i] = (Data.dress( x, y));
+                } else  {
+                    Utilities.echo("Error! Cannot plot given data. (Every) x,y-pair must have same length");
+                    return;
+                }
             }
-
-            Plot newPlot = new Plot(figureToPlot, plot, data, linespec);
-            groot.get(index).add(newPlot);
-
-            figureToPlot.getContentPane().revalidate();
-            figureToPlot.getContentPane().repaint();
-
-        } else Utilities.debugEcho("Error! Plot could not be added to Figure " + index);
-    }
-
-    protected void addMultiplePlotsToGRoot (int index, double[]... dataPoints) {
-
-        if ( (groot.size() > index) && (groot.get(index).size() > 2) ) {
 
             Figure figureToPlot = getFigureToIndex(index);
             figureToPlot.getContentPane().removeAll();
-
-            List<DataTable> dataList = new ArrayList<DataTable>();
-            for (int i = 0; i < (dataPoints.length/2); i ++) {
-
-                dataList.add(Data.dress( dataPoints[2*i],  dataPoints[2*i+1]));
-            }
-
-            DataTable[] data = dataList.toArray(new DataTable[dataList.size()]);
 
             XYPlot plot  = new XYPlot(data);
 
@@ -77,8 +60,11 @@ class GRootManager {
             }
 
             for (int i = 0; i < data.length; i++) {
+                String linespecs;
+                if (linespecsParam == "#MultiplePlots") linespecs = "#MultiplePlots"+i;
+                    else linespecs = linespecsParam;
 
-                Plot newPlot = new Plot(figureToPlot, plot, data[i], "#"+i); // ToDo: linespecs wählen, dassdie zumindest unterschieldich eingefärbt werden
+                Plot newPlot = new Plot(figureToPlot, plot, data[i], linespecs);
                 groot.get(index).add(newPlot);
             }
 
@@ -140,13 +126,13 @@ class GRootManager {
     // returns the figure to given id (remember id = position in groot and not the "handle"
     protected Figure getFigureToId (int id) {
 
-       return getFigureToIndex(getIndexToId(id));
+        return getFigureToIndex(getIndexToId(id));
     }
 
     // returns the figure to given id (remember id = position in groot and not the "handle"
     protected Figure getFigureToIndex (int index) {
 
-            return (Figure) groot.get(index).get(2);
+        return (Figure) groot.get(index).get(2);
     }
 
     protected int getIdToTag (String givenTag) {

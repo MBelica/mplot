@@ -10,8 +10,6 @@ public class MPlot {
     protected int currentFigureId = -1; // contains highest id of all existent figures
 
 
-    // ToDo: Check if x, y have same length
-
     /****
      * Figure: create a figure or set an existent figure as active
      * @return integer as figure handle
@@ -46,7 +44,7 @@ public class MPlot {
             groot.addNewFigureIntoGRoot(activeFigureId, "", propertyVarArgs);
 
             Utilities.debugEcho("New figure with index " + String.valueOf(activeFigureId) + " created. activeFigureId: " + activeFigureId + ", currentFigureId: " + currentFigureId);
-            Utilities.debugEchoGRoot(groot);
+            Utilities.debugEcho( groot.GRootListToString() );
 
             return activeFigureId;
         }
@@ -67,7 +65,7 @@ public class MPlot {
             groot.addNewFigureIntoGRoot(id, tag);
 
             Utilities.debugEcho("New figure with index " + String.valueOf(id) + " created. activeFigureId: " + activeFigureId + ", currentFigureId: " + currentFigureId);
-            Utilities.debugEchoGRoot(groot);
+            Utilities.debugEcho( groot.GRootListToString() );
         }
 
         return activeFigureId;
@@ -88,13 +86,10 @@ public class MPlot {
         int index = groot.getIndexToId(activeFigureId);
         if ( index > -1 ) {
 
-            if (x.length == y.length) {
-                groot.addPlotToGRoot(index, x, y, linespec);
-
-                Utilities.debugEcho("New plot created and associated with figure " + activeFigureId + ". activeFigureId: " + activeFigureId + ", currentFigureId: " + currentFigureId);
-            } else Utilities.echo("Error! Cannot plot given data. X and Y must have same length");
+            groot.addPlotsToGRoot(index, linespec, new double[][]{x, y});
+            Utilities.debugEcho("New plot created and associated with figure " + activeFigureId + ". activeFigureId: " + activeFigureId + ", currentFigureId: " + currentFigureId);
         } else if (index == (groot.size()-1)) Utilities.echo("Error! No figure created yet.");
-        Utilities.debugEchoGRoot(groot);
+        Utilities.debugEcho( groot.GRootListToString() );
     }
 
     public void plot (double[]... dataPoints) {
@@ -111,16 +106,16 @@ public class MPlot {
             double[] x = dataPoints[1];
             plot (x, y, "");
         }
-        else if ( ( dataPoints.length > 0 ) && ( (dataPoints.length&1) == 0 ) ) { // ToDo: Check all lengths
+        else if ( ( dataPoints.length > 0 ) && ( (dataPoints.length&1) == 0 ) ) {
 
             int index = groot.getIndexToId(activeFigureId);
             if ( index > -1 ) { // if we've found an index (entry in groot) we are going to plot
 
-                groot.addMultiplePlotsToGRoot(index, dataPoints);
+                groot.addPlotsToGRoot(index, "#MultiplePlots", dataPoints);
 
                 Utilities.debugEcho("New plots created and associated with figure " + activeFigureId +". activeFigureId: " + activeFigureId + ", currentFigureId: " + currentFigureId);
             } else if (index == (groot.size()-1)) Utilities.echo("Error! No figure created yet.");
-            Utilities.debugEchoGRoot (groot);
+            Utilities.debugEcho( groot.GRootListToString() );
         } else Utilities.echo("Error! Cannot plot given data.");
     }
 
@@ -155,7 +150,7 @@ public class MPlot {
                 groot.clfFigureWithIndex(indexHandle, reset);
 
                 Utilities.debugEcho("Figure with index " + id + " cleared. activeFigureId: " + activeFigureId + ", currentFigureId:" + currentFigureId);
-                Utilities.debugEchoGRoot (groot);
+                Utilities.debugEcho( groot.GRootListToString() );
             } else Utilities.echo("Error! Nothing cleared - figure with index " + id + " does not exist.");
         } else Utilities.echo("Error! Nothing cleared - figure with index " + id + " does not exist.");
     }
@@ -184,7 +179,7 @@ public class MPlot {
                 if(id == currentFigureId) currentFigureId = groot.getHighestId();
 
                 Utilities.debugEcho("Figure with index " + id + " deleted. activeFigureId: " + activeFigureId + ", currentFigureId:" + currentFigureId);
-                Utilities.debugEchoGRoot (groot);
+                Utilities.debugEcho( groot.GRootListToString() );
 
                 return 1;
             } else return 0;
@@ -203,7 +198,7 @@ public class MPlot {
             activeFigureId = currentFigureId = -1;
 
             Utilities.debugEcho("All figures deleted. activeFigureId: " + activeFigureId + ", currentFigureId:" + currentFigureId);
-            Utilities.debugEchoGRoot (groot);
+            Utilities.debugEcho( groot.GRootListToString() );
 
             return 1;
         } else return close(  groot.getIdToTag( param ) );

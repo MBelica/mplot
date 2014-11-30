@@ -8,10 +8,11 @@ class Figure extends JFrame {
 
 
     /**
-     *  Figure properties; for nor only figure appearance
-     *  I really don't know any better method than this...
+     *  Figure properties; for now only figure appearance
+     *  I don't know any more elegant method than this...
      *  Not (yet) possible or don't understand or not necessary now:
      *      DockControls,  MenuBar, ToolBar, Clipping, GraphicsSmoothing, RendererMode, Alphamap, Colormap, Units, SizeChangedFcn, ResizeFcn, OuterPosition
+     *  The rest is going to be added... by and by
      **/
 
     protected int id = 0;
@@ -88,7 +89,7 @@ class Figure extends JFrame {
 
                      /** Location and Size **/
                     case "Position":
-                        if (propertyValue != "") position = propertyValue; // ToDo: set name also in GRoot
+                        if (propertyValue != "") position = propertyValue; // ToDo: set name also in GRoot. tag = name??
                         break;
                     case "Resize":
                         if (propertyValue == "on") resize = true;
@@ -127,7 +128,7 @@ class Figure extends JFrame {
         /** Axes and Plot Appearance **/
 
         /* Renderer */
-                            // ToDo: well we just have gral...
+                            // ToDo: well, we yet just have gral...
 
         /* Position */
         position = position.replaceAll("\\[", "").replaceAll("\\]","");
