@@ -23,10 +23,9 @@ class Plot {
     protected enum markerStyle { point, plus, circle, asterisk, cross, dot }; protected markerStyle mStyle;
 
 
-    Plot (DataTable data, Figure currentFigure, String args) {
+    Plot (Figure currentFigure, XYPlot plot, DataTable data, String args) {
 
         parseLinespecs(args);
-        XYPlot plot         = new XYPlot(data);
         LineRenderer lines  = new DefaultLineRenderer2D();
 
         currentFigure.getContentPane().add(new InteractivePanel(plot));
@@ -123,14 +122,28 @@ class Plot {
         else if (ls.indexOf("q") > -1) mStyle = markerStyle.dot;             // dot
         else  mStyle = markerStyle.point;            // Point (default)
         /** Color Specifiers **/
-        if      (ls.indexOf("r") > -1) color = new Color (1.0f, 0.0f, 0.0f); // Red
-        else if (ls.indexOf("g") > -1) color = new Color (0.0f, 1.0f, 0.0f); // Green
-        else if (ls.indexOf("b") > -1) color = new Color (0.0f, 0.0f, 1.0f); // Blue
-        else if (ls.indexOf("c") > -1) color = new Color (0.0f, 1.0f, 1.0f); // Cyan
-        else if (ls.indexOf("m") > -1) color = new Color (1.0f, 0.0f, 1.0f); // Magenta
-        else if (ls.indexOf("y") > -1) color = new Color (1.0f, 1.0f, 0.0f); // Yellow
-        else if (ls.indexOf("w") > -1) color = new Color (1.0f, 1.0f, 1.0f); // White
-        else  color = new Color (0.0f, 0.0f, 0.0f);  // Black (default)
+        if (ls.indexOf("#") > -1) {
+
+            if (ls.indexOf("1") > -1) color = new Color(1.0f, 0.0f, 0.0f); // Red
+            else if (ls.indexOf("2") > -1) color = new Color(0.0f, 1.0f, 0.0f); // Green
+            else if (ls.indexOf("3") > -1) color = new Color(0.0f, 0.0f, 1.0f); // Blue
+            else if (ls.indexOf("4") > -1) color = new Color(0.0f, 1.0f, 1.0f); // Cyan
+            else if (ls.indexOf("5") > -1) color = new Color(1.0f, 0.0f, 1.0f); // Magenta
+            else if (ls.indexOf("6") > -1) color = new Color(1.0f, 1.0f, 0.0f); // Yellow
+            else if (ls.indexOf("7") > -1) color = new Color(1.0f, 1.0f, 1.0f); // White
+            else color = new Color(0.0f, 0.0f, 0.0f);  // Black (default)
+        }
+        else {
+
+            if (ls.indexOf("r") > -1) color = new Color(1.0f, 0.0f, 0.0f); // Red
+            else if (ls.indexOf("g") > -1) color = new Color(0.0f, 1.0f, 0.0f); // Green
+            else if (ls.indexOf("b") > -1) color = new Color(0.0f, 0.0f, 1.0f); // Blue
+            else if (ls.indexOf("c") > -1) color = new Color(0.0f, 1.0f, 1.0f); // Cyan
+            else if (ls.indexOf("m") > -1) color = new Color(1.0f, 0.0f, 1.0f); // Magenta
+            else if (ls.indexOf("y") > -1) color = new Color(1.0f, 1.0f, 0.0f); // Yellow
+            else if (ls.indexOf("w") > -1) color = new Color(1.0f, 1.0f, 1.0f); // White
+            else color = new Color(0.0f, 0.0f, 0.0f);  // Black (default)
+        }
     }
 
     // the next 3 methods draw shapes found in matlab, asterisk and plus still has to be written but do we really want this?

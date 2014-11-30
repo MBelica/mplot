@@ -47,6 +47,13 @@ class Utilities {
         debugEcho( groot.GRootListToString() );
     }
 
+    protected static double[] getIndexVs (double[] y) {
+
+        double[] x = new double[y.length];
+        for (int i = 0; i < x.length; i++) x[i] = i + 1.0;
+
+        return x;
+    }
 }
 
 

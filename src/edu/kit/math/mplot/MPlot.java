@@ -10,6 +10,8 @@ public class MPlot {
     protected int currentFigureId = -1; // contains highest id of all existent figures
 
 
+    // ToDo: Check if x, y have same length
+
     /****
      * Figure: create a figure or set an existent figure as active
      * @return integer as figure handle
@@ -26,14 +28,28 @@ public class MPlot {
         return figure(id, "");
     }
 
-    public String figure (String tag) { // das hier habe ich neu erstellt, da dies auch in matlab möglich ist, vor allem sind einige der punkte bei figure(property) eben auf diesen name handle bezogen
+    public int figure (String... propertyVarArgs) {
 
-        if (groot.getIdToTag(tag) > -1) activeFigureId = groot.getIdToTag(tag);
+        if (propertyVarArgs.length == 1) {
+
+            String tag = propertyVarArgs[0];
+            int id     = groot.getIdToTag(tag);
+            if (id > -1) activeFigureId = id;
             else activeFigureId = ++currentFigureId;
 
-        figure(activeFigureId, tag);
+            figure(activeFigureId, tag);
+            return id;
+        }
+        else {
 
-        return tag;
+            activeFigureId = ++currentFigureId;
+            groot.addNewFigureIntoGRoot(activeFigureId, "", propertyVarArgs);
+
+            Utilities.debugEcho("New figure with index " + String.valueOf(activeFigureId) + " created. activeFigureId: " + activeFigureId + ", currentFigureId: " + currentFigureId);
+            Utilities.debugEchoGRoot(groot);
+
+            return activeFigureId;
+        }
     }
 
    public int figure (int id, String tag) {
@@ -57,39 +73,56 @@ public class MPlot {
         return activeFigureId;
     }
 
-    public int figure (String... propertyVarArgs) {
-
-        activeFigureId = ++currentFigureId;
-        groot.addNewFigureIntoGRoot(activeFigureId, "", propertyVarArgs);
-
-        Utilities.debugEcho("New figure with index " + String.valueOf(activeFigureId) + " created. activeFigureId: " + activeFigureId + ", currentFigureId: " + currentFigureId);
-        Utilities.debugEchoGRoot(groot);
-
-        return activeFigureId;
-    }
-
 
     /****
      *  Plot: plot x, y into active figure. If no linespec is given use standards = ""
      */
-    public void plot (double[] x, double[] y) {
+    public void plot (double[] y, String linespec) {
 
-        plot (x, y, "");
+        double[] x = Utilities.getIndexVs(y);
+        plot (x, y, linespec);
     }
 
     public void plot (double[] x, double[] y, String linespec) {
-        // Check under all created objects whose index contains the activeFigureId and therefore also the figure we want to plot in
+
         int index = groot.getIndexToId(activeFigureId);
+        if ( index > -1 ) {
 
-        if ( index > -1 ) { // if we've found an index (entry in groot) we are going to plot
+            if (x.length == y.length) {
+                groot.addPlotToGRoot(index, x, y, linespec);
 
-            groot.addPlotToGRoot(index, x, y, linespec);
-
-            Utilities.debugEcho("New plot created and associated with figure " + activeFigureId +". activeFigureId: " + activeFigureId + ", currentFigureId: " + currentFigureId);
+                Utilities.debugEcho("New plot created and associated with figure " + activeFigureId + ". activeFigureId: " + activeFigureId + ", currentFigureId: " + currentFigureId);
+            } else Utilities.echo("Error! Cannot plot given data. X and Y must have same length");
         } else if (index == (groot.size()-1)) Utilities.echo("Error! No figure created yet.");
-        Utilities.debugEchoGRoot (groot);
+        Utilities.debugEchoGRoot(groot);
     }
 
+    public void plot (double[]... dataPoints) {
+
+        if (dataPoints.length == 1) {
+
+            double[] y = dataPoints[0];
+            double[] x = Utilities.getIndexVs(y);
+            plot (x, y, "");
+        }
+        else if (dataPoints.length == 2)  {
+
+            double[] y = dataPoints[0];
+            double[] x = dataPoints[1];
+            plot (x, y, "");
+        }
+        else if ( ( dataPoints.length > 0 ) && ( (dataPoints.length&1) == 0 ) ) { // ToDo: Check all lengths
+
+            int index = groot.getIndexToId(activeFigureId);
+            if ( index > -1 ) { // if we've found an index (entry in groot) we are going to plot
+
+                groot.addMultiplePlotsToGRoot(index, dataPoints);
+
+                Utilities.debugEcho("New plots created and associated with figure " + activeFigureId +". activeFigureId: " + activeFigureId + ", currentFigureId: " + currentFigureId);
+            } else if (index == (groot.size()-1)) Utilities.echo("Error! No figure created yet.");
+            Utilities.debugEchoGRoot (groot);
+        } else Utilities.echo("Error! Cannot plot given data.");
+    }
 
     /****
      *  Clf: clear a figure, i.e. removing all plots inside etc, without parameter clf active else clf given
@@ -155,12 +188,12 @@ public class MPlot {
 
                 return 1;
             } else return 0;
-    } else {
+        } else {
 
-        Utilities.echo("Error! Nothing closed - figure with index " + id + " does not exist.");
-        return 0;
+            Utilities.echo("Error! Nothing closed - figure with index " + id + " does not exist.");
+            return 0;
+        }
     }
-}
 
     public int close (String param) { // overload close method for the possibility to close all
 
@@ -173,6 +206,6 @@ public class MPlot {
             Utilities.debugEchoGRoot (groot);
 
             return 1;
-        } else return 0;
+        } else return close(  groot.getIdToTag( param ) );
     }
 }

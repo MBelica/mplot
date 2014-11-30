@@ -1,6 +1,9 @@
 package edu.kit.math.mplot;
 
 
+import de.erichseifert.gral.data.DataTable;
+import de.erichseifert.gral.plots.XYPlot;
+
 import java.util.*;
 
 
@@ -17,9 +20,7 @@ class GRootManager {
             newFigure = new Figure(id, propertyVarArgs);
             tag = newFigure.name;
         }
-        else {
-            newFigure = new Figure(id, tag);
-        }
+        else newFigure = new Figure(id, tag);
 
         ArrayList tempArrayList = new ArrayList();
         tempArrayList.add(id);
@@ -34,10 +35,59 @@ class GRootManager {
 
         if ( (groot.size() > index) && (groot.get(index).size() > 2) ) {
 
-            Plot newPlot = new Plot(Data.dress(x, y), getFigureToIndex(index), linespec);
+            Figure figureToPlot = getFigureToIndex(index);
+            figureToPlot.getContentPane().removeAll();
+
+
+            DataTable data = Data.dress(x, y);
+            XYPlot plot  = new XYPlot(data);
+
+            if ( groot.get(index).size() > 3) {
+                for (int i = 3; i < groot.get(index).size(); i++ ) groot.get(index).remove(i);
+            }
+
+            Plot newPlot = new Plot(figureToPlot, plot, data, linespec);
             groot.get(index).add(newPlot);
+
+            figureToPlot.getContentPane().revalidate();
+            figureToPlot.getContentPane().repaint();
+
         } else Utilities.debugEcho("Error! Plot could not be added to Figure " + index);
     }
+
+    protected void addMultiplePlotsToGRoot (int index, double[]... dataPoints) {
+
+        if ( (groot.size() > index) && (groot.get(index).size() > 2) ) {
+
+            Figure figureToPlot = getFigureToIndex(index);
+            figureToPlot.getContentPane().removeAll();
+
+            List<DataTable> dataList = new ArrayList<DataTable>();
+            for (int i = 0; i < (dataPoints.length/2); i ++) {
+
+                dataList.add(Data.dress( dataPoints[2*i],  dataPoints[2*i+1]));
+            }
+
+            DataTable[] data = dataList.toArray(new DataTable[dataList.size()]);
+
+            XYPlot plot  = new XYPlot(data);
+
+            if ( groot.get(index).size() > 3) {
+                for (int i = 3; i < groot.get(index).size(); i++ ) groot.get(index).remove(i);
+            }
+
+            for (int i = 0; i < data.length; i++) {
+
+                Plot newPlot = new Plot(figureToPlot, plot, data[i], "#"+i); // ToDo: linespecs wählen, dassdie zumindest unterschieldich eingefärbt werden
+                groot.get(index).add(newPlot);
+            }
+
+            figureToPlot.getContentPane().revalidate();
+            figureToPlot.getContentPane().repaint();
+
+        } else Utilities.debugEcho("Error! Plot could not be added to Figure " + index);
+    }
+
 
     // clear a figure
     protected void clfFigureWithIndex (int index, boolean reset) {
@@ -47,7 +97,7 @@ class GRootManager {
                 for (int i = 3; i < groot.get(index).size(); i++) groot.get(index).remove(i);
 
             // CLF figure in this id
-            Figure figureToCLF = (Figure) groot.get(index).get(2);
+            Figure figureToCLF =  getFigureToIndex(index);
             figureToCLF.getContentPane().removeAll();
 
             figureToCLF.getDefaultProperties();
@@ -63,7 +113,7 @@ class GRootManager {
 
         // Delete figure in this id
         if ( (groot.size() > index) && (groot.get(index).size() > 2) ) {
-            Figure figureToClose = (Figure) groot.get(index).get(2);
+            Figure figureToClose =  getFigureToIndex(index);
 
             figureToClose.setVisible(false);
             figureToClose.dispose(); // Plots are going to be deleted by javas garbage-collector

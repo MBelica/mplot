@@ -6,6 +6,7 @@ import javax.swing.JFrame;
 
 class Figure extends JFrame {
 
+
     /**
      *  Figure properties; for nor only figure appearance
      *  I really don't know any better method than this...
@@ -69,7 +70,7 @@ class Figure extends JFrame {
                         bgcolor = BGColor.none; // ToDo: temporary... this is going to be hard
                         break;
                     case "Name":
-                        if (propertyValue != "") name = propertyValue; // ToDo: set name also in GRoot
+                        if (propertyValue != "") name = propertyValue; // ToDo: set name also in GRoot. tag = name??
                         break;
                     case "NumberTitle":
                         if (propertyValue == "false") numberTitle = false;
