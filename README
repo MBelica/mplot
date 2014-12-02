@@ -1,22 +1,18 @@
-#############################################################
-##  MPlot                                                  ##
-##                                                         ##
-##                                                         ##
-#############################################################
+# MPlot  
 
 
-# General
+## General
 Compiled with Java 1.7
 UML Diagrams: in doc folder
 
 
-# Compile (I think this isn't up to date)
+## Compile (I think this isn't up to date)
 javac -cp "lib/*" -d "bin/" src/*.java
 run: (e.g. MPlotTest1)
 java -cp "bin/:lib/*" test
 
 
-# Structure
+## Structure
 MPlot (+)
     * main file
     * contains only static to be called by user
@@ -46,7 +42,7 @@ Here is main work done, the question is how to go on:
 * or rewrite whole structur since groot is just a child of matlabs dock which allows docking etc.. many of linespecs aren't working yet because of this missing
 
 
-# Idea for function hold
+## Idea for function hold
 for each plot check if plot exists in newest frame
     * no: plot
     * yes: check if hold has been callen
@@ -54,5 +50,5 @@ for each plot check if plot exists in newest frame
         - yes: draw both
 
 
-# Dispose JFrame 
+## Dispose JFrame 
 Depending on how many graphs active dispose or close JFrame and delete MPlot instance?
