@@ -2,14 +2,14 @@
 
 
 ## General
-Compiled with Java 1.7
-UML Diagrams: in doc folder
+* Compiled with Java 1.7
+* UML Diagrams: in doc folder
 
 
 ## Compile (I think this isn't up to date)
-javac -cp "lib/*" -d "bin/" src/*.java
-run: (e.g. MPlotTest1)
-java -cp "bin/:lib/*" test
+* javac -cp "lib/*" -d "bin/" src/*.java
+* run: (e.g. MPlotTest1)
+* java -cp "bin/:lib/*" test
 
 
 ## Structure
@@ -28,11 +28,11 @@ Plot (-)
 
 
 # Plan for further development
-- Clean files, 
-- Write output/debug output into file
-- Write help function
-- UML * class-diagramm, * sequence-diagramm
-- Javadoc
+1. * Clean files, 
+1. * Write output/debug output into file
+1. * Write help function
+1. * UML * class-diagramm, * sequence-diagramm
+1. * Javadoc
 
 
 Here is main work done, the question is how to go on:
