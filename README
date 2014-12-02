@@ -7,10 +7,10 @@
 
 # General
 Compiled with Java 1.7
-UML Diagram: https://repository.genmymodel.com/ProxiStyx/matlabinterface
+UML Diagrams: in doc folder
 
 
-# Compile
+# Compile (I think this isn't up to date)
 javac -cp "lib/*" -d "bin/" src/*.java
 run: (e.g. MPlotTest1)
 java -cp "bin/:lib/*" test
@@ -31,9 +31,19 @@ Plot (-)
     * main file for creating plot including points and lines
 
 
-# Idea for function clf
-closing a frame is pretty simple. Is this really necessary?
-clf could also close all frames..
+# Plan for further development
+- Clean files, 
+- Write output/debug output into file
+- Write help function
+- UML * class-diagramm, * sequence-diagramm
+- Javadoc
+
+
+Here is main work done, the question is how to go on:
+* either rewrite package with namespaces, generics and strict java doc to have a safer and more elegant code
+* or add all (possible) linespecs and colors missing
+* or add other plot library. Idea for that: add interface between interface between groot and plot to convert data and pass them to right plot library
+* or rewrite whole structur since groot is just a child of matlabs dock which allows docking etc.. many of linespecs aren't working yet because of this missing
 
 
 # Idea for function hold
@@ -43,5 +53,6 @@ for each plot check if plot exists in newest frame
         - no: clear frame and repaint
         - yes: draw both
 
-# Dispose
-Depending on how many graphs active dispose or close
+
+# Dispose JFrame 
+Depending on how many graphs active dispose or close JFrame and delete MPlot instance?
