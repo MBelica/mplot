@@ -30,7 +30,7 @@
 
 
 ## At this point the main work (of our first part/version) is done, the question is how to go on:
-* either rewrite package with namespaces, generics and strict java doc to have a safer and more elegant code. This would mean a lot of work, getting a core, writing it very modular so defenetly many advantages but the question remains if this would be necessairy
+* either rewrite package with namespaces, generics and strict java doc to have a safer and more elegant code. This would mean a lot of work, writing the core, writing it modulary, .... Then new system definitely would have many advantages but the question remains if this is necessairy
 * or add all (possible) linespecs and colors missing + some cleaning. This would... lets say finish this branch completely 
 * or add other plot library - to test the flexibility of our code. Idea for that: add interface between interface between groot and plot to convert data and pass them to right plot library
 
