@@ -36,10 +36,9 @@
 
 
 ## At this point the main work (of our first part/version) is done, the question is how to go on:
-* either rewrite package with namespaces, generics and strict java doc to have a safer and more elegant code
-* or add all (possible) linespecs and colors missing
-* or add other plot library. Idea for that: add interface between interface between groot and plot to convert data and pass them to right plot library
-* or rewrite whole structur since groot is just a child of matlabs dock which allows docking etc.. many of linespecs aren't working yet because of this missing
+* either rewrite package with namespaces, generics and strict java doc to have a safer and more elegant code. This would mean a lot of work, getting a core, writing it very modular so defenetly many advantages but the question remains if this would be necessairy
+* or add all (possible) linespecs and colors missing + some cleaning. This would... lets say finish this branch completely 
+* or add other plot library - to test the flexibility of our code. Idea for that: add interface between interface between groot and plot to convert data and pass them to right plot library
 
 
 ## Idea for function hold
