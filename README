@@ -13,26 +13,26 @@
 
 
 ## Structure
-MPlot (+)
-    * main file
-    * contains only static to be called by user
-Utilities (-)
-    * contains all function want to call from several files
-    * or could belong into MPlot but aren't mentioned for users
-Figure (-)
-    * creates simple Frame
-Data (-)
-    * responsible for conversion of user input into datatable
-Plot (-)
-    * main file for creating plot including points and lines
+* MPlot (+)
+** main file
+** contains only static to be called by user
+* Utilities (-)
+**  contains all function want to call from several files
+** or could belong into MPlot but aren't mentioned for users
+* Figure (-)
+** creates simple Frame
+* Data (-)
+**  responsible for conversion of user input into datatable
+* Plot (-)
+** main file for creating plot including points and lines
 
 
 # Plan for further development
-1. * Clean files, 
-1. * Write output/debug output into file
-1. * Write help function
-1. * UML * class-diagramm, * sequence-diagramm
-1. * Javadoc
+1. Clean files, 
+1. Write output/debug output into file
+1. Write help function
+1. UML * class-diagramm, * sequence-diagramm
+1. Javadoc
 
 
 Here is main work done, the question is how to go on:
