@@ -7,24 +7,18 @@
 
 
 ## Compile (I think this isn't up to date)
-* javac -cp "lib/*" -d "bin/" src/*.java
+* javac -cp lib/*" -d "bin/" src/*.java
 * run: (e.g. MPlotTest1)
 * java -cp "bin/:lib/*" test
 
 
 ## Structure
-* MPlot (+)
-** main file
-** contains only static to be called by user
-* Utilities (-)
-**  contains all function want to call from several files
-** or could belong into MPlot but aren't mentioned for users
-* Figure (-)
-** creates simple Frame
-* Data (-)
-**  responsible for conversion of user input into datatable
-* Plot (-)
-** main file for creating plot including points and lines
+* MPlot (+): main file. contains all public methods to be called by user
+* GRootManager (#): contains our ArrayList of Figures and Plots and handles every request regarding groot
+* Utilities (-): contains all function want to call from several files or could belong into MPlot but aren't mentioned for users
+* Figure (-): creates simple Frame.
+* Data (-): responsible for conversion of user input into datatable
+* Plot (-): main file for creating plot including points and lines, parsing linespecs etc
 
 
 ## Plan for further development
