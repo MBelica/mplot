@@ -27,7 +27,7 @@
 ** main file for creating plot including points and lines
 
 
-# Plan for further development
+## Plan for further development
 1. Clean files, 
 1. Write output/debug output into file
 1. Write help function
@@ -35,7 +35,7 @@
 1. Javadoc
 
 
-## At this point the main work done, the question is how to go on:
+## At this point the main work (of our first part/version) is done, the question is how to go on:
 * either rewrite package with namespaces, generics and strict java doc to have a safer and more elegant code
 * or add all (possible) linespecs and colors missing
 * or add other plot library. Idea for that: add interface between interface between groot and plot to convert data and pass them to right plot library
