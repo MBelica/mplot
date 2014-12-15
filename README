@@ -11,6 +11,7 @@ UML Diagrams: in doc folder
 
 
 # Compile (I think this isn't up to date)
+find -name "*" | grep ".java" > "src/allsrcfiles"
 javac -cp "lib/*" -d "bin/" src/*.java
 run: (e.g. MPlotTest1)
 java -cp "bin/:lib/*" test
