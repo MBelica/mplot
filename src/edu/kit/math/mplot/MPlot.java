@@ -1,7 +1,9 @@
 package edu.kit.math.mplot;
 
 public class MPlot {
-    private GRootManager groot = new GRootManager();
+    private GRootManager groot            = new GRootManager();
+    private final int    infPauseSequence = 500;
+    private boolean      pausingEnabled   = true;
 
     /**
      *
@@ -9,7 +11,6 @@ public class MPlot {
      *
      * @return integer as figure handle
      */
-
     public int figure() {
         return figure(-1, "", true);
     }
@@ -30,29 +31,37 @@ public class MPlot {
             }
         } else {
             groot.addNewFigureIntoGRoot(-1, "", true, propertyVarArgs);
-            Utilities.debugEcho("New figure with index "         + groot.getActiveFigureId() + " created. "
-                                         + " activeFigureId: "   + groot.getActiveFigureId()
-                                         + ", currentFigureId: " + groot.getCurrentFigureId());
+            Utilities.debugEcho("New figure with index " + groot.getActiveFigureId() + " created. "
+                                + " activeFigureId: "    + groot.getActiveFigureId()
+                                + ", currentFigureId: "  + groot.getCurrentFigureId());
             Utilities.debugEcho(groot.GRootListToString());
         }
+
         return groot.getActiveFigureId();
     }
 
     public int figure(int id, String tag, boolean... varArgsAddWithoutId) {
         boolean addWithoutId;
-        if (varArgsAddWithoutId.length == 0) addWithoutId = false;
-            else addWithoutId = varArgsAddWithoutId[0];
 
-        if ( !addWithoutId && (groot.getIndexToId(id) > -1 ) ) {    // user wants to set a figure active
+        if (varArgsAddWithoutId.length == 0) {
+            addWithoutId = false;
+        } else {
+            addWithoutId = varArgsAddWithoutId[0];
+        }
+
+        if (!addWithoutId && (groot.getIndexToId(id) > -1)) {    // user wants to set a figure active
             groot.setFigureActive(id);
-            Utilities.debugEcho("Figure " + id + " set as active. activeFigureId: " + groot.getActiveFigureId()
-                                               + ", currentFigureId: "             + groot.getCurrentFigureId());
+            Utilities.debugEcho("Figure " + id + " set as active. "
+                                + "activeFigureId: "    + groot.getActiveFigureId()
+                                + ", currentFigureId: " + groot.getCurrentFigureId());
         } else {    // user wants to create new figure
             groot.addNewFigureIntoGRoot(id, tag, addWithoutId);
-            Utilities.debugEcho("New figure with index " + id + " created. activeFigureId: " + groot.getActiveFigureId()
-                                                              + ", currentFigureId: "        + groot.getCurrentFigureId());
+            Utilities.debugEcho("New figure with index " + id + " created. "
+                                + "activeFigureId: "     + groot.getActiveFigureId()
+                                + ", currentFigureId: "  + groot.getCurrentFigureId());
             Utilities.debugEcho(groot.GRootListToString());
         }
+
         return groot.getActiveFigureId();
     }
 
@@ -62,20 +71,22 @@ public class MPlot {
      */
     public void plot(double[] y, String linespec) {
         double[] x = Utilities.getIndexVs(y);
+
         plot(x, y, linespec);
     }
 
     public void plot(double[] x, double[] y, String linespec) {
         int index = groot.getIndexToActiveFigure();
+
         System.out.println(index);
 
         if (index > -1) {
             groot.addPlotsToGRoot(index, linespec, new double[][] {
                 x, y
             });
-            Utilities.debugEcho("New plot created and associated with figure "  + groot.getActiveFigureId()
-                                                        + ". activeFigureId: "  + groot.getActiveFigureId()
-                                                        + ", currentFigureId: " + groot.getCurrentFigureId());
+            Utilities.debugEcho("New plot created and associated with figure " + groot.getActiveFigureId()
+                                + ". activeFigureId: "  + groot.getActiveFigureId()
+                                + ", currentFigureId: " + groot.getCurrentFigureId());
         } else if (index == (groot.size() - 1)) {
             Utilities.echo("Error! No figure created yet.");
         }
@@ -100,8 +111,8 @@ public class MPlot {
             if (index > -1) {    // if we've found an index (entry in groot) we are going to plot
                 groot.addPlotsToGRoot(index, "#MultiplePlots", dataPoints);
                 Utilities.debugEcho("New plots created and associated with figure " + groot.getActiveFigureId()
-                                                            + ". activeFigureId: "  + groot.getActiveFigureId()
-                                                            + ", currentFigureId: " + groot.getCurrentFigureId());
+                                    + ". activeFigureId: "  + groot.getActiveFigureId()
+                                    + ", currentFigureId: " + groot.getCurrentFigureId());
             } else if (index == (groot.size() - 1)) {
                 Utilities.echo("Error! No figure created yet.");
             }
@@ -116,13 +127,15 @@ public class MPlot {
      *
      * Clf: clear a figure, i.e. removing all plots inside etc, without parameter clf active else clf given
      */
-    public void clf() { clf( groot.getActiveFigureId() ); }
+    public void clf() {
+        clf(groot.getActiveFigureId());
+    }
 
     public void clf(String... varArgs) {
         if (varArgs.length == 2) {
             clf(groot.getIdToTag(varArgs[0]), varArgs[1]);
         } else if ((varArgs.length == 1) && (varArgs[0] == "reset")) {
-            clf( groot.getActiveFigureId() , "reset");
+            clf(groot.getActiveFigureId(), "reset");
         } else {
             clf(groot.getIdToTag(varArgs[0]));
         }
@@ -155,11 +168,10 @@ public class MPlot {
     /**
      *
      * Close: closing the figure, either with id to close, without which will close active or with string "all" to close all figures
-     *
      * @return 1 if close successful , 0 if not
      */
     public int close() {
-        return close( groot.getActiveFigureId() );
+        return close(groot.getActiveFigureId());
     }
 
     public int close(int id) {
@@ -168,7 +180,6 @@ public class MPlot {
 
             if (index > -1) {
                 groot.closeFigure(id, index);
-
                 Utilities.debugEcho("Figure with index "   + id + " deleted. "
                                     + "activeFigureId: "   + groot.getActiveFigureId()
                                     + ", currentFigureId:" + groot.getCurrentFigureId());
@@ -189,11 +200,61 @@ public class MPlot {
         if (param == "all") {
             groot.closeAllFigures();
             Utilities.debugEcho("All figures deleted. "
-                                    + "activeFigureId: "   + groot.getActiveFigureId()
-                                    + ", currentFigureId:" + groot.getCurrentFigureId());
+                                + "activeFigureId: "   + groot.getActiveFigureId()
+                                + ", currentFigureId:" + groot.getCurrentFigureId());
             Utilities.debugEcho(groot.GRootListToString());
 
             return 1;
-        } else return close(groot.getIdToTag(param));
+        } else {
+            return close(groot.getIdToTag(param));
+        }
+    }
+
+    /**
+     *
+     * Pause pauses execution for n seconds before continuing, where n is any nonnegative real number. Pausing must be enabled for this to take effect.
+     *
+     */
+    public void pause() throws InterruptedException {
+        boolean infLoop = true;
+
+        while (infLoop) {
+            Thread.sleep(infPauseSequence);
+
+            // ToDo: Add Keylistener to change infLoop to false
+        }
+    }
+
+    public void pause(int sleepTime) throws InterruptedException {
+        if (pausingEnabled) {
+            if (sleepTime >= 0) {
+                java.lang.Thread.sleep(sleepTime);
+            } else if (sleepTime == -1) {
+                boolean infLoop = true;
+
+                while (infLoop) {
+                    Thread.sleep(infPauseSequence);
+                }
+            } else {
+                Utilities.echo("Error! Pause time has to be positive");
+            }
+        }
+    }
+
+    public String pause(String state) throws InterruptedException {
+        if (state == "newstate") {
+            if (pausingEnabled) pausingEnabled = false;
+            else pausingEnabled = true;
+
+            if (pausingEnabled) return "off"; // return oldstate
+            else return "on";
+        } else {
+            if      (state == "on")  pausingEnabled = true;
+            else if (state == "off") pausingEnabled = false;
+            else if (state == "inf") pause(-1);
+
+            if (pausingEnabled) return "on";  // return state
+            else return "off";
+        }
     }
 }

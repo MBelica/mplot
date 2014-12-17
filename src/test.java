@@ -3,7 +3,7 @@
 import edu.kit.math.mplot.MPlot;
 
 public class test {
-    public static void main(String[] args) throws InterruptedException {
+    public static void main(String[] args) throws InterruptedException { // ToDo: ich fände es gut wenn man throws weglassen könnte, aber ich weis noch nicht wie
         double[] x = new double[100],
                  y = new double[100],
                  z = new double[100];
@@ -19,50 +19,49 @@ public class test {
 
         /* Figure 0 */
         newPlot.figure();
-        java.lang.Thread.sleep(sleepTime);
+        newPlot.pause(sleepTime);
         newPlot.plot(x, x, "");
-        java.lang.Thread.sleep(sleepTime);
-
+        newPlot.pause(sleepTime);
         /* Figure 7 */
         newPlot.figure(7);
-        java.lang.Thread.sleep(sleepTime);
+        newPlot.pause(sleepTime);
         newPlot.plot(x, y, "b--.");
-        java.lang.Thread.sleep(sleepTime);
+        newPlot.pause(sleepTime);
 
         /* Figure 8 */
         newPlot.figure("Name", "Martins Figure", "NumberTitle", "false", "Position", "[100 100 750 500]");
-        java.lang.Thread.sleep(sleepTime);
+        newPlot.pause(sleepTime);
         newPlot.plot(x, z, "r-*");
-        java.lang.Thread.sleep(sleepTime);
+        newPlot.pause(sleepTime);
 
         /* Figure 9 */
         newPlot.figure();
-        java.lang.Thread.sleep(sleepTime);
+        newPlot.pause(sleepTime);
         newPlot.plot(x, y, x, z, x, x);
-        java.lang.Thread.sleep(sleepTime);
+        newPlot.pause(sleepTime);
 
         /* set figure 0 active */
         newPlot.figure(0);
-        java.lang.Thread.sleep(sleepTime);
+        newPlot.pause(sleepTime);
 
         /* figure with id 100 does not exist, output error msg and keep going */
         newPlot.close(100);
-        java.lang.Thread.sleep(sleepTime);
+        newPlot.pause(sleepTime);
 
         /* try to clear not existent figure with id 50, output error msg and keep going */
         newPlot.clf(50);
-        java.lang.Thread.sleep(sleepTime);
+        newPlot.pause(sleepTime);
 
         /* close active figure */
         newPlot.close();
-        java.lang.Thread.sleep(sleepTime);
+        newPlot.pause(sleepTime);
 
         /* clear active figure */
         newPlot.clf("reset");
-        java.lang.Thread.sleep(sleepTime);
+        newPlot.pause(sleepTime);
 
         /* close all other figures */
         newPlot.close("all");
-        java.lang.Thread.sleep(sleepTime);
+        newPlot.pause(sleepTime);
     }
 }
