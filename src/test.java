@@ -14,12 +14,12 @@ public class test {
             z[i] = Math.pow(x[i], 3);
         }
 
-        int   sleepTime = 5000;
+        int   sleepTime = 3000;
         MPlot newPlot   = new MPlot();
 
         newPlot.pause("off");
         /* Figure 0 */
-        newPlot.figure();
+        newPlot.figure("Name", "Martins Figure", "NumberTitle", "false", "Position", "[100 100 750 500]");
         newPlot.pause(sleepTime);
         newPlot.plot(x, x, "");
         newPlot.pause("newstate");
