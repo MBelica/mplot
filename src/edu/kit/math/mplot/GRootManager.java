@@ -11,21 +11,27 @@ import java.util.ArrayList;
 import java.util.ListIterator;
 
 class GRootManager {
-    protected ArrayList<ArrayList> groot = new ArrayList<ArrayList>();
+    protected ArrayList<ArrayList> groot           = new ArrayList<ArrayList>();    // contains every figure, data and plot
+    protected int                  activeFigureId  = -1;                    // contains id of active figure
+    protected int                  currentFigureId = -1;                    // contains highest id of all existent figures
 
-    protected void addNewFigureIntoGRoot(int id, String tag, String... propertyVarArgs) {
+    protected void addNewFigureIntoGRoot(int id, String tag, boolean addWithoutId, String... propertyVarArgs) {
         Figure newFigure;
 
+        if (addWithoutId) activeFigureId = ++currentFigureId;
+        else activeFigureId = id;
+        if (id > currentFigureId)  currentFigureId = id;
+
         if (propertyVarArgs.length > 0) {
-            newFigure = new Figure(id, propertyVarArgs);
+            newFigure = new Figure(activeFigureId , propertyVarArgs);
             tag       = newFigure.name;
         } else {
-            newFigure = new Figure(id, tag);
+            newFigure = new Figure(activeFigureId, tag);
         }
 
         ArrayList tempArrayList = new ArrayList();
 
-        tempArrayList.add(id);
+        tempArrayList.add(activeFigureId);
         tempArrayList.add(tag);
         tempArrayList.add(newFigure);
         groot.add(tempArrayList);
@@ -103,7 +109,7 @@ class GRootManager {
         }
     }
 
-    protected void closeFigureWithIndex(int index) {
+    protected void closeFigure(int id, int index) {
 
         // Delete figure in this id
         if ((groot.size() > index) && (groot.get(index).size() > 2)) {
@@ -112,6 +118,9 @@ class GRootManager {
             figureToClose.setVisible(false);
             figureToClose.dispose();    // Plots are going to be deleted by javas garbage-collector
             groot.remove(index);
+
+            if (id == activeFigureId)  activeFigureId = getNewestId();
+            if (id == currentFigureId) currentFigureId = getHighestId();
         } else {
             System.out.println("Error! Figure with index " + index + " could not be deleted.");
         }
@@ -130,7 +139,11 @@ class GRootManager {
         }
 
         groot.clear();
+        activeFigureId = currentFigureId = -1;
     }
+
+    protected int getActiveFigureId() { return this.activeFigureId;}
+    protected int getCurrentFigureId() { return this.currentFigureId;}
 
     // returns the figure to given id (remember id = position in groot and not the "handle"
     protected Figure getFigureToId(int id) {
@@ -168,6 +181,12 @@ class GRootManager {
         } else {
             return -1;
         }
+    }
+
+    protected int getIndexToActiveFigure() {
+        int index = getIndexToId( getActiveFigureId() ) ;
+
+        return index;
     }
 
     // check which index (position in ArrayList) has the figure with given id
@@ -267,7 +286,10 @@ class GRootManager {
     }
 
     // get figure with given index to front
-    protected void setFigureActive(int index) {
+    protected void setFigureActive(int id) {
+        activeFigureId = id;
+        int index = getIndexToId(id);
+
         if ((groot.size() > index) && (groot.get(index).size() > 2)) {
             Figure tempFigure = getFigureToIndex(index);
 
