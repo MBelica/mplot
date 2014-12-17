@@ -78,8 +78,6 @@ public class MPlot {
     public void plot(double[] x, double[] y, String linespec) {
         int index = groot.getIndexToActiveFigure();
 
-        System.out.println(index);
-
         if (index > -1) {
             groot.addPlotsToGRoot(index, linespec, new double[][] {
                 x, y
@@ -243,8 +241,7 @@ public class MPlot {
 
     public String pause(String state) throws InterruptedException {
         if (state == "newstate") {
-            if (pausingEnabled) pausingEnabled = false;
-            else pausingEnabled = true;
+            pausingEnabled ^= true;
 
             if (pausingEnabled) return "off"; // return oldstate
             else return "on";
@@ -256,5 +253,21 @@ public class MPlot {
             if (pausingEnabled) return "on";  // return state
             else return "off";
         }
+    }
+
+    public void hold () {
+        hold("toggle");
+    }
+
+    public void hold (String param) {
+        groot.changeHoldState(param);
+    }
+
+    public void help() {
+
+    }
+
+    public void help(String param) {
+
     }
 }

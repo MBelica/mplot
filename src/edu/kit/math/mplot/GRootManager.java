@@ -12,8 +12,9 @@ import java.util.ListIterator;
 
 class GRootManager {
     protected ArrayList<ArrayList> groot           = new ArrayList<ArrayList>();    // contains every figure, data and plot
-    protected int                  activeFigureId  = -1;                    // contains id of active figure
-    protected int                  currentFigureId = -1;                    // contains highest id of all existent figures
+    protected boolean              hold            = false;                         //
+    protected int                  activeFigureId  = -1;                            // contains id of active figure
+    protected int                  currentFigureId = -1;                            // contains highest id of all existent figures
 
     protected void addNewFigureIntoGRoot(int id, String tag, boolean addWithoutId, String... propertyVarArgs) {
         Figure newFigure;
@@ -40,15 +41,47 @@ class GRootManager {
     // add Plot into GRoot under given ID, for now small but I think necessary if adding more than one plot into one figure
     protected void addPlotsToGRoot(int index, String linespecsParam, double[]... dataPoints) {
         if ((groot.size() > index) && (groot.get(index).size() > 2)) {
-            int         plotAmount = (dataPoints.length / 2);
-            DataTable[] data       = new DataTable[plotAmount];
+            int existingPlotAmount;
+            int newPlotAmount = (dataPoints.length / 2);
 
-            for (int i = 0; i < (plotAmount); i++) {
+            DataTable[] data, existingDataTables;
+            String[] lineSpecs, exisitingLineSpecs;
+
+            Figure figureToPlot = getFigureToIndex(index);
+
+            if (hold) {
+                existingPlotAmount = (groot.get(index).size() - 3) / 3; // ToDo: trotz Redundanz Sicherheitsabfrage ob Ganzzahlig
+                exisitingLineSpecs = getLineSpecsToIndex(index, existingPlotAmount);
+                existingDataTables = getDataTablesToIndex(index, existingPlotAmount);
+
+                lineSpecs = new String[newPlotAmount + existingPlotAmount];
+                data      = new DataTable[newPlotAmount + existingPlotAmount];
+
+                for (int i = 0; i < existingPlotAmount; i++) {
+
+                    data[i]        = existingDataTables[i];
+                    lineSpecs[i]   = exisitingLineSpecs[i];
+                }
+            }
+            else {
+                existingPlotAmount = 0;
+                lineSpecs = new String[newPlotAmount];
+                data      = new DataTable[newPlotAmount];
+
+                int figureSize = groot.get(index).size();
+                if (figureSize > 3) {
+                    for (int i = (figureSize-1); i >= 3; i--) {
+                        groot.get(index).remove(i);
+                    }
+                }
+            }
+
+            for (int i = 0; i < (newPlotAmount); i++) {
                 double[] x = dataPoints[2 * i];
                 double[] y = dataPoints[2 * i + 1];
 
                 if (x.length == y.length) {
-                    data[i] = (Data.dress(x, y));
+                    data[existingPlotAmount + i] = (Data.dress(x, y));
                 } else {
                     Utilities.echo("Error! Cannot plot given data. (Every) x,y-pair must have same length");
 
@@ -56,30 +89,24 @@ class GRootManager {
                 }
             }
 
-            Figure figureToPlot = getFigureToIndex(index);
-
             figureToPlot.getContentPane().removeAll();
-
             XYPlot plot = new XYPlot(data);
-
-            if (groot.get(index).size() > 3) {
-                for (int i = 3; i < groot.get(index).size(); i++) {
-                    groot.get(index).remove(i);
-                }
-            }
-
             for (int i = 0; i < data.length; i++) {
-                String linespecs;
-
-                if (linespecsParam == "#MultiplePlots") {
-                    linespecs = "#MultiplePlots" + i;
-                } else {
-                    linespecs = linespecsParam;
+                if (i >= existingPlotAmount) {
+                    if (linespecsParam == "#MultiplePlots") {
+                        lineSpecs[i] = "#MultiplePlots" + i;
+                    } else {
+                        lineSpecs[i] = linespecsParam;
+                    }
                 }
 
-                Plot newPlot = new Plot(figureToPlot, plot, data[i], linespecs);
+                Plot newPlot = new Plot(figureToPlot, plot, data[i], lineSpecs[i]);
 
-                groot.get(index).add(newPlot);
+                if (i >= existingPlotAmount) {
+                    groot.get(index).add(newPlot);
+                    groot.get(index).add(data[i]);
+                    groot.get(index).add(lineSpecs[i]);
+                }
             }
 
             figureToPlot.getContentPane().revalidate();
@@ -87,6 +114,12 @@ class GRootManager {
         } else {
             Utilities.debugEcho("Error! Plot could not be added to Figure " + index);
         }
+    }
+
+    protected void changeHoldState(String param) { // ToDo multiple axes and then here current axes instead of whole figure
+        if      (param == "on")     hold  = true;
+        else if (param == "off")    hold  = false;
+        else if (param == "toggle") hold ^= true;
     }
 
     // clear a figure
@@ -153,6 +186,24 @@ class GRootManager {
     // returns the figure to given id (remember id = position in groot and not the "handle"
     protected Figure getFigureToIndex(int index) {
         return (Figure) groot.get(index).get(2);
+    }
+
+    protected String[] getLineSpecsToIndex(int index, int existingPlotAmount) {
+        String[] lineSpecs = new String[existingPlotAmount];
+        for(int i = 0; i < existingPlotAmount; i++) {
+            lineSpecs[i] = (String) groot.get(index).get(3 + 3*i + 2); // 3 for id, tag and figure and every plot has plot, data and params
+        }
+
+        return lineSpecs;
+    }
+
+    protected DataTable[] getDataTablesToIndex(int index, int existingPlotAmount) {
+        DataTable[] DataTables = new DataTable[existingPlotAmount];
+        for(int i = 0; i < existingPlotAmount; i++) {
+            DataTables[i] = (DataTable) groot.get(index).get(3 + 3*i + 1); // 3 for id, tag and figure and every plot has plot, data and params
+        }
+
+        return DataTables;
     }
 
     protected int getIdToTag(String givenTag) {
@@ -272,8 +323,10 @@ class GRootManager {
             if (content.size() > 3) {
                 grootString += "     Associated plots: \n";
 
-                for (int i = 3; i < content.size(); i++) {
-                    grootString += "        * " + content.get(i) + "\n";
+                for (int i = 3; i < content.size(); i += 3) {
+                    grootString +=   "        * " + content.get(i)  + "\n";
+                        if (i+1<content.size()) grootString += "              - with DataTable: " + content.get(i+1) + "\n";
+                        if (i+2<content.size()) grootString += "              - and Linespecs: "  + content.get(i+2) + "\n";
                 }
             } else {
                 grootString += "     No plots associated \n";
