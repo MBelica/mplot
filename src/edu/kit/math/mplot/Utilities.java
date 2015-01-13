@@ -8,8 +8,8 @@ class Utilities {
     static long systemStartTime  = 0;
     static int  infPauseSequence = 500;
 
-    static final outputStyle echoOutput  = outputStyle.console;
-    static final outputStyle debugOutput = outputStyle.file;
+    static outputStyle echoOutput  = outputStyle.console;
+    static outputStyle debugOutput = outputStyle.file;
 
     protected enum outputStyle { console, file, none }
 
