@@ -1,41 +1,53 @@
-# MPlot  
+#############################################################
+##  MPlot                                                  ##
+##                                                         ##
+##                                                         ##
+#############################################################
 
 
-## General
-* Compiled with Java 1.7
-* UML Diagrams: in doc folder
+# General
+Compiled with Java 1.7
+UML Diagrams: in doc folder
 
 
-## Compile (I think this isn't up to date)
-* javac -cp lib/*" -d "bin/" src/*.java
-* run: (e.g. MPlotTest1)
-* java -cp "bin/:lib/*" test
+# Compile (I think this isn't up to date)
+find -name "*" | grep ".java" > "src/allsrcfiles"
+javac -cp "lib/*" -d "bin/" src/*.java
+run: (e.g. MPlotTest1)
+java -cp "bin/:lib/*" test
 
 
-## Structure
-* MPlot (+): main file. contains all public methods to be called by user
-* GRootManager (#): contains our ArrayList of Figures and Plots and handles every request regarding groot
-* Utilities (-): contains all function want to call from several files or could belong into MPlot but aren't mentioned for users
-* Figure (-): creates simple Frame.
-* Data (-): responsible for conversion of user input into datatable
-* Plot (-): main file for creating plot including points and lines, parsing linespecs etc
+# Structure
+MPlot (+)
+    * main file
+    * contains only static to be called by user
+Utilities (-)
+    * contains all function want to call from several files
+    * or could belong into MPlot but aren't mentioned for users
+Figure (-)
+    * creates simple Frame
+Data (-)
+    * responsible for conversion of user input into datatable
+Plot (-)
+    * main file for creating plot including points and lines
 
 
-## Plan for further development
-1. Clean files, 
-1. Write output/debug output into file
-1. Write help function
-1. UML * class-diagramm, * sequence-diagramm
-1. Javadoc
+# Plan for further development
+- Clean files, 
+- Write output/debug output into file
+- Write help function
+- UML * class-diagramm, * sequence-diagramm
+- Javadoc
 
 
-## At this point the main work (of our first part/version) is done, the question is how to go on:
-* either rewrite package with namespaces, generics and strict java doc to have a safer and more elegant code. This would mean a lot of work, writing the core, writing it modulary, .... Then new system definitely would have many advantages but the question remains if this is necessairy
-* or add all (possible) linespecs and colors missing + some cleaning. This would... lets say finish this branch completely 
-* or add other plot library - to test the flexibility of our code. Idea for that: add interface between interface between groot and plot to convert data and pass them to right plot library
+Here is main work done, the question is how to go on:
+* either rewrite package with namespaces, generics and strict java doc to have a safer and more elegant code
+* or add all (possible) linespecs and colors missing
+* or add other plot library. Idea for that: add interface between interface between groot and plot to convert data and pass them to right plot library
+* or rewrite whole structur since groot is just a child of matlabs dock which allows docking etc.. many of linespecs aren't working yet because of this missing
 
 
-## Idea for function hold
+# Idea for function hold
 for each plot check if plot exists in newest frame
     * no: plot
     * yes: check if hold has been callen
@@ -43,5 +55,5 @@ for each plot check if plot exists in newest frame
         - yes: draw both
 
 
-## Dispose JFrame 
+# Dispose JFrame 
 Depending on how many graphs active dispose or close JFrame and delete MPlot instance?
