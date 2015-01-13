@@ -60,64 +60,64 @@ class Figure extends JFrame {
 
                 switch (propertyName) {
 
-                /** Figure Appearance */
-                case "Color" :
-                    bgcolor = BGColor.none;          // ToDo: temporary... this is going to be hard
+                    /** Figure Appearance */
+                    case "Color" :
+                        bgcolor = BGColor.none;          // ToDo: temporary... this is going to be hard
 
-                    break;
+                        break;
 
-                case "Name" :
-                    if (propertyValue != "") {
-                        name = propertyValue;        // ToDo: set name also in GRoot. tag = name??
-                    }
+                    case "Name" :
+                        if (propertyValue != "") {
+                            name = propertyValue;        // ToDo: set name also in GRoot. tag = name??
+                        }
 
-                    break;
+                        break;
 
-                case "NumberTitle" :
-                    if (propertyValue == "false") {
-                        numberTitle = false;
-                    } else if (propertyValue == "true") {
-                        numberTitle = true;
-                    }
+                    case "NumberTitle" :
+                        if (propertyValue == "false") {
+                            numberTitle = false;
+                        } else if (propertyValue == "true") {
+                            numberTitle = true;
+                        }
 
-                    break;
+                        break;
 
-                case "Visible" :
-                    if (propertyValue == "false") {
-                        visible = false;
-                    } else if (propertyValue == "true") {
-                        visible = true;
-                    }
+                    case "Visible" :
+                        if (propertyValue == "false") {
+                            visible = false;
+                        } else if (propertyValue == "true") {
+                            visible = true;
+                        }
 
-                    break;
+                        break;
 
-                /** Axes and Plot Appearance */
-                case "Renderer" :
-                    if (propertyValue == "gral") {
-                        renderer = Renderer.gral;
-                    }
+                    /** Axes and Plot Appearance */
+                    case "Renderer" :
+                        if (propertyValue == "gral") {
+                            renderer = Renderer.gral;
+                        }
 
-                    break;
+                        break;
 
-                /** Location and Size */
-                case "Position" :
-                    if (propertyValue != "") {
-                        position = propertyValue;    // ToDo: set name also in GRoot. tag = name??
-                    }
+                    /** Location and Size */
+                    case "Position" :
+                        if (propertyValue != "") {
+                            position = propertyValue;    // ToDo: set name also in GRoot. tag = name??
+                        }
 
-                    break;
+                        break;
 
-                case "Resize" :
-                    if (propertyValue == "on") {
-                        resize = true;
-                    } else if (propertyValue == "off") {
-                        resize = false;
-                    }
+                    case "Resize" :
+                        if (propertyValue == "on") {
+                            resize = true;
+                        } else if (propertyValue == "off") {
+                            resize = false;
+                        }
 
-                    break;
+                        break;
 
-                default :
-                    break;
+                    default :
+                        break;
                 }
             }
         }
@@ -129,8 +129,8 @@ class Figure extends JFrame {
 
         /* Color */
         switch (bgcolor) {    // ToDo: thats gonna be work
-        default :
-            break;
+            default :
+                break;
         }
 
         /* Name & Number Title */

@@ -11,7 +11,7 @@ import java.util.ArrayList;
 import java.util.ListIterator;
 
 class GRootManager {
-    protected ArrayList<ArrayList> groot           = new ArrayList<ArrayList>();    // contains every figure, data and plot
+    protected ArrayList<ArrayList> groot           = new ArrayList<ArrayList>();            // contains every figure, data and plot
     protected boolean              hold            = false;                         //
     protected int                  activeFigureId  = -1;                            // contains id of active figure
     protected int                  currentFigureId = -1;                            // contains highest id of all existent figures
@@ -50,7 +50,7 @@ class GRootManager {
             Figure figureToPlot = getFigureToIndex(index);
 
             if (hold) {
-                existingPlotAmount = (groot.get(index).size() - 3) / 3; // ToDo: trotz Redundanz Sicherheitsabfrage ob Ganzzahlig
+                existingPlotAmount = (int) ( (groot.get(index).size() - 3) / 3.0 );
                 exisitingLineSpecs = getLineSpecsToIndex(index, existingPlotAmount);
                 existingDataTables = getDataTablesToIndex(index, existingPlotAmount);
 
@@ -112,11 +112,11 @@ class GRootManager {
             figureToPlot.getContentPane().revalidate();
             figureToPlot.getContentPane().repaint();
         } else {
-            Utilities.debugEcho("Error! Plot could not be added to Figure " + index);
+            Utilities.debugEcho("[" + Utilities.getExecuteDuration() + "] " + "Error! Plot could not be added to Figure " + index);
         }
     }
 
-    protected void changeHoldState(String param) { // ToDo multiple axes and then here current axes instead of whole figure
+    protected void changeHoldState(String param) {
         if      (param == "on")     hold  = true;
         else if (param == "off")    hold  = false;
         else if (param == "toggle") hold ^= true;
@@ -149,7 +149,7 @@ class GRootManager {
             Figure figureToClose = getFigureToIndex(index);
 
             figureToClose.setVisible(false);
-            figureToClose.dispose();    // Plots are going to be deleted by javas garbage-collector
+            figureToClose.dispose();
             groot.remove(index);
 
             if (id == activeFigureId)  activeFigureId = getNewestId();
@@ -307,7 +307,7 @@ class GRootManager {
         String                  grootString = "";
         ListIterator<ArrayList> li          = groot.listIterator();
 
-        grootString += "Current Figures (#" + groot.size() + "): \n";
+        grootString += "Current Figures (#" + groot.size() + "): " + System.lineSeparator();
 
         while (li.hasNext()) {
             ArrayList content = li.next();
@@ -318,22 +318,22 @@ class GRootManager {
                 grootString += " and tag '" + content.get(1) + "'";
             }
 
-            grootString += ": " + content.get(2) + "\n";
+            grootString += ": " + content.get(2) + System.lineSeparator();
 
             if (content.size() > 3) {
-                grootString += "     Associated plots: \n";
+                grootString += "     Associated plots: " + System.lineSeparator();
 
                 for (int i = 3; i < content.size(); i += 3) {
-                    grootString +=   "        * " + content.get(i)  + "\n";
-                        if (i+1<content.size()) grootString += "              - with DataTable: " + content.get(i+1) + "\n";
-                        if (i+2<content.size()) grootString += "              - and Linespecs: "  + content.get(i+2) + "\n";
+                    grootString +=   "        * " + content.get(i)  + System.lineSeparator();
+                        if (i+1<content.size()) grootString += "              - with DataTable: " + content.get(i+1) + System.lineSeparator();
+                        if (i+2<content.size()) grootString += "              - and Linespecs: "  + content.get(i+2) + System.lineSeparator();
                 }
             } else {
-                grootString += "     No plots associated \n";
+                grootString += "     No plots associated " + System.lineSeparator();
             }
         }
 
-        grootString += "\n";
+        grootString += System.lineSeparator();
 
         return grootString;
     }
@@ -349,7 +349,7 @@ class GRootManager {
             tempFigure.toFront();
             tempFigure.repaint();
         } else {
-            Utilities.debugEcho("Error with set figure active!");
+            Utilities.debugEcho("[" + Utilities.getExecuteDuration() + "] " + "Unable setting figure active!");
         }
     }
 

@@ -15,11 +15,12 @@ public class test {
         }
 
         int   sleepTime = 3000;
+
         MPlot newPlot   = new MPlot();
 
         newPlot.pause("off");
         /* Figure 0 */
-        newPlot.figure("Name", "Martins Figure", "NumberTitle", "false", "Position", "[100 100 750 500]");
+        newPlot.figure("Name", "Martins Figure", "NumberTitle", "false", "Position", "[100 100 1280 720]");
         newPlot.pause(sleepTime);
         newPlot.plot(x, x, "");
         newPlot.pause("newstate");
@@ -36,6 +37,5 @@ public class test {
 
         /* close all other figures */
         newPlot.close("all");
-        newPlot.pause(sleepTime);
     }
 }
