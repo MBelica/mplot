@@ -2,7 +2,7 @@
 
 import edu.kit.math.mplot.MPlot;
 
-public class test {
+public class martinTest {
     public static void main(String[] args) throws InterruptedException { // ToDo: ich fände es gut wenn man throws weglassen könnte, aber ich weis noch nicht wie
         double[] x = new double[100],
                  y = new double[100],

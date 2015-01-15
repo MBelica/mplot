@@ -1,11 +1,11 @@
 package edu.kit.math.mplot;
 
 public class MPlot {
-    private boolean      pausingEnabled       = true;
+    private boolean pausingEnabled            = true;
     private GRootManager groot                = new GRootManager();
 
     static int infPauseSequence               = 250;
-    static long systemStartTime               = 0;
+    static long systemStartTime               = System.nanoTime();
 
     static outputStyle echoOutput             = outputStyle.console;
     static outputStyle debugOutput            = outputStyle.console;
@@ -14,10 +14,6 @@ public class MPlot {
 
     static enum outputStyle { console, file, none }
     static enum reportingStyle { silent, normal, loud }
-
-    public MPlot() {
-        systemStartTime = System.nanoTime();
-    }
 
     /**
      *
