@@ -1,0 +1,10 @@
+diff a/README b/README	(rejected hunks)
+@@ -55,5 +55,5 @@
+         - yes: draw both
+ 
+ 
+-## Dispose JFrame 
+-Depending on how many graphs active dispose or close JFrame and delete MPlot instance?
+\ No newline at end of file
++# Dispose JFrame 
++Depending on how many graphs active dispose or close JFrame and delete MPlot instance?
