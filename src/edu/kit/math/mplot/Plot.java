@@ -197,6 +197,47 @@ class Plot {
 
     private void parseLinespecs(String ls) {
 
+        if (ls.indexOf("MultiplePlots#") > -1) {
+
+            int mpIndex = Integer.parseInt(ls.substring(ls.indexOf("#")+1).trim());
+
+            int lineRendererIndex  = ( (int)(mpIndex/8) ) % 4;
+            int colorRendererIndex = mpIndex % 8;
+
+
+            if (colorRendererIndex == 1) {
+                ls = "r";    // Red
+            } else if (colorRendererIndex == 2) {
+                ls = "g";    // Green
+            } else if (colorRendererIndex == 3) {
+                ls = "b";    // Blue
+            } else if (colorRendererIndex == 4) {
+                ls = "c";    // Cyan
+            } else if (colorRendererIndex == 5) {
+                ls = "m";       // Magenta
+            } else if (colorRendererIndex == 6) {
+                ls = "y";        // Yellow
+            } else if (colorRendererIndex == 7) {
+                ls = "w";        // White
+            } else {
+                ls = "k";       // Black (default)
+            }
+
+            if (lineRendererIndex == 1) {
+                ls += "--";     // Dashed line
+            } else if (lineRendererIndex == 2) {
+                ls += "-.";     // Dash-dot line
+            } else if (lineRendererIndex == 3) {
+                ls += ":";     // Dotted line
+            } else {
+                ls += "-";     // Solid line (default)
+            }
+
+            System.out.println(ls);
+        }
+
+
+
         /** Line Style Specifiers */
         if (ls.indexOf("--") > -1) {
             lStyle = lineStyle.dashed;     // Dashed line
@@ -226,42 +267,22 @@ class Plot {
         }
 
         /** Color Specifiers */
-        if (ls.indexOf("#MultiplePlots") > -1) {
-            if (ls.indexOf("1") > -1) {
-                color = new Color(1.0f, 0.0f, 0.0f);    // Red
-            } else if (ls.indexOf("2") > -1) {
-                color = new Color(0.0f, 1.0f, 0.0f);    // Green
-            } else if (ls.indexOf("3") > -1) {
-                color = new Color(0.0f, 0.0f, 1.0f);    // Blue
-            } else if (ls.indexOf("4") > -1) {
-                color = new Color(0.0f, 1.0f, 1.0f);    // Cyan
-            } else if (ls.indexOf("5") > -1) {
-                color = new Color(1.0f, 0.0f, 1.0f);    // Magenta
-            } else if (ls.indexOf("6") > -1) {
-                color = new Color(1.0f, 1.0f, 0.0f);    // Yellow
-            } else if (ls.indexOf("7") > -1) {
-                color = new Color(1.0f, 1.0f, 1.0f);    // White
-            } else {
-                color = new Color(0.0f, 0.0f, 0.0f);    // Black (default)
-            }
+        if (ls.indexOf("r") > -1) {
+            color = new Color(1.0f, 0.0f, 0.0f);    // Red
+        } else if (ls.indexOf("g") > -1) {
+            color = new Color(0.0f, 1.0f, 0.0f);    // Green
+        } else if (ls.indexOf("b") > -1) {
+            color = new Color((float) 0.0, (float) 0.0, (float) 1.0);    // Blue
+        } else if (ls.indexOf("c") > -1) {
+            color = new Color(0.0f, 1.0f, 1.0f);    // Cyan
+        } else if (ls.indexOf("m") > -1) {
+            color = new Color(1.0f, 0.0f, 1.0f);    // Magenta
+        } else if (ls.indexOf("y") > -1) {
+            color = new Color(1.0f, 1.0f, 0.0f);    // Yellow
+        } else if (ls.indexOf("w") > -1) {
+            color = new Color(1.0f, 1.0f, 1.0f);    // White
         } else {
-            if (ls.indexOf("r") > -1) {
-                color = new Color(1.0f, 0.0f, 0.0f);    // Red
-            } else if (ls.indexOf("g") > -1) {
-                color = new Color(0.0f, 1.0f, 0.0f);    // Green
-            } else if (ls.indexOf("b") > -1) {
-                color = new Color(0.0f, 0.0f, 1.0f);    // Blue
-            } else if (ls.indexOf("c") > -1) {
-                color = new Color(0.0f, 1.0f, 1.0f);    // Cyan
-            } else if (ls.indexOf("m") > -1) {
-                color = new Color(1.0f, 0.0f, 1.0f);    // Magenta
-            } else if (ls.indexOf("y") > -1) {
-                color = new Color(1.0f, 1.0f, 0.0f);    // Yellow
-            } else if (ls.indexOf("w") > -1) {
-                color = new Color(1.0f, 1.0f, 1.0f);    // White
-            } else {
-                color = new Color(0.0f, 0.0f, 0.0f);    // Black (default)
-            }
+            color = new Color(0.0f, 0.0f, 0.0f);    // Black (default)
         }
     }
 }

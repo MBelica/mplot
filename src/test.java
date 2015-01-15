@@ -14,28 +14,20 @@ public class test {
             z[i] = Math.pow(x[i], 3);
         }
 
-        int   sleepTime = 3000;
+
+        int sleepTime = 2000;
 
         MPlot newPlot   = new MPlot();
 
-        newPlot.pause("off");
-        /* Figure 0 */
         newPlot.figure("Name", "Martins Figure", "NumberTitle", "false", "Position", "[100 100 1280 720]");
         newPlot.pause(sleepTime);
-        newPlot.plot(x, x, "");
-        newPlot.pause("newstate");
-        newPlot.pause(sleepTime);
-        newPlot.plot(x, y, "b--.");
-        newPlot.pause(sleepTime);
-        newPlot.hold("on");
-        newPlot.plot(x, z, "r-*");
-        newPlot.pause(sleepTime);
-        newPlot.hold();
-        newPlot.pause(sleepTime);
-        newPlot.plot(x, x, "");
+
+        newPlot.plot(x, y, x, x, x, z);
         newPlot.pause(sleepTime);
 
-        /* close all other figures */
+        newPlot.clf("Martins Figure");
+        newPlot.pause(sleepTime);
+
         newPlot.close("all");
     }
 }

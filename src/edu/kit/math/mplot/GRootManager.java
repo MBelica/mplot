@@ -93,8 +93,8 @@ class GRootManager {
             XYPlot plot = new XYPlot(data);
             for (int i = 0; i < data.length; i++) {
                 if (i >= existingPlotAmount) {
-                    if (linespecsParam == "#MultiplePlots") {
-                        lineSpecs[i] = "#MultiplePlots" + i;
+                    if (linespecsParam == "MultiplePlots#") {
+                        lineSpecs[i] = "MultiplePlots#" + i;
                     } else {
                         lineSpecs[i] = linespecsParam;
                     }

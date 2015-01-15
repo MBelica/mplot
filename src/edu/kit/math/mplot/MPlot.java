@@ -8,7 +8,7 @@ public class MPlot {
     static long systemStartTime               = 0;
 
     static outputStyle echoOutput             = outputStyle.console;
-    static outputStyle debugOutput            = outputStyle.file;
+    static outputStyle debugOutput            = outputStyle.console;
     static reportingStyle echoReportingLevel  = reportingStyle.normal;
     static reportingStyle debugReportingLevel = reportingStyle.loud;
 
@@ -125,7 +125,7 @@ public class MPlot {
             int index = groot.getIndexToActiveFigure();
 
             if (index > -1) {    // if we've found an index (entry in groot) we are going to plot
-                groot.addPlotsToGRoot(index, "#MultiplePlots", dataPoints);
+                groot.addPlotsToGRoot(index, "MultiplePlots#", dataPoints);
                 Watchdog.debugEcho("[" + Utilities.getExecuteDuration() + "] "
                         + "New plots created and associated with figure " + groot.getActiveFigureId()
                         + ". activeFigureId: "  + groot.getActiveFigureId()
