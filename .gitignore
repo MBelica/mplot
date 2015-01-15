@@ -1,3 +1,7 @@
+#IntelliJ IDEA crap ;)
+*.iml
+*.idea/
+
 #Java class files
 *.class
 
