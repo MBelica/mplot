@@ -6,7 +6,7 @@ import java.io.*;
 
 class Utilities {
     static long systemStartTime  = 0;
-    static int  infPauseSequence = 500;
+    static int  infPauseSequence = 250;
 
     static outputStyle echoOutput  = outputStyle.console;
     static outputStyle debugOutput = outputStyle.file;

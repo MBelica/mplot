@@ -1,0 +1,56 @@
+[0.00149] Pausing state changed. Pausing now false
+[0.20889] New figure with index 0 created.  activeFigureId: 0, currentFigureId: 0
+[0.20922] Current Figures (#1): 
+   - Figure with index 0 and tag 'Martins Figure': edu.kit.math.mplot.Figure[frame0,100,100,1280x720,invalid,layout=java.awt.BorderLayout,title=Martins Figure,resizable,normal,defaultCloseOperation=HIDE_ON_CLOSE,rootPane=javax.swing.JRootPane[,8,31,124x0,layout=javax.swing.JRootPane$RootLayout,alignmentX=0.0,alignmentY=0.0,border=,flags=16777673,maximumSize=,minimumSize=,preferredSize=],rootPaneCheckingEnabled=true]
+     No plots associated 
+
+
+[0.79814] New plot created and associated with figure 0. activeFigureId: 0, currentFigureId: 0
+[0.79844] Current Figures (#1): 
+   - Figure with index 0 and tag 'Martins Figure': edu.kit.math.mplot.Figure[frame0,100,100,1280x720,layout=java.awt.BorderLayout,title=Martins Figure,resizable,normal,defaultCloseOperation=HIDE_ON_CLOSE,rootPane=javax.swing.JRootPane[,8,31,1264x681,layout=javax.swing.JRootPane$RootLayout,alignmentX=0.0,alignmentY=0.0,border=,flags=16777673,maximumSize=,minimumSize=,preferredSize=],rootPaneCheckingEnabled=true]
+     Associated plots: 
+        * edu.kit.math.mplot.Plot@756a162a
+              - with DataTable: de.erichseifert.gral.data.DataTable@4790de90
+              - and Linespecs: 
+
+
+[0.79875] Pausing state switched. Pausing now true
+[0.79896] Pausing for 3000 ms enabled.
+[3.95623] New plot created and associated with figure 0. activeFigureId: 0, currentFigureId: 0
+[3.95653] Current Figures (#1): 
+   - Figure with index 0 and tag 'Martins Figure': edu.kit.math.mplot.Figure[frame0,100,100,1280x720,layout=java.awt.BorderLayout,title=Martins Figure,resizable,normal,defaultCloseOperation=HIDE_ON_CLOSE,rootPane=javax.swing.JRootPane[,8,31,1264x681,layout=javax.swing.JRootPane$RootLayout,alignmentX=0.0,alignmentY=0.0,border=,flags=16777673,maximumSize=,minimumSize=,preferredSize=],rootPaneCheckingEnabled=true]
+     Associated plots: 
+        * edu.kit.math.mplot.Plot@25b56115
+              - with DataTable: de.erichseifert.gral.data.DataTable@3fb42cbe
+              - and Linespecs: b--.
+
+
+[3.95689] Pausing for 3000 ms enabled.
+[7.30629] New plot created and associated with figure 0. activeFigureId: 0, currentFigureId: 0
+[7.3066] Current Figures (#1): 
+   - Figure with index 0 and tag 'Martins Figure': edu.kit.math.mplot.Figure[frame0,100,100,1280x720,layout=java.awt.BorderLayout,title=Martins Figure,resizable,normal,defaultCloseOperation=HIDE_ON_CLOSE,rootPane=javax.swing.JRootPane[,8,31,1264x681,layout=javax.swing.JRootPane$RootLayout,alignmentX=0.0,alignmentY=0.0,border=,flags=16777673,maximumSize=,minimumSize=,preferredSize=],rootPaneCheckingEnabled=true]
+     Associated plots: 
+        * edu.kit.math.mplot.Plot@25b56115
+              - with DataTable: de.erichseifert.gral.data.DataTable@3fb42cbe
+              - and Linespecs: b--.
+        * edu.kit.math.mplot.Plot@75a61582
+              - with DataTable: de.erichseifert.gral.data.DataTable@9a33c3
+              - and Linespecs: r-*
+
+
+[7.30698] Pausing for 3000 ms enabled.
+[10.30718] Pausing for 3000 ms enabled.
+[13.42398] New plot created and associated with figure 0. activeFigureId: 0, currentFigureId: 0
+[13.42434] Current Figures (#1): 
+   - Figure with index 0 and tag 'Martins Figure': edu.kit.math.mplot.Figure[frame0,100,100,1280x720,invalid,hidden,layout=java.awt.BorderLayout,title=Martins Figure,resizable,normal,defaultCloseOperation=HIDE_ON_CLOSE,rootPane=javax.swing.JRootPane[,8,31,1264x681,invalid,layout=javax.swing.JRootPane$RootLayout,alignmentX=0.0,alignmentY=0.0,border=,flags=16777673,maximumSize=,minimumSize=,preferredSize=],rootPaneCheckingEnabled=true]
+     Associated plots: 
+        * edu.kit.math.mplot.Plot@1e3af3cb
+              - with DataTable: de.erichseifert.gral.data.DataTable@1e89a8d9
+              - and Linespecs: 
+
+
+[13.42471] Pausing for 3000 ms enabled.
+[16.42712] All figures deleted. activeFigureId: -1, currentFigureId:-1
+[16.42745] Current Figures (#0): 
+
+
