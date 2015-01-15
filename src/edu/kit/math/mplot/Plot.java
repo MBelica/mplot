@@ -101,47 +101,47 @@ class Plot {
 
     private void setLineRenderer(DataTable data, XYPlot plot, LineRenderer lines) {
         switch (lStyle) {
-        case solid :
-            plot.setLineRenderer(data, lines);
-            plot.getLineRenderer(data).setColor(color);
+            case solid :
+                plot.setLineRenderer(data, lines);
+                plot.getLineRenderer(data).setColor(color);
 
-            break;
+                break;
 
-        case dashed :
-            plot.setLineRenderer(data, lines);
-            lines.setStroke(new BasicStroke(2.0f, BasicStroke.CAP_BUTT, BasicStroke.JOIN_MITER, 10.0f,
-                                            new float[] { 10.0f,
-                    10.0f }, 0.0f));
-            plot.getLineRenderer(data).setColor(color);
+            case dashed :
+                plot.setLineRenderer(data, lines);
+                lines.setStroke(new BasicStroke(2.0f, BasicStroke.CAP_BUTT, BasicStroke.JOIN_MITER, 10.0f,
+                        new float[] { 10.0f,
+                                10.0f }, 0.0f));
+                plot.getLineRenderer(data).setColor(color);
 
-            break;
+                break;
 
-        case dashdot :
-            plot.setLineRenderer(data, lines);
-            lines.setStroke(new BasicStroke(2.0f, BasicStroke.CAP_BUTT, BasicStroke.JOIN_MITER, 10.0f,
-                                            new float[] { 10.0f,
-                    10.0f, 2.0f, 10.0f }, 0.0f));
-            plot.getLineRenderer(data).setColor(color);
+            case dashdot :
+                plot.setLineRenderer(data, lines);
+                lines.setStroke(new BasicStroke(2.0f, BasicStroke.CAP_BUTT, BasicStroke.JOIN_MITER, 10.0f,
+                        new float[] { 10.0f,
+                                10.0f, 2.0f, 10.0f }, 0.0f));
+                plot.getLineRenderer(data).setColor(color);
 
-            break;
+                break;
 
-        case dotted :
-            plot.setLineRenderer(data, lines);
-            lines.setStroke(new BasicStroke(2.0f, BasicStroke.CAP_BUTT, BasicStroke.JOIN_MITER, 10.0f,
-                                            new float[] { 2.0f,
-                    10.0f }, 0.0f));
-            plot.getLineRenderer(data).setColor(color);
+            case dotted :
+                plot.setLineRenderer(data, lines);
+                lines.setStroke(new BasicStroke(2.0f, BasicStroke.CAP_BUTT, BasicStroke.JOIN_MITER, 10.0f,
+                        new float[] { 2.0f,
+                                10.0f }, 0.0f));
+                plot.getLineRenderer(data).setColor(color);
 
-            break;
+                break;
 
-        case plain :
-            break;
+            case plain :
+                break;
 
-        default :
-            plot.setLineRenderer(data, lines);
-            plot.getLineRenderer(data).setColor(color);
+            default :
+                plot.setLineRenderer(data, lines);
+                plot.getLineRenderer(data).setColor(color);
 
-            break;
+                break;
         }
     }
 
@@ -149,49 +149,49 @@ class Plot {
         PointRenderer pointRenderer = plot.getPointRenderer(data);
 
         switch (mStyle) {
-        case point :
-            pointRenderer.setShape(new Ellipse2D.Double(-1.0, -1.0, 2.0, 2.0));
-            pointRenderer.setColor(color);
+            case point :
+                pointRenderer.setShape(new Ellipse2D.Double(-1.0, -1.0, 2.0, 2.0));
+                pointRenderer.setColor(color);
 
-            break;
+                break;
 
-        case plus :
-            pointRenderer.setShape(drawPlus(2, 1));
-            pointRenderer.setColor(color);
+            case plus :
+                pointRenderer.setShape(drawPlus(2, 1));
+                pointRenderer.setColor(color);
 
-            break;
+                break;
 
-        case circle :
-            Area circle = new Area(new Ellipse2D.Double(-2.0, -2.0, 4.0, 4.0));
+            case circle :
+                Area circle = new Area(new Ellipse2D.Double(-2.0, -2.0, 4.0, 4.0));
 
-            circle.subtract(new Area(new Ellipse2D.Double(-1.0, -1.0, 2.0, 2.0)));
-            pointRenderer.setShape(circle);
+                circle.subtract(new Area(new Ellipse2D.Double(-1.0, -1.0, 2.0, 2.0)));
+                pointRenderer.setShape(circle);
 
-            break;
+                break;
 
-        case asterisk :
-            pointRenderer.setShape(drawAsterisk(2, 1));
-            pointRenderer.setColor(color);
+            case asterisk :
+                pointRenderer.setShape(drawAsterisk(2, 1));
+                pointRenderer.setColor(color);
 
-            break;
+                break;
 
-        case cross :
-            pointRenderer.setShape(drawDiagonalCross(2, 1));
-            pointRenderer.setColor(color);
+            case cross :
+                pointRenderer.setShape(drawDiagonalCross(2, 1));
+                pointRenderer.setColor(color);
 
-            break;
+                break;
 
-        case dot :
-            pointRenderer.setShape(new Ellipse2D.Double(-2.0, -2.0, 4.0, 4.0));
-            pointRenderer.setColor(color);
+            case dot :
+                pointRenderer.setShape(new Ellipse2D.Double(-2.0, -2.0, 4.0, 4.0));
+                pointRenderer.setColor(color);
 
-            break;
+                break;
 
-        default :
-            pointRenderer.setShape(new Ellipse2D.Double(-1.0, -1.0, 2.0, 2.0));
-            pointRenderer.setColor(color);
+            default :
+                pointRenderer.setShape(new Ellipse2D.Double(-1.0, -1.0, 2.0, 2.0));
+                pointRenderer.setColor(color);
 
-            break;
+                break;
         }
     }
 

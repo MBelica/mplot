@@ -83,7 +83,7 @@ class GRootManager {
                 if (x.length == y.length) {
                     data[existingPlotAmount + i] = (Data.dress(x, y));
                 } else {
-                    Utilities.echo("Error! Cannot plot given data. (Every) x,y-pair must have same length");
+                    Watchdog.echo("Error! Cannot plot given data. (Every) x,y-pair must have same length", 1);
 
                     return;
                 }
@@ -112,7 +112,7 @@ class GRootManager {
             figureToPlot.getContentPane().revalidate();
             figureToPlot.getContentPane().repaint();
         } else {
-            Utilities.debugEcho("[" + Utilities.getExecuteDuration() + "] " + "Error! Plot could not be added to Figure " + index);
+            Watchdog.debugEcho("[" + Utilities.getExecuteDuration() + "] " + "Error! Plot could not be added to Figure " + index, 1);
         }
     }
 
@@ -325,8 +325,8 @@ class GRootManager {
 
                 for (int i = 3; i < content.size(); i += 3) {
                     grootString +=   "        * " + content.get(i)  + System.lineSeparator();
-                        if (i+1<content.size()) grootString += "              - with DataTable: " + content.get(i+1) + System.lineSeparator();
-                        if (i+2<content.size()) grootString += "              - and Linespecs: "  + content.get(i+2) + System.lineSeparator();
+                    if (i+1<content.size()) grootString += "              - with DataTable: " + content.get(i+1) + System.lineSeparator();
+                    if (i+2<content.size()) grootString += "              - and Linespecs: "  + content.get(i+2) + System.lineSeparator();
                 }
             } else {
                 grootString += "     No plots associated " + System.lineSeparator();
@@ -349,7 +349,7 @@ class GRootManager {
             tempFigure.toFront();
             tempFigure.repaint();
         } else {
-            Utilities.debugEcho("[" + Utilities.getExecuteDuration() + "] " + "Unable setting figure active!");
+            Watchdog.debugEcho("[" + Utilities.getExecuteDuration() + "] " + "Unable setting figure active!", 0);
         }
     }
 

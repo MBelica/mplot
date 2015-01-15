@@ -1,53 +1,6 @@
 package edu.kit.math.mplot;
 
-//~--- JDK imports ------------------------------------------------------------
-
-import java.io.*;
-
 class Utilities {
-    static long systemStartTime  = 0;
-    static int  infPauseSequence = 250;
-
-    static outputStyle echoOutput  = outputStyle.console;
-    static outputStyle debugOutput = outputStyle.file;
-
-    protected enum outputStyle { console, file, none }
-
-
-    protected static void setStartTime (long time) {
-        systemStartTime = time;
-    }
-
-    protected static void echo(String ouputText) {
-        createOutput(echoOutput, ouputText, systemStartTime + ".echoOutput.txt");
-    }
-
-    protected static void debugEcho(String debugText) {
-        createOutput(debugOutput, debugText, systemStartTime + ".debugEchoOutput.txt");
-    }
-
-    private static void createOutput(outputStyle methode, String text, String filename) {
-        switch (methode) {
-            case console :
-                System.out.println(text);
-
-                break;
-
-            case file :
-                try (PrintWriter pw = new PrintWriter( new BufferedWriter( new FileWriter(filename, true)) )) {
-                    pw.println(text);
-                }catch (Exception ex) {
-                    ex.printStackTrace();
-                }
-                break;
-
-            case none :
-                break;
-
-            default :
-                break;
-        }
-    }
 
     protected static double[] getIndexVs(double[] y) {
         double[] x = new double[y.length];
@@ -61,7 +14,7 @@ class Utilities {
 
     protected static double getExecuteDuration() {
         double time = 0;
-        long   t    = (System.nanoTime() - systemStartTime);
+        long   t    = (System.nanoTime() - MPlot.systemStartTime);
 
 
         time =  Math.round(100000.0 * convertLong(t, "n")) / 100000.0;
