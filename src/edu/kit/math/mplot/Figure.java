@@ -3,26 +3,22 @@ package edu.kit.math.mplot;
 //~--- JDK imports ------------------------------------------------------------
 
 import javax.swing.*;
+import java.awt.Color;
 
 class Figure extends JFrame {
 
     /**
-     * Figure properties; for now only figure appearance
-     * I don't know any more elegant method than this...
-     * Not (yet) possible or don't understand or not necessary now:
-     * DockControls,  MenuBar, ToolBar, Clipping, GraphicsSmoothing, RendererMode, Alphamap, Colormap, Units, SizeChangedFcn, ResizeFcn, OuterPosition
-     * The rest is going to be added... by and by
+     * Figure properties; for now only some figure appearances
      */
+
     protected int    id   = 0;
     protected String name = "";
 
     // matlabs figure properties
     protected String   position;
     protected boolean  numberTitle, visible, resize;
-    protected BGColor  bgcolor;
+    protected Color  bgcolor;
     protected Renderer renderer;
-
-    protected enum BGColor { none }
 
     protected enum Renderer { gral }
 
@@ -32,6 +28,7 @@ class Figure extends JFrame {
         this.name = name;
         getDefaultProperties();
         setProperties();
+
     }
 
     Figure(int id, String... propertyVarArgs) {
@@ -48,7 +45,7 @@ class Figure extends JFrame {
         numberTitle = true;
         visible     = true;
         resize      = true;
-        bgcolor     = BGColor.none;
+        bgcolor     = null;
         renderer    = Renderer.gral;
     }
 
@@ -62,13 +59,35 @@ class Figure extends JFrame {
 
                     /** Figure Appearance */
                     case "Color" :
-                        bgcolor = BGColor.none;          // ToDo: temporary... this is going to be hard
-
+                        if ( (propertyValue == "yellow") || (propertyValue == "y") ) {
+                            bgcolor = new Color(1.0f, 1.0f, 0.0f);
+                        } else if ( (propertyValue == "magenta") || (propertyValue == "m") ) {
+                            bgcolor = new Color(1.0f, 0.0f, 1.0f);
+                        } else if ( (propertyValue == "cyan")    || (propertyValue == "c") ) {
+                            bgcolor = new Color(0.0f, 1.0f, 1.0f);
+                        } else if ( (propertyValue == "red")     || (propertyValue == "r") ) {
+                            bgcolor = new Color(1.0f, 0.0f, 0.0f);
+                        } else if ( (propertyValue == "green")   || (propertyValue == "g") ) {
+                            bgcolor = new Color(0.0f, 1.0f, 0.0f);
+                        } else if ( (propertyValue == "blue")    || (propertyValue == "b") ) {
+                            bgcolor = new Color(0.0f, 0.0f, 1.0f);
+                        } else if ( (propertyValue == "white")   || (propertyValue == "w") ) {
+                            bgcolor = new Color(1.0f, 1.0f, 1.0f);
+                        } else if ( (propertyValue == "black")   || (propertyValue == "k") ) {
+                            bgcolor = new Color(0.0f, 0.0f, 0.0f);
+                        } else if ((propertyValue.indexOf( "[")*propertyValue.indexOf( "]")) < 0) {
+                            String colorString  = propertyValue.replaceAll("\\[", "").replaceAll("\\]", "");
+                            String[] colorPart  = colorString.split("[ ]");
+                            float r             = Float.parseFloat(colorPart[0]);
+                            float g             = Float.parseFloat(colorPart[1]);
+                            float b             = Float.parseFloat(colorPart[2]);
+                            bgcolor = new Color(r, g, b);
+                        }
                         break;
 
                     case "Name" :
                         if (propertyValue != "") {
-                            name = propertyValue;        // ToDo: set name also in GRoot. tag = name??
+                            name = propertyValue;
                         }
 
                         break;
@@ -102,7 +121,7 @@ class Figure extends JFrame {
                     /** Location and Size */
                     case "Position" :
                         if (propertyValue != "") {
-                            position = propertyValue;    // ToDo: set name also in GRoot. tag = name??
+                            position = propertyValue;
                         }
 
                         break;
@@ -128,9 +147,9 @@ class Figure extends JFrame {
         /** Figure Appearance */
 
         /* Color */
-        switch (bgcolor) {    // ToDo: thats gonna be work
-            default :
-                break;
+        if(bgcolor != null){
+            setBackground(bgcolor);
+            getContentPane().setBackground(bgcolor);
         }
 
         /* Name & Number Title */
@@ -173,5 +192,6 @@ class Figure extends JFrame {
 
         /* Resize */
         setResizable(resize);
+        setLocationRelativeTo(null);
     }
 }

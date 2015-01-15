@@ -26,14 +26,18 @@ class Plot {
 
     protected enum markerStyle { point, plus, circle, asterisk, cross, dot }
 
-    Plot(Figure currentFigure, XYPlot plot, DataTable data, String args) {
+    Plot(Figure currentFigure, XYPlot currentPlot, DataTable data, String args) {
         parseLinespecs(args);
 
         LineRenderer lines = new DefaultLineRenderer2D();
 
-        currentFigure.getContentPane().add(new InteractivePanel(plot));
-        setLineRenderer(data, plot, lines);
-        setPointRenderer(data, plot, lines);
+        currentFigure.getContentPane().add(new InteractivePanel(currentPlot));
+        currentPlot.getPlotArea().setBackground(currentFigure.bgcolor);
+
+        setLineRenderer(data, currentPlot, lines);
+        setPointRenderer(data, currentPlot, lines);
+
+
         currentFigure.revalidate();
         currentFigure.repaint();
     }
@@ -232,11 +236,7 @@ class Plot {
             } else {
                 ls += "-";     // Solid line (default)
             }
-
-            System.out.println(ls);
         }
-
-
 
         /** Line Style Specifiers */
         if (ls.indexOf("--") > -1) {
@@ -272,7 +272,7 @@ class Plot {
         } else if (ls.indexOf("g") > -1) {
             color = new Color(0.0f, 1.0f, 0.0f);    // Green
         } else if (ls.indexOf("b") > -1) {
-            color = new Color((float) 0.0, (float) 0.0, (float) 1.0);    // Blue
+            color = new Color(0.0f, 0.0f, 1.0f);    // Blue
         } else if (ls.indexOf("c") > -1) {
             color = new Color(0.0f, 1.0f, 1.0f);    // Cyan
         } else if (ls.indexOf("m") > -1) {

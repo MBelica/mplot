@@ -15,7 +15,7 @@ public class test {
         }
 
 
-        int sleepTime = 2000;
+        int sleepTime = 3000;
 
         MPlot newPlot   = new MPlot();
 
