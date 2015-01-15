@@ -242,7 +242,8 @@ public class MPlot {
             Watchdog.debugEcho("[" + Utilities.getExecuteDuration() + "] " + "Infinite pausing enabled.", 1);
             Thread.sleep(infPauseSequence);
 
-            // ToDo: Add Keylistener to change infLoop to false
+            // ToDo: Add Keylistener to change infLoop to false,
+            // depends on where to add the keylistener ...
         }
     }
 

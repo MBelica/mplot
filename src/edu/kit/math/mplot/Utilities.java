@@ -23,6 +23,7 @@ class Utilities {
 
     protected static double convertLong(long t, String... conv) {
         double factor = 1;
+        double result = t;
         double[] unitPrefix = new double[2];
 
         if (conv.length > 0) {
@@ -67,8 +68,9 @@ class Utilities {
             }
             if (conv.length == 1) unitPrefix[1] = 1;
             factor = unitPrefix[0] / unitPrefix[1];
+            if ( !Double.isNaN(factor) ) result *= factor;
         }
 
-        return (t * factor);
+        return result;
     }
 }
