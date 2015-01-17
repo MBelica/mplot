@@ -99,9 +99,8 @@ class GRootManager {
                         lineSpecs[i] = linespecsParam;
                     }
                 }
-                if (data[i].getLength() == 2) {
-                    newPlot = new Plot(figureToPlot, data[i], lineSpecs[i]);
-                } else Watchdog.debugEcho("[" + Utilities.getExecuteDuration() + "] " + "Gral output must have 2 dimensional data but it has " + data[i].getLength(), 0);
+                //TODO: if (data[i].getLength() == 2) {
+                //} else Watchdog.debugEcho("[" + Utilities.getExecuteDuration() + "] " + "Gral output must have 2 dimensional data but it has " + data[i].getLength(), 0);
 
                 if (i >= existingPlotAmount) {
                     groot.get(index).add(newPlot);
@@ -109,7 +108,8 @@ class GRootManager {
                     groot.get(index).add(lineSpecs[i]);
                 }
             }
-
+            newPlot = new Plot(figureToPlot, data, lineSpecs);
+            // ToDO didn'T I do that twice? once in new Plot() and once here
             figureToPlot.getContentPane().revalidate();
             figureToPlot.getContentPane().repaint();
         } else {

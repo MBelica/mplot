@@ -25,26 +25,25 @@ public class Plot {
     protected enum lineStyle { solid, dashed, dashdot, dotted, plain }
     protected enum markerStyle { point, plus, circle, asterisk, cross, dot }
 
-    public Plot(Figure currentFigure, Data data, String args) {
-        // TODo get gral DataTable with :
-
-        DataTable dataTable =  data.createGralDataTable();
+    public Plot(Figure currentFigure, Data[] data, String[] args) {
+        DataTable[] dataTable = new DataTable[data.length];
+        for (int i = 0; i < data.length; i++) dataTable[i] =  data[i].createGralDataTable();
         XYPlot currentPlot = new XYPlot(dataTable);
 
-        parseLinespecs(args);
-        LineRenderer lines = new DefaultLineRenderer2D();
+        for (int i = 0; i < data.length; i++) {
+            parseLinespecs(args[i]);
+            LineRenderer lines = new DefaultLineRenderer2D();
 
-        currentFigure.getContentPane().add(new InteractivePanel(currentPlot));
-        currentPlot.getPlotArea().setBackground(currentFigure.bgcolor);
+            currentFigure.getContentPane().add(new InteractivePanel(currentPlot));
+            currentPlot.getPlotArea().setBackground(currentFigure.bgcolor);
 
-        setLineRenderer(dataTable, currentPlot, lines);
-        setPointRenderer(dataTable, currentPlot, lines);
+            setLineRenderer(dataTable[i], currentPlot, lines);
+            setPointRenderer(dataTable[i], currentPlot, lines);
 
-        currentFigure.revalidate();
-        currentFigure.repaint();
+        }
     }
 
-    // the next 3 methods draw shapes found in matlab, asterisk and plus still has to be written but do we really want this?
+    // the next 3 methods ceoss, asterisk and plus still have to be written but do we really want this?
     private static final Shape drawDiagonalCross(final float l, final float t) {  // Todo
         final GeneralPath p0 = new GeneralPath();
 

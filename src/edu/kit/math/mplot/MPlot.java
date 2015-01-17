@@ -1,22 +1,22 @@
 package edu.kit.math.mplot;
 
 public class MPlot {
-    private boolean pausingEnabled            = true;
-    private GRootManager groot                = new GRootManager();
+    private boolean pausingEnabled = true;
+    private GRootManager groot = new GRootManager();
 
-    static int infPauseSequence               = 250;
-    static long systemStartTime               = System.nanoTime();
+    static int infPauseSequence = 250;
+    static long systemStartTime = System.nanoTime();
 
-    static outputStyle echoOutput             = outputStyle.console;
-    static outputStyle debugOutput            = outputStyle.console;
-    static reportingStyle echoReportingLevel  = reportingStyle.silent;
+    static outputStyle echoOutput = outputStyle.console;
+    static outputStyle debugOutput = outputStyle.console;
+    static reportingStyle echoReportingLevel = reportingStyle.silent;
     static reportingStyle debugReportingLevel = reportingStyle.silent;
 
-    static enum outputStyle { console, file, none }
-    static enum reportingStyle { silent, normal, loud }
+    static enum outputStyle {console, file, none}
+
+    static enum reportingStyle {silent, normal, loud}
 
     /**
-     *
      * Figure: create a figure or set an existent figure as active
      *
      * @return integer as figure handle
@@ -32,7 +32,7 @@ public class MPlot {
     public int figure(String... propertyVarArgs) {
         if (propertyVarArgs.length == 1) {
             String tag = propertyVarArgs[0];
-            int    id  = groot.getIdToTag(tag);
+            int id = groot.getIdToTag(tag);
 
             if (id > -1) {
                 figure(id, tag);
@@ -43,8 +43,8 @@ public class MPlot {
             groot.addNewFigureIntoGRoot(-1, "", true, propertyVarArgs);
             Watchdog.debugEcho("[" + Utilities.getExecuteDuration() + "] "
                     + "New figure with index " + groot.getActiveFigureId() + " created. "
-                    + " activeFigureId: "    + groot.getActiveFigureId()
-                    + ", currentFigureId: "  + groot.getCurrentFigureId(), 1);
+                    + " activeFigureId: " + groot.getActiveFigureId()
+                    + ", currentFigureId: " + groot.getCurrentFigureId(), 1);
             Watchdog.debugEcho("[" + Utilities.getExecuteDuration() + "] " + groot.GRootListToString(), 2);
         }
 
@@ -64,14 +64,14 @@ public class MPlot {
             groot.setFigureActive(id);
             Watchdog.debugEcho("[" + Utilities.getExecuteDuration() + "] "
                     + "Figure " + id + " set as active. "
-                    + "activeFigureId: "    + groot.getActiveFigureId()
+                    + "activeFigureId: " + groot.getActiveFigureId()
                     + ", currentFigureId: " + groot.getCurrentFigureId(), 1);
         } else {    // user wants to create new figure
             groot.addNewFigureIntoGRoot(id, tag, addWithoutId);
             Watchdog.debugEcho("[" + Utilities.getExecuteDuration() + "] "
                     + "New figure with index " + id + " created. "
-                    + "activeFigureId: "     + groot.getActiveFigureId()
-                    + ", currentFigureId: "  + groot.getCurrentFigureId(), 1);
+                    + "activeFigureId: " + groot.getActiveFigureId()
+                    + ", currentFigureId: " + groot.getCurrentFigureId(), 1);
             Watchdog.debugEcho("[" + Utilities.getExecuteDuration() + "] " + groot.GRootListToString(), 2);
         }
 
@@ -79,7 +79,6 @@ public class MPlot {
     }
 
     /**
-     *
      * Plot: plot x, y into active figure. If no linespec is given use standards = ""
      */
     public void plot(double[] y, String linespec) {
@@ -92,12 +91,12 @@ public class MPlot {
         int index = groot.getIndexToActiveFigure();
 
         if (index > -1) {
-            groot.addPlotsToGRoot(index, linespec, new double[][] {
+            groot.addPlotsToGRoot(index, linespec, new double[][]{
                     x, y
             });
             Watchdog.debugEcho("[" + Utilities.getExecuteDuration() + "] "
                     + "New plot created and associated with figure " + groot.getActiveFigureId()
-                    + ". activeFigureId: "  + groot.getActiveFigureId()
+                    + ". activeFigureId: " + groot.getActiveFigureId()
                     + ", currentFigureId: " + groot.getCurrentFigureId(), 1);
         } else if (index == (groot.size() - 1)) {
             Watchdog.echo("Error! No figure created yet.", 0);
@@ -124,7 +123,7 @@ public class MPlot {
                 groot.addPlotsToGRoot(index, "MultiplePlots#", dataPoints);
                 Watchdog.debugEcho("[" + Utilities.getExecuteDuration() + "] "
                         + "New plots created and associated with figure " + groot.getActiveFigureId()
-                        + ". activeFigureId: "  + groot.getActiveFigureId()
+                        + ". activeFigureId: " + groot.getActiveFigureId()
                         + ", currentFigureId: " + groot.getCurrentFigureId(), 1);
             } else if (index == (groot.size() - 1)) {
                 Watchdog.echo("Error! No figure created yet.", 0);
@@ -134,6 +133,13 @@ public class MPlot {
         } else {
             Watchdog.echo("Error! Cannot plot given data.", 0);
         }
+    }
+
+    /**
+     * Plot: plot x, y into active figure. If no linespec is given use standards = ""
+     */
+    public void plot3(double[] X1, double[] Y1, double[] Z1) {
+
     }
 
     /**
