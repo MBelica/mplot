@@ -38,81 +38,84 @@ class GRootManager {
     }
 
     // add Plot into GRoot under given ID, for now small but I think necessary if adding more than one plot into one figure
-    protected void addPlotsToGRoot(int index, String linespecsParam, double[]... dataPoints) {
+    protected void addPlotsToGRoot(int index, int dimension, String linespecsParam, double[]... dataPoints) {
         if ((groot.size() > index) && (groot.get(index).size() > 2)) {
-            int existingPlotAmount;
-            int newPlotAmount = (dataPoints.length / 2);
+
+                int newPlotAmount;
+                int existingPlotAmount;
 
             Plot newPlot = null;
-            Data[] data, existingDataTables;
-            String[] lineSpecs, exisitingLineSpecs;
-
+            Data[] data = null, existingDataTables = null;
+            String[] lineSpecs = null, exisitingLineSpecs = null;
             Figure figureToPlot = getFigureToIndex(index);
 
-            if (hold) { //
-                existingPlotAmount = (int) ( (groot.get(index).size() - 3) / 3.0 );
-                exisitingLineSpecs = getLineSpecsToIndex(index, existingPlotAmount);
-                existingDataTables = getDataToIndex(index, existingPlotAmount);
 
-                lineSpecs = new String[newPlotAmount + existingPlotAmount];
-                data      = new Data[newPlotAmount + existingPlotAmount];
 
-                for (int i = 0; i < existingPlotAmount; i++) {
+            if (dataPoints != null ) { // todo remove this again
+                newPlotAmount = (int) (dataPoints.length / dimension);
+                if (hold) { //
+                    existingPlotAmount = (int) ((groot.get(index).size() - 3) / 3.0);
+                    exisitingLineSpecs = getLineSpecsToIndex(index, existingPlotAmount);
+                    existingDataTables = getDataToIndex(index, existingPlotAmount);
 
-                    data[i]        = existingDataTables[i];
-                    lineSpecs[i]   = exisitingLineSpecs[i];
-                }
-            }
-            else {
-                existingPlotAmount = 0;
-                lineSpecs = new String[newPlotAmount];
-                data      = new Data[newPlotAmount];
+                    lineSpecs = new String[newPlotAmount + existingPlotAmount];
+                    data = new Data[newPlotAmount + existingPlotAmount];
 
-                int figureSize = groot.get(index).size();
-                if (figureSize > 3) {
-                    for (int i = (figureSize-1); i >= 3; i--) {
-                        groot.get(index).remove(i);
+                    for (int i = 0; i < existingPlotAmount; i++) {
+
+                        data[i] = existingDataTables[i];
+                        lineSpecs[i] = exisitingLineSpecs[i];
                     }
-                }
-            }
-
-            for (int i = 0; i < (newPlotAmount); i++) { // Todo how does matlab check if 2d or 3d plot, nevertheless: add 2 and 3 dimensions call + error check if ( (xi.length >= 2) && (checkDataLength(xi)) ) { } else Watchdog.echo("[" + Utilities.getExecuteDuration() + "] " + "Data constructor executed with less then 2 arguments or data do not have same length", 0);
-                double[] x = dataPoints[2 * i];
-                double[] y = dataPoints[2 * i + 1];
-
-                if (x.length == y.length) {
-
-                    data[existingPlotAmount + i] = new Data(x, y);
                 } else {
-                    Watchdog.echo("Error! Cannot plot given data. (Every) x,y-pair must have same length", 1);
-                    return;
-                }
-            }
+                    existingPlotAmount = 0;
+                    lineSpecs = new String[newPlotAmount];
+                    data = new Data[newPlotAmount];
 
-            figureToPlot.getContentPane().removeAll();
-            for (int i = 0; i < data.length; i++) {
-                if (i >= existingPlotAmount) {
-                    if (linespecsParam == "MultiplePlots#") {
-                        lineSpecs[i] = "MultiplePlots#" + i;
-                    } else {
-                        lineSpecs[i] = linespecsParam;
+                    int figureSize = groot.get(index).size();
+                    if (figureSize > 3) {
+                        for (int i = (figureSize - 1); i >= 3; i--) {
+                            groot.get(index).remove(i);
+                        }
                     }
                 }
-                if (data[i].getLength() != 2) { // TODO 2D or 3D
-                    Watchdog.debugEcho("[" + Utilities.getExecuteDuration() + "] " + "Gral output must have 2 dimensional data but it has " + data[i].getLength(), 0);
-                    return;
+
+                for (int i = 0; i < (newPlotAmount); i++) {
+                    double[][] xi = new double[dimension][];
+                    for (int k = 0; k < dimension; k++) {
+                        xi[k] = dataPoints[((dimension * i) + k)];
+                    }
+
+                    if (lengthsDiffers(xi)) {
+                        Watchdog.echo("Error! Cannot plot given data. (Every) x,y-pair must have same length", 0);
+                        return;
+                    } else {
+                        data[existingPlotAmount + i] = new Data(xi);
+                    }
                 }
 
-                if (i >= existingPlotAmount) {
-                    groot.get(index).add(newPlot);
-                    groot.get(index).add(data[i]);
-                    groot.get(index).add(lineSpecs[i]);
+                for (int i = 0; i < data.length; i++) {
+                    if (i >= existingPlotAmount) {
+                        if (linespecsParam == "MultiplePlots#") {
+                            lineSpecs[i] = "MultiplePlots#" + i;
+                        } else {
+                            lineSpecs[i] = linespecsParam;
+                        }
+                    }
+                    if (data[i].getLength() != dimension) {
+                        Watchdog.debugEcho("[" + Utilities.getExecuteDuration() + "] " + "Dimension of data does not fit. Given dimension: " + data[i].getLength() + ", called dimension: " + dimension, 0);
+                        return;
+                    }
                 }
             }
-            newPlot = new Plot(figureToPlot, data, lineSpecs);
-            // ToDO didn'T I do that twice? once in new Plot() and once here
-            figureToPlot.getContentPane().revalidate();
-            figureToPlot.getContentPane().repaint();
+            figureToPlot.getContentPane().removeAll();
+            if (dimension == 2) newPlot = new Plot(figureToPlot, dimension, data, lineSpecs);
+            else if (dimension == 3) newPlot = new Plot(figureToPlot, dimension);
+
+            //for (int i = existingPlotAmount; i < data.length; i++) {
+            //    groot.get(index).add(newPlot); TODO GET THE PLOTS
+            //   groot.get(index).add(data[i]);
+            //    groot.get(index).add(lineSpecs[i]);
+            //}
         } else {
             Watchdog.debugEcho("[" + Utilities.getExecuteDuration() + "] " + "Error! Plot could not be added to Figure " + index, 1);
         }
@@ -135,7 +138,7 @@ class GRootManager {
 
             // CLF figure in this id
             Figure figureToCLF = getFigureToIndex(index);
-            figureToCLF.getContentPane().removeAll();
+            figureToCLF.getContentPane().removeAll();  // ToDo 3D plot clf results in error
             figureToCLF.resetFigure();
             figureToCLF.getContentPane().revalidate();
             figureToCLF.getContentPane().repaint();
@@ -336,6 +339,18 @@ class GRootManager {
         grootString += System.lineSeparator();
 
         return grootString;
+    }
+
+    private boolean lengthsDiffers(double[][] xi) {
+
+        int l = xi[0].length;
+        boolean fit = false;
+
+        for (int i = 1; i < xi.length; i++) {
+            if (xi[i].length != l) fit = true;
+        }
+
+        return fit;
     }
 
     // get figure with given index to front

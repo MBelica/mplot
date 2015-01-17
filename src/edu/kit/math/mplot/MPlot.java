@@ -1,19 +1,18 @@
 package edu.kit.math.mplot;
 
-public class MPlot {
-    private boolean pausingEnabled = true;
-    private GRootManager groot = new GRootManager();
+public class MPlot { // TODO: Loading (Image/Text while getting plots) & close error
+    private boolean pausingEnabled              = true;
+    private GRootManager groot                  = new GRootManager();
 
-    static int infPauseSequence = 250;
-    static long systemStartTime = System.nanoTime();
+    static int infPauseSequence                 = 250;
+    static long systemStartTime                 = System.nanoTime();
 
-    static outputStyle echoOutput = outputStyle.console;
-    static outputStyle debugOutput = outputStyle.console;
-    static reportingStyle echoReportingLevel = reportingStyle.silent;
-    static reportingStyle debugReportingLevel = reportingStyle.silent;
+    static outputStyle echoOutput               = outputStyle.console;
+    static outputStyle debugOutput              = outputStyle.console;
+    static reportingStyle echoReportingLevel    = reportingStyle.silent;
+    static reportingStyle debugReportingLevel   = reportingStyle.silent;
 
     static enum outputStyle {console, file, none}
-
     static enum reportingStyle {silent, normal, loud}
 
     /**
@@ -91,7 +90,7 @@ public class MPlot {
         int index = groot.getIndexToActiveFigure();
 
         if (index > -1) {
-            groot.addPlotsToGRoot(index, linespec, new double[][]{
+            groot.addPlotsToGRoot(index, 2, linespec, new double[][]{
                     x, y
             });
             Watchdog.debugEcho("[" + Utilities.getExecuteDuration() + "] "
@@ -120,7 +119,7 @@ public class MPlot {
             int index = groot.getIndexToActiveFigure();
 
             if (index > -1) {    // if we've found an index (entry in groot) we are going to plot
-                groot.addPlotsToGRoot(index, "MultiplePlots#", dataPoints);
+                groot.addPlotsToGRoot(index, 2, "MultiplePlots#", dataPoints);
                 Watchdog.debugEcho("[" + Utilities.getExecuteDuration() + "] "
                         + "New plots created and associated with figure " + groot.getActiveFigureId()
                         + ". activeFigureId: " + groot.getActiveFigureId()
@@ -138,8 +137,12 @@ public class MPlot {
     /**
      * Plot: plot x, y into active figure. If no linespec is given use standards = ""
      */
-    public void plot3(double[] X1, double[] Y1, double[] Z1) {
+    public void plot3() {
+        int index = groot.getIndexToActiveFigure();
 
+        if (index > -1) {    // if we've found an index (entry in groot) we are going to plot
+            groot.addPlotsToGRoot(index, 3, "", null);
+        }
     }
 
     /**

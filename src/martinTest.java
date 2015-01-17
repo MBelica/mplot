@@ -21,11 +21,12 @@ public class martinTest {
 
         newPlot.figure("Name", "Martins Figure", "NumberTitle", "false", "Position", "[100 100 1280 720]");
         newPlot.pause(sleepTime);
-
         newPlot.plot(x, y, x, x);
         newPlot.pause(sleepTime);
 
-        newPlot.clf("Martins Figure");
+        newPlot.figure("Name", "Martins 3d Figure", "NumberTitle", "false", "Position", "[100 100 852 480]");
+        newPlot.pause(sleepTime);
+        newPlot.plot3();
         newPlot.pause(sleepTime);
 
         newPlot.close("all");

@@ -3,7 +3,7 @@ package edu.kit.math.mplot.modules;
 //~--- JDK imports ------------------------------------------------------------
 
 import javax.swing.*;
-import java.awt.Color;
+import java.awt.*;
 
 public class Figure extends JFrame {
 
@@ -15,18 +15,20 @@ public class Figure extends JFrame {
     public String   position;
     public Color    bgcolor;
     public boolean  numberTitle, visible, resize;
-    public Renderer renderer;
+    public Renderer2d renderer2d;
+    public Renderer3d renderer3d;
 
-    protected enum Renderer { gral }
+    protected enum Renderer2d { gral }
+    protected enum Renderer3d { jzy3d }
+
+    public Figure() {    }
 
     public Figure(int id, String name) {
         super();
         getDefaultProperties();
         this.id   = id;
         this.name = name;
-
         setProperties();
-
     }
 
     public Figure(int id, String... propertyVarArgs) {
@@ -38,7 +40,6 @@ public class Figure extends JFrame {
     }
 
     public void resetFigure() {
-
         getDefaultProperties();
         setProperties();
     }
@@ -52,7 +53,8 @@ public class Figure extends JFrame {
         visible     = true;
         resize      = true;
         bgcolor     = null;
-        renderer    = Renderer.gral;
+        renderer2d  = Renderer2d.gral;
+        renderer3d  = Renderer3d.jzy3d;
     }
 
     private void getProperties(String... propertyVarArgs) {
@@ -116,9 +118,10 @@ public class Figure extends JFrame {
                     /** Axes and Plot Appearance */
                     case "Renderer" :
                         if (propertyValue == "gral") {
-                            renderer = Renderer.gral;
+                            renderer2d = Renderer2d.gral;
+                        }else if (propertyValue == "jzy3d") {
+                            renderer3d = Renderer3d.jzy3d;
                         }
-
                         break;
 
                     /** Location and Size */
@@ -196,5 +199,8 @@ public class Figure extends JFrame {
         /* Resize */
         setResizable(resize);
         setLocationRelativeTo(null);
+
+        /* Other default setings */
+        setLayout(new BorderLayout());
     }
 }
