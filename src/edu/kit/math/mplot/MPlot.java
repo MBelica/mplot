@@ -9,8 +9,8 @@ public class MPlot {
 
     static outputStyle echoOutput             = outputStyle.console;
     static outputStyle debugOutput            = outputStyle.console;
-    static reportingStyle echoReportingLevel  = reportingStyle.normal;
-    static reportingStyle debugReportingLevel = reportingStyle.loud;
+    static reportingStyle echoReportingLevel  = reportingStyle.silent;
+    static reportingStyle debugReportingLevel = reportingStyle.silent;
 
     static enum outputStyle { console, file, none }
     static enum reportingStyle { silent, normal, loud }

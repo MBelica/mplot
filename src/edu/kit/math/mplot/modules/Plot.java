@@ -1,7 +1,6 @@
-package edu.kit.math.mplot;
+package edu.kit.math.mplot.modules;
 
 //~--- non-JDK imports --------------------------------------------------------
-
 import de.erichseifert.gral.data.DataTable;
 import de.erichseifert.gral.plots.XYPlot;
 import de.erichseifert.gral.plots.lines.DefaultLineRenderer2D;
@@ -16,34 +15,37 @@ import java.awt.geom.Area;
 import java.awt.geom.Ellipse2D;
 import java.awt.geom.GeneralPath;
 
-class Plot {
+public class Plot {
     private static final float SQRT2 = (float) Math.pow(2.0, 0.5);
-    protected Color            color;
-    protected lineStyle        lStyle;
-    protected markerStyle      mStyle;
+
+    public Color            color;
+    public lineStyle        lStyle;
+    public markerStyle      mStyle;
 
     protected enum lineStyle { solid, dashed, dashdot, dotted, plain }
-
     protected enum markerStyle { point, plus, circle, asterisk, cross, dot }
 
-    Plot(Figure currentFigure, XYPlot currentPlot, DataTable data, String args) {
-        parseLinespecs(args);
+    public Plot(Figure currentFigure, Data data, String args) {
+        // TODo get gral DataTable with :
 
+        DataTable dataTable =  data.createGralDataTable();
+        XYPlot currentPlot = new XYPlot(dataTable);
+
+        parseLinespecs(args);
         LineRenderer lines = new DefaultLineRenderer2D();
 
         currentFigure.getContentPane().add(new InteractivePanel(currentPlot));
         currentPlot.getPlotArea().setBackground(currentFigure.bgcolor);
 
-        setLineRenderer(data, currentPlot, lines);
-        setPointRenderer(data, currentPlot, lines);
-
+        setLineRenderer(dataTable, currentPlot, lines);
+        setPointRenderer(dataTable, currentPlot, lines);
 
         currentFigure.revalidate();
         currentFigure.repaint();
     }
 
     // the next 3 methods draw shapes found in matlab, asterisk and plus still has to be written but do we really want this?
-    private static final Shape drawDiagonalCross(final float l, final float t) {
+    private static final Shape drawDiagonalCross(final float l, final float t) {  // Todo
         final GeneralPath p0 = new GeneralPath();
 
         p0.moveTo(-l - t, -l + t);
@@ -63,7 +65,7 @@ class Plot {
         return p0;
     }
 
-    private static final Shape drawAsterisk(final float l, final float t) {
+    private static final Shape drawAsterisk(final float l, final float t) { // Todo
         final GeneralPath p0 = new GeneralPath();
 
         p0.moveTo(-l - t, -l + t);
@@ -83,7 +85,7 @@ class Plot {
         return p0;
     }
 
-    private static final Shape drawPlus(final float l, final float t) {
+    private static final Shape drawPlus(final float l, final float t) {  // Todo
         final GeneralPath p0 = new GeneralPath();
 
         p0.moveTo(-l - t, -l + t);
@@ -108,34 +110,24 @@ class Plot {
             case solid :
                 plot.setLineRenderer(data, lines);
                 plot.getLineRenderer(data).setColor(color);
-
                 break;
 
             case dashed :
                 plot.setLineRenderer(data, lines);
-                lines.setStroke(new BasicStroke(2.0f, BasicStroke.CAP_BUTT, BasicStroke.JOIN_MITER, 10.0f,
-                        new float[] { 10.0f,
-                                10.0f }, 0.0f));
+                lines.setStroke(new BasicStroke(2.0f, BasicStroke.CAP_BUTT, BasicStroke.JOIN_MITER, 10.0f, new float[] { 10.0f,0.0f }, 0.0f));
                 plot.getLineRenderer(data).setColor(color);
-
                 break;
 
             case dashdot :
                 plot.setLineRenderer(data, lines);
-                lines.setStroke(new BasicStroke(2.0f, BasicStroke.CAP_BUTT, BasicStroke.JOIN_MITER, 10.0f,
-                        new float[] { 10.0f,
-                                10.0f, 2.0f, 10.0f }, 0.0f));
+                lines.setStroke(new BasicStroke(2.0f, BasicStroke.CAP_BUTT, BasicStroke.JOIN_MITER, 10.0f, new float[] { 10.0f, 10.0f, 2.0f, 10.0f }, 0.0f));
                 plot.getLineRenderer(data).setColor(color);
-
                 break;
 
             case dotted :
                 plot.setLineRenderer(data, lines);
-                lines.setStroke(new BasicStroke(2.0f, BasicStroke.CAP_BUTT, BasicStroke.JOIN_MITER, 10.0f,
-                        new float[] { 2.0f,
-                                10.0f }, 0.0f));
+                lines.setStroke(new BasicStroke(2.0f, BasicStroke.CAP_BUTT, BasicStroke.JOIN_MITER, 10.0f, new float[] { 2.0f, 10.0f }, 0.0f));
                 plot.getLineRenderer(data).setColor(color);
-
                 break;
 
             case plain :
@@ -144,7 +136,6 @@ class Plot {
             default :
                 plot.setLineRenderer(data, lines);
                 plot.getLineRenderer(data).setColor(color);
-
                 break;
         }
     }
@@ -156,114 +147,105 @@ class Plot {
             case point :
                 pointRenderer.setShape(new Ellipse2D.Double(-1.0, -1.0, 2.0, 2.0));
                 pointRenderer.setColor(color);
-
                 break;
 
             case plus :
                 pointRenderer.setShape(drawPlus(2, 1));
                 pointRenderer.setColor(color);
-
                 break;
 
             case circle :
                 Area circle = new Area(new Ellipse2D.Double(-2.0, -2.0, 4.0, 4.0));
-
                 circle.subtract(new Area(new Ellipse2D.Double(-1.0, -1.0, 2.0, 2.0)));
                 pointRenderer.setShape(circle);
-
                 break;
 
             case asterisk :
                 pointRenderer.setShape(drawAsterisk(2, 1));
                 pointRenderer.setColor(color);
-
                 break;
 
             case cross :
                 pointRenderer.setShape(drawDiagonalCross(2, 1));
                 pointRenderer.setColor(color);
-
                 break;
 
             case dot :
                 pointRenderer.setShape(new Ellipse2D.Double(-2.0, -2.0, 4.0, 4.0));
                 pointRenderer.setColor(color);
-
                 break;
 
             default :
                 pointRenderer.setShape(new Ellipse2D.Double(-1.0, -1.0, 2.0, 2.0));
                 pointRenderer.setColor(color);
-
                 break;
         }
     }
 
     private void parseLinespecs(String ls) {
 
+        /** Set different linespecs for multiple Plots */
         if (ls.indexOf("MultiplePlots#") > -1) {
-
             int mpIndex = Integer.parseInt(ls.substring(ls.indexOf("#")+1).trim());
+            int colorRendererIndex = mpIndex % 8; // we have 8 colours ...
+            int lineRendererIndex  = ( (int)(mpIndex/8) ) % 4; // ... and 4 different linetypes
 
-            int lineRendererIndex  = ( (int)(mpIndex/8) ) % 4;
-            int colorRendererIndex = mpIndex % 8;
-
-
+            ls = "";
             if (colorRendererIndex == 1) {
-                ls = "r";    // Red
+                ls += "r";    // Red
             } else if (colorRendererIndex == 2) {
-                ls = "g";    // Green
+                ls += "g";    // Green
             } else if (colorRendererIndex == 3) {
-                ls = "b";    // Blue
+                ls += "b";    // Blue
             } else if (colorRendererIndex == 4) {
-                ls = "c";    // Cyan
+                ls += "c";    // Cyan
             } else if (colorRendererIndex == 5) {
-                ls = "m";       // Magenta
+                ls += "m";    // Magenta
             } else if (colorRendererIndex == 6) {
-                ls = "y";        // Yellow
+                ls += "y";    // Yellow
             } else if (colorRendererIndex == 7) {
-                ls = "w";        // White
+                ls += "w";    // White
             } else {
-                ls = "k";       // Black (default)
+                ls += "k";    // Black (default)
             }
-
             if (lineRendererIndex == 1) {
-                ls += "--";     // Dashed line
+                ls += "--";   // Dashed line
             } else if (lineRendererIndex == 2) {
-                ls += "-.";     // Dash-dot line
+                ls += "-.";   // Dash-dot line
             } else if (lineRendererIndex == 3) {
-                ls += ":";     // Dotted line
+                ls += ":";    // Dotted line
             } else {
-                ls += "-";     // Solid line (default)
+                ls += "-";    // Solid line (default)
             }
         }
 
+
         /** Line Style Specifiers */
         if (ls.indexOf("--") > -1) {
-            lStyle = lineStyle.dashed;     // Dashed line
+            lStyle = lineStyle.dashed;              // Dashed line
         } else if (ls.indexOf("-.") > -1) {
-            lStyle = lineStyle.dashdot;    // Dash-dot line
+            lStyle = lineStyle.dashdot;             // Dash-dot line
         } else if (ls.indexOf(":") > -1) {
-            lStyle = lineStyle.dotted;     // Dotted line
+            lStyle = lineStyle.dotted;              // Dotted line
         } else if (ls.indexOf(" ") > -1) {
-            lStyle = lineStyle.plain;      // Plain
+            lStyle = lineStyle.plain;               // Plain
         } else {
-            lStyle = lineStyle.solid;      // Solid line (default)
+            lStyle = lineStyle.solid;               // Solid line (default)
         }
 
         /** Marker Specifiers */
         if (ls.indexOf("+") > -1) {
-            mStyle = markerStyle.plus;        // Plus sign
+            mStyle = markerStyle.plus;              // Plus sign
         } else if (ls.indexOf("o") > -1) {
-            mStyle = markerStyle.circle;      // Circle
+            mStyle = markerStyle.circle;            // Circle
         } else if (ls.indexOf("*") > -1) {
-            mStyle = markerStyle.asterisk;    // Asterisk
+            mStyle = markerStyle.asterisk;          // Asterisk
         } else if (ls.indexOf("x") > -1) {
-            mStyle = markerStyle.cross;       // Cross
+            mStyle = markerStyle.cross;             // Cross
         } else if (ls.indexOf("q") > -1) {
-            mStyle = markerStyle.dot;         // dot
+            mStyle = markerStyle.dot;               // dot
         } else {
-            mStyle = markerStyle.point;       // Point (default)
+            mStyle = markerStyle.point;             // Point (default)
         }
 
         /** Color Specifiers */

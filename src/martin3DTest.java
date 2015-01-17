@@ -1,4 +1,3 @@
-
 import edu.kit.math.mplot.MPlot;
 import java.util.Random;
 

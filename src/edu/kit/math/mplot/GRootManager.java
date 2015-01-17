@@ -2,8 +2,7 @@ package edu.kit.math.mplot;
 
 //~--- non-JDK imports --------------------------------------------------------
 
-import de.erichseifert.gral.data.DataTable;
-import de.erichseifert.gral.plots.XYPlot;
+import edu.kit.math.mplot.modules.*;
 
 //~--- JDK imports ------------------------------------------------------------
 
@@ -44,18 +43,19 @@ class GRootManager {
             int existingPlotAmount;
             int newPlotAmount = (dataPoints.length / 2);
 
-            DataTable[] data, existingDataTables;
+            Plot newPlot = null;
+            Data[] data, existingDataTables;
             String[] lineSpecs, exisitingLineSpecs;
 
             Figure figureToPlot = getFigureToIndex(index);
 
-            if (hold) {
+            if (hold) { //
                 existingPlotAmount = (int) ( (groot.get(index).size() - 3) / 3.0 );
                 exisitingLineSpecs = getLineSpecsToIndex(index, existingPlotAmount);
-                existingDataTables = getDataTablesToIndex(index, existingPlotAmount);
+                existingDataTables = getDataToIndex(index, existingPlotAmount);
 
                 lineSpecs = new String[newPlotAmount + existingPlotAmount];
-                data      = new DataTable[newPlotAmount + existingPlotAmount];
+                data      = new Data[newPlotAmount + existingPlotAmount];
 
                 for (int i = 0; i < existingPlotAmount; i++) {
 
@@ -66,7 +66,7 @@ class GRootManager {
             else {
                 existingPlotAmount = 0;
                 lineSpecs = new String[newPlotAmount];
-                data      = new DataTable[newPlotAmount];
+                data      = new Data[newPlotAmount];
 
                 int figureSize = groot.get(index).size();
                 if (figureSize > 3) {
@@ -76,12 +76,13 @@ class GRootManager {
                 }
             }
 
-            for (int i = 0; i < (newPlotAmount); i++) {
+            for (int i = 0; i < (newPlotAmount); i++) { // Todo how does matlab check if 2d or 3d plot, nevertheless: add 2 and 3 dimensions call + error check if ( (xi.length >= 2) && (checkDataLength(xi)) ) { } else Watchdog.echo("[" + Utilities.getExecuteDuration() + "] " + "Data constructor executed with less then 2 arguments or data do not have same length", 0);
                 double[] x = dataPoints[2 * i];
                 double[] y = dataPoints[2 * i + 1];
 
                 if (x.length == y.length) {
-                    data[existingPlotAmount + i] = (Data.dress(x, y));
+
+                    data[existingPlotAmount + i] = new Data(x, y);
                 } else {
                     Watchdog.echo("Error! Cannot plot given data. (Every) x,y-pair must have same length", 1);
 
@@ -90,7 +91,6 @@ class GRootManager {
             }
 
             figureToPlot.getContentPane().removeAll();
-            XYPlot plot = new XYPlot(data);
             for (int i = 0; i < data.length; i++) {
                 if (i >= existingPlotAmount) {
                     if (linespecsParam == "MultiplePlots#") {
@@ -99,8 +99,9 @@ class GRootManager {
                         lineSpecs[i] = linespecsParam;
                     }
                 }
-
-                Plot newPlot = new Plot(figureToPlot, plot, data[i], lineSpecs[i]);
+                if (data[i].getLength() == 2) {
+                    newPlot = new Plot(figureToPlot, data[i], lineSpecs[i]);
+                } else Watchdog.debugEcho("[" + Utilities.getExecuteDuration() + "] " + "Gral output must have 2 dimensional data but it has " + data[i].getLength(), 0);
 
                 if (i >= existingPlotAmount) {
                     groot.get(index).add(newPlot);
@@ -128,15 +129,13 @@ class GRootManager {
             if (groot.get(index).size() > 3) {
                 for (int i = 3; i < groot.get(index).size(); i++) {
                     groot.get(index).remove(i);
-                }
+            }
             }
 
             // CLF figure in this id
             Figure figureToCLF = getFigureToIndex(index);
-
             figureToCLF.getContentPane().removeAll();
-            figureToCLF.getDefaultProperties();
-            figureToCLF.setProperties();
+            figureToCLF.resetFigure();
             figureToCLF.getContentPane().revalidate();
             figureToCLF.getContentPane().repaint();
         }
@@ -197,10 +196,10 @@ class GRootManager {
         return lineSpecs;
     }
 
-    protected DataTable[] getDataTablesToIndex(int index, int existingPlotAmount) {
-        DataTable[] DataTables = new DataTable[existingPlotAmount];
+    protected Data[] getDataToIndex(int index, int existingPlotAmount) {
+        Data[] DataTables = new Data[existingPlotAmount];
         for(int i = 0; i < existingPlotAmount; i++) {
-            DataTables[i] = (DataTable) groot.get(index).get(3 + 3*i + 1); // 3 for id, tag and figure and every plot has plot, data and params
+            DataTables[i] = (Data) groot.get(index).get(3 + 3*i + 1); // 3 for id, tag and figure and every plot has plot, data and params
         }
 
         return DataTables;

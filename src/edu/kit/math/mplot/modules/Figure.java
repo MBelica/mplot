@@ -1,45 +1,51 @@
-package edu.kit.math.mplot;
+package edu.kit.math.mplot.modules;
 
 //~--- JDK imports ------------------------------------------------------------
 
 import javax.swing.*;
 import java.awt.Color;
 
-class Figure extends JFrame {
+public class Figure extends JFrame {
 
     /**
      * Figure properties; for now only some figure appearances
      */
-
-    protected int    id   = 0;
-    protected String name = "";
-
-    // matlabs figure properties
-    protected String   position;
-    protected boolean  numberTitle, visible, resize;
-    protected Color  bgcolor;
-    protected Renderer renderer;
+    public int      id;
+    public String   name;
+    public String   position;
+    public Color    bgcolor;
+    public boolean  numberTitle, visible, resize;
+    public Renderer renderer;
 
     protected enum Renderer { gral }
 
-    Figure(int id, String name) {
+    public Figure(int id, String name) {
         super();
+        getDefaultProperties();
         this.id   = id;
         this.name = name;
-        getDefaultProperties();
+
         setProperties();
 
     }
 
-    Figure(int id, String... propertyVarArgs) {
+    public Figure(int id, String... propertyVarArgs) {
         super();
-        this.id = id;
         getDefaultProperties();
+        this.id = id;
         getProperties(propertyVarArgs);
         setProperties();
     }
 
-    protected void getDefaultProperties() {
+    public void resetFigure() {
+
+        getDefaultProperties();
+        setProperties();
+    }
+
+    private void getDefaultProperties() {
+        id          = 0;
+        name        = "";
         name        = "";
         position    = "[20 20 600 400]";
         numberTitle = true;
@@ -49,7 +55,7 @@ class Figure extends JFrame {
         renderer    = Renderer.gral;
     }
 
-    protected void getProperties(String... propertyVarArgs) {
+    private void getProperties(String... propertyVarArgs) {
         if (propertyVarArgs.length > 1) {
             for (int i = 1; i <= propertyVarArgs.length; i += 2) {
                 String propertyName  = (String) propertyVarArgs[i - 1];
@@ -75,7 +81,7 @@ class Figure extends JFrame {
                             bgcolor = new Color(1.0f, 1.0f, 1.0f);
                         } else if ( (propertyValue == "black")   || (propertyValue == "k") ) {
                             bgcolor = new Color(0.0f, 0.0f, 0.0f);
-                        } else if ((propertyValue.indexOf( "[")*propertyValue.indexOf( "]")) < 0) {
+                        } else if ((propertyValue.indexOf( "[")*propertyValue.indexOf( "]")) < 0) {  // Todo: parse the string better with reg
                             String colorString  = propertyValue.replaceAll("\\[", "").replaceAll("\\]", "");
                             String[] colorPart  = colorString.split("[ ]");
                             float r             = Float.parseFloat(colorPart[0]);
@@ -86,10 +92,7 @@ class Figure extends JFrame {
                         break;
 
                     case "Name" :
-                        if (propertyValue != "") {
-                            name = propertyValue;
-                        }
-
+                        name = propertyValue;
                         break;
 
                     case "NumberTitle" :
@@ -120,7 +123,7 @@ class Figure extends JFrame {
 
                     /** Location and Size */
                     case "Position" :
-                        if (propertyValue != "") {
+                        if (propertyValue != "") { // Todo: parse the string better with reg
                             position = propertyValue;
                         }
 
@@ -142,7 +145,7 @@ class Figure extends JFrame {
         }
     }
 
-    protected void setProperties() {
+    private void setProperties() {
 
         /** Figure Appearance */
 
