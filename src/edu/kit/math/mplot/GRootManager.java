@@ -85,7 +85,6 @@ class GRootManager {
                     data[existingPlotAmount + i] = new Data(x, y);
                 } else {
                     Watchdog.echo("Error! Cannot plot given data. (Every) x,y-pair must have same length", 1);
-
                     return;
                 }
             }
@@ -99,8 +98,10 @@ class GRootManager {
                         lineSpecs[i] = linespecsParam;
                     }
                 }
-                //TODO: if (data[i].getLength() == 2) {
-                //} else Watchdog.debugEcho("[" + Utilities.getExecuteDuration() + "] " + "Gral output must have 2 dimensional data but it has " + data[i].getLength(), 0);
+                if (data[i].getLength() != 2) { // TODO 2D or 3D
+                    Watchdog.debugEcho("[" + Utilities.getExecuteDuration() + "] " + "Gral output must have 2 dimensional data but it has " + data[i].getLength(), 0);
+                    return;
+                }
 
                 if (i >= existingPlotAmount) {
                     groot.get(index).add(newPlot);

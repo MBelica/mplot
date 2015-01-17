@@ -23,10 +23,11 @@ public class martinTest {
         newPlot.pause(sleepTime);
 
         newPlot.plot(x, y, x, x);
+        newPlot.pause(sleepTime);
 
+        newPlot.clf("Martins Figure");
+        newPlot.pause(sleepTime);
 
-        System.out.println("test");
-
-
+        newPlot.close("all");
     }
 }
