@@ -16,16 +16,15 @@ public class Data {
 
     private DataTable gralDataTable     = null;
 
-    private static Color[]   sjzy3dDataColor    = null;
-    private static Coord3d[] sjzy3dDataTable    = null;
+    private Color[]   sjzy3dDataColor    = null;
+    private Coord3d[] sjzy3dDataTable    = null;
 
     public Data(double[]... xi) {
         for (int j = 0; j < xi[0].length; j++) {
             Double[] vector = new Double[xi.length];
             for (int k = 0; k < xi.length; k++) {
-                 vector[k] = xi[k][j];
+                vector[k] = xi[k][j];
             }
-
             dataSet.add(vector);
         }
     }
@@ -43,34 +42,35 @@ public class Data {
     }
 
 
-    public static Color[] getJzy3dDataColor() {
+    public Color[] getJzy3dDataColor() {
         if (sjzy3dDataColor == null) createJzy3dDataSystem();
         return sjzy3dDataColor;
     }
 
-    public static Coord3d[] getJzy3dDataTable() {
+    public Coord3d[] getJzy3dDataTable() {
         if (sjzy3dDataTable == null) createJzy3dDataSystem();
         return sjzy3dDataTable;
     }
 
-    private static void createJzy3dDataSystem() {
-        int size = 5000;
-        float x;
-        float y;
-        float z;
-        float a;
+    private void createJzy3dDataSystem() {
+        float a  = 1.00f;
+        int size = this.dataSet.size();
 
-        Coord3d[] dataTable = new Coord3d[size];
         Color[]   dataColor = new Color[size];
-        for(int i=0; i<size; i++){
-            x = (float) Math.sin(i);
-            y = (float) Math.cos(i);
-            z = (float) i;
-            dataTable[i] = new Coord3d(x, y, z);
-            a = 1.00f;
-            dataColor[i] = new Color(x, y, z, a);
-        }
+        Coord3d[] dataTable = new Coord3d[size];
 
+        for (int i = 0; i < size; i++) {
+            Double xiD = this.dataSet.get(i)[0];
+            Double yiD = this.dataSet.get(i)[1];
+            Double ziD = this.dataSet.get(i)[2];
+
+            float xiF  = xiD.floatValue();
+            float yiF  = yiD.floatValue();
+            float ziF  = ziD.floatValue();
+
+            dataTable[i] = new Coord3d(xiF, yiF, ziF);
+            dataColor[i] = new Color(xiF, yiF, ziF, a);
+        }
         sjzy3dDataTable = dataTable;
         sjzy3dDataColor = dataColor;
     }
@@ -81,8 +81,9 @@ public class Data {
     }
 
     private void createGralDataSystem() {
+        int size = this.dataSet.size();
         DataTable dataTable = new DataTable(Double.class, Double.class);
-        for (int i = 0; i < this.dataSet.size(); i++) {
+        for (int i = 0; i < size; i++) {
             dataTable.add(this.dataSet.get(i));
         }
 

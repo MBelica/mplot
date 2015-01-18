@@ -1,18 +1,8 @@
 package edu.kit.math.mplot.modules;
 
-//~--- non-JDK imports --------------------------------------------------------
-import de.erichseifert.gral.data.DataTable;
-import de.erichseifert.gral.plots.XYPlot;
-import de.erichseifert.gral.plots.lines.DefaultLineRenderer2D;
-import de.erichseifert.gral.plots.lines.LineRenderer;
-import de.erichseifert.gral.plots.points.PointRenderer;
-import de.erichseifert.gral.ui.InteractivePanel;
-
 //~--- JDK imports ------------------------------------------------------------
 
 import java.awt.*;
-import java.awt.geom.Area;
-import java.awt.geom.Ellipse2D;
 import java.awt.geom.GeneralPath;
 
 public class Plot {
@@ -27,14 +17,7 @@ public class Plot {
 
     public Plot() {    }
 
-    public Plot(Figure currentFigure, int dimension) { // TODO this is just a temp constructor for testing purpose
-
-        new PlotJzy3D(currentFigure);
-        currentFigure.getContentPane().revalidate();
-        currentFigure.getContentPane().repaint();
-    }
-
-    public Plot(Figure currentFigure, int dimension, Data[] data, String[] args) {
+    public Plot(Figure currentFigure, int dimension, Data[] data, String... args) { // Todo switch through plot libraries ... even though there are only 2
 
         if (dimension == 2) {
 
@@ -42,7 +25,7 @@ public class Plot {
 
         } else if (dimension == 3) {
 
-            new PlotJzy3D(currentFigure);
+            new PlotJzy3D(currentFigure, data, args);
 
         }
 

@@ -16,17 +16,18 @@ import org.jzy3d.maths.Coord3d;
 
 public class PlotJzy3D extends Plot {
 
-    PlotJzy3D (Figure currentFigure) {
-
-        Color[]   colors = Data.getJzy3dDataColor(); // TODO ATM STATIC CHANGE LATER
-        Coord3d[] points = Data.getJzy3dDataTable();
-
-        Scatter scatter = new Scatter(points, colors);
+    PlotJzy3D (Figure currentFigure, Data[] data, String... args) {
         Chart chart = AWTChartComponentFactory.chart(Quality.Advanced, IChartComponentFactory.Toolkit.awt);
-        chart.getScene().add(scatter);
+
+        for (int i = 0; i < data.length; i++) {
+            Color[] colors = data[0].getJzy3dDataColor();
+            Coord3d[] points = data[0].getJzy3dDataTable();
+            Scatter scatter = new Scatter(points, colors);
+            chart.getScene().add(scatter);
+        }
+
         chart.addController(new AWTCameraKeyController());
         chart.addController(new AWTCameraMouseController());
-
         JPanel panel = new JPanel();
         panel.setLayout(new BorderLayout()); // Use BorderLayout
         if (chart.getCanvas() instanceof Canvas) {

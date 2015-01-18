@@ -1,6 +1,6 @@
 package edu.kit.math.mplot;
 
-public class MPlot { // TODO: Loading (Image/Text while getting plots) & close error
+public class MPlot { // TODO: Loading (Image/Text while getting plots) & close error + close handle to dispose + improve performance + todo add multiple plots in groot
     private boolean pausingEnabled              = true;
     private GRootManager groot                  = new GRootManager();
 
@@ -135,14 +135,25 @@ public class MPlot { // TODO: Loading (Image/Text while getting plots) & close e
     }
 
     /**
-     * Plot: plot x, y into active figure. If no linespec is given use standards = ""
+     * Plot3: plot x, y, z into active figure. If no linespec is given use standards = ""
      */
-    public void plot3() {
+    public void plot3(double[] x, double[] y, double[] z) {
         int index = groot.getIndexToActiveFigure();
+        String linespec = "";
 
-        if (index > -1) {    // if we've found an index (entry in groot) we are going to plot
-            groot.addPlotsToGRoot(index, 3, "", null);
+        if (index > -1) {
+            groot.addPlotsToGRoot(index, 3, linespec, new double[][] {
+                    x, y, z
+            });
+            Watchdog.debugEcho("[" + Utilities.getExecuteDuration() + "] "
+                    + "New plot created and associated with figure " + groot.getActiveFigureId()
+                    + ". activeFigureId: " + groot.getActiveFigureId()
+                    + ", currentFigureId: " + groot.getCurrentFigureId(), 1);
+        } else if (index == (groot.size() - 1)) {
+            Watchdog.echo("Error! No figure created yet.", 0);
         }
+
+        Watchdog.debugEcho("[" + Utilities.getExecuteDuration() + "] " + groot.GRootListToString(), 2);
     }
 
     /**

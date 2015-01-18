@@ -41,75 +41,66 @@ class GRootManager {
     protected void addPlotsToGRoot(int index, int dimension, String linespecsParam, double[]... dataPoints) {
         if ((groot.size() > index) && (groot.get(index).size() > 2)) {
 
-                int newPlotAmount;
-                int existingPlotAmount;
+            int newPlotAmount;
+            int existingPlotAmount;
 
             Plot newPlot = null;
             Data[] data = null, existingDataTables = null;
             String[] lineSpecs = null, exisitingLineSpecs = null;
             Figure figureToPlot = getFigureToIndex(index);
+            newPlotAmount = (int) (dataPoints.length / dimension);
 
+            if (hold) { //
+                existingPlotAmount = (int) ((groot.get(index).size() - 3) / 3.0);
+                exisitingLineSpecs = getLineSpecsToIndex(index, existingPlotAmount);
+                existingDataTables = getDataToIndex(index, existingPlotAmount);
 
+                data      = new Data[newPlotAmount + existingPlotAmount];
+                lineSpecs = new String[newPlotAmount + existingPlotAmount];
 
-            if (dataPoints != null ) { // todo remove this again
-                newPlotAmount = (int) (dataPoints.length / dimension);
-                if (hold) { //
-                    existingPlotAmount = (int) ((groot.get(index).size() - 3) / 3.0);
-                    exisitingLineSpecs = getLineSpecsToIndex(index, existingPlotAmount);
-                    existingDataTables = getDataToIndex(index, existingPlotAmount);
-
-                    lineSpecs = new String[newPlotAmount + existingPlotAmount];
-                    data = new Data[newPlotAmount + existingPlotAmount];
-
-                    for (int i = 0; i < existingPlotAmount; i++) {
-
-                        data[i] = existingDataTables[i];
-                        lineSpecs[i] = exisitingLineSpecs[i];
-                    }
-                } else {
-                    existingPlotAmount = 0;
-                    lineSpecs = new String[newPlotAmount];
-                    data = new Data[newPlotAmount];
-
-                    int figureSize = groot.get(index).size();
-                    if (figureSize > 3) {
-                        for (int i = (figureSize - 1); i >= 3; i--) {
-                            groot.get(index).remove(i);
-                        }
-                    }
+                for (int i = 0; i < existingPlotAmount; i++) {
+                    data[i] = existingDataTables[i];
+                    lineSpecs[i] = exisitingLineSpecs[i];
                 }
+            } else {
+                existingPlotAmount = 0;
+                data      = new Data[newPlotAmount];
+                lineSpecs = new String[newPlotAmount];
 
-                for (int i = 0; i < (newPlotAmount); i++) {
-                    double[][] xi = new double[dimension][];
-                    for (int k = 0; k < dimension; k++) {
-                        xi[k] = dataPoints[((dimension * i) + k)];
-                    }
 
-                    if (lengthsDiffers(xi)) {
-                        Watchdog.echo("Error! Cannot plot given data. (Every) x,y-pair must have same length", 0);
-                        return;
-                    } else {
-                        data[existingPlotAmount + i] = new Data(xi);
-                    }
-                }
-
-                for (int i = 0; i < data.length; i++) {
-                    if (i >= existingPlotAmount) {
-                        if (linespecsParam == "MultiplePlots#") {
-                            lineSpecs[i] = "MultiplePlots#" + i;
-                        } else {
-                            lineSpecs[i] = linespecsParam;
-                        }
-                    }
-                    if (data[i].getLength() != dimension) {
-                        Watchdog.debugEcho("[" + Utilities.getExecuteDuration() + "] " + "Dimension of data does not fit. Given dimension: " + data[i].getLength() + ", called dimension: " + dimension, 0);
-                        return;
-                    }
+                int figureSize = groot.get(index).size();
+                if (figureSize > 3) {
+                    for (int i = (figureSize - 1); i >= 3; i--) groot.get(index).remove(i);
                 }
             }
+
+            for (int i = 0; i < (newPlotAmount); i++) {
+                double[][] xi = new double[dimension][];
+                for (int k = 0; k < dimension; k++)  xi[k] = dataPoints[((dimension * i) + k)];
+                if (lengthsDiffers(xi)) {
+                    Watchdog.echo("Error! Cannot plot given data. (Every) x,y-pair must have same length", 0);
+                    return;
+                } else {
+                    data[existingPlotAmount + i] = new Data(xi);
+                }
+            }
+
+            for (int i = 0; i < data.length; i++) {
+                if (i >= existingPlotAmount) {
+                    if (linespecsParam == "MultiplePlots#") {
+                        lineSpecs[i] = "MultiplePlots#" + i;
+                    } else {
+                        lineSpecs[i] = linespecsParam;
+                    }
+                }
+                if (data[i].getLength() != dimension) {
+                    Watchdog.debugEcho("[" + Utilities.getExecuteDuration() + "] " + "Dimension of data does not fit. Given dimension: " + data[i].getLength() + ", called dimension: " + dimension, 0);
+                    return;
+                }
+            }
+
             figureToPlot.getContentPane().removeAll();
-            if (dimension == 2) newPlot = new Plot(figureToPlot, dimension, data, lineSpecs);
-            else if (dimension == 3) newPlot = new Plot(figureToPlot, dimension);
+            newPlot = new Plot(figureToPlot, dimension, data, lineSpecs);
 
             //for (int i = existingPlotAmount; i < data.length; i++) {
             //    groot.get(index).add(newPlot); TODO GET THE PLOTS
