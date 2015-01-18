@@ -17,16 +17,26 @@ public class Plot {
 
     public Plot() {    }
 
-    public Plot(Figure currentFigure, int dimension, Data[] data, String... args) { // Todo switch through plot libraries ... even though there are only 2
+    public Plot(Figure currentFigure, int dimension, Data[] data, String... args) {
 
         if (dimension == 2) {
+            switch (currentFigure.renderer2d) {
+                case gral:
+                    new PlotGral(currentFigure, data, args);
+                    break;
 
-            new PlotGral(currentFigure, data, args);
-
+                default:
+                    new PlotGral(currentFigure, data, args);
+            }
         } else if (dimension == 3) {
+            switch (currentFigure.renderer3d) {
+                case jzy3d:
+                    new PlotJzy3D(currentFigure, data, args);
+                    break;
 
-            new PlotJzy3D(currentFigure, data, args);
-
+                default:
+                    new PlotJzy3D(currentFigure, data, args);
+            }
         }
 
         currentFigure.getContentPane().revalidate();
@@ -69,7 +79,6 @@ public class Plot {
                 ls += "-";    // Solid line (default)
             }
         }
-
 
         /** Line Style Specifiers */
         if (ls.indexOf("--") > -1) {
@@ -119,8 +128,7 @@ public class Plot {
         }
     }
 
-    // the next 3 methods ceoss, asterisk and plus still have to be written but do we really want this?
-    static final Shape drawDiagonalCross(final float l, final float t) {  // Todo
+    static final Shape drawDiagonalCross(final float l, final float t) {
         final GeneralPath p0 = new GeneralPath();
 
         p0.moveTo(-l - t, -l + t);
@@ -140,41 +148,35 @@ public class Plot {
         return p0;
     }
 
-    static final Shape drawAsterisk(final float l, final float t) { // Todo
+    static final Shape drawAsterisk(final float l, final float t) {
         final GeneralPath p0 = new GeneralPath();
 
-        p0.moveTo(-l - t, -l + t);
-        p0.lineTo(-l + t, -l - t);
-        p0.lineTo(0.0f, -t * SQRT2);
-        p0.lineTo(l - t, -l - t);
-        p0.lineTo(l + t, -l + t);
-        p0.lineTo(t * SQRT2, 0.0f);
-        p0.lineTo(l + t, l - t);
-        p0.lineTo(l - t, l + t);
-        p0.lineTo(0.0f, t * SQRT2);
-        p0.lineTo(-l + t, l + t);
-        p0.lineTo(-l - t, l - t);
-        p0.lineTo(-t * SQRT2, 0.0f);
+        p0.moveTo((-l + t)*SQRT2, -l - t);
+        p0.lineTo(0.0f, l + t);
+        p0.lineTo((l - t)*SQRT2, -l - t);
+        p0.lineTo(-l - t, (l - t)*SQRT2);
+        p0.lineTo(0.0f, 0);
+        p0.lineTo(l + t, (l - t)*SQRT2);
         p0.closePath();
 
         return p0;
     }
 
-    static final Shape drawPlus(final float l, final float t) {  // Todo
+    static final Shape drawPlus(final float l, final float t) {
         final GeneralPath p0 = new GeneralPath();
 
         p0.moveTo(-l - t, -l + t);
-        p0.lineTo(-l + t, -l - t);
-        p0.lineTo(0.0f, -t * SQRT2);
-        p0.lineTo(l - t, -l - t);
-        p0.lineTo(l + t, -l + t);
-        p0.lineTo(t * SQRT2, 0.0f);
-        p0.lineTo(l + t, l - t);
-        p0.lineTo(l - t, l + t);
-        p0.lineTo(0.0f, t * SQRT2);
-        p0.lineTo(-l + t, l + t);
         p0.lineTo(-l - t, l - t);
-        p0.lineTo(-t * SQRT2, 0.0f);
+        p0.lineTo(-l + t, l - t);
+        p0.lineTo(-l + t, l + t);
+        p0.lineTo(l - t, l + t);
+        p0.lineTo(l - t, l - t);
+        p0.lineTo(l + t, l - t);
+        p0.lineTo(l + t, -l + t);
+        p0.lineTo(l - t, -l + t);
+        p0.lineTo(l - t, -l - t);
+        p0.lineTo(-l + t, -l - t);
+        p0.lineTo(-l + t, -l + t);
         p0.closePath();
 
         return p0;

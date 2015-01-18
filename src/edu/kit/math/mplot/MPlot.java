@@ -90,9 +90,7 @@ public class MPlot { // TODO: Loading (Image/Text while getting plots) & close e
         int index = groot.getIndexToActiveFigure();
 
         if (index > -1) {
-            groot.addPlotsToGRoot(index, 2, linespec, new double[][]{
-                    x, y
-            });
+            groot.addPlotsToGRoot(index, 2, linespec, new double[][]{ x, y });
             Watchdog.debugEcho("[" + Utilities.getExecuteDuration() + "] "
                     + "New plot created and associated with figure " + groot.getActiveFigureId()
                     + ". activeFigureId: " + groot.getActiveFigureId()
@@ -137,14 +135,11 @@ public class MPlot { // TODO: Loading (Image/Text while getting plots) & close e
     /**
      * Plot3: plot x, y, z into active figure. If no linespec is given use standards = ""
      */
-    public void plot3(double[] x, double[] y, double[] z) {
+    public void plot3(double[] x, double[] y, double[] z, String linespec) {
         int index = groot.getIndexToActiveFigure();
-        String linespec = "";
 
         if (index > -1) {
-            groot.addPlotsToGRoot(index, 3, linespec, new double[][] {
-                    x, y, z
-            });
+            groot.addPlotsToGRoot(index, 3, linespec, new double[][] { x, y, z });
             Watchdog.debugEcho("[" + Utilities.getExecuteDuration() + "] "
                     + "New plot created and associated with figure " + groot.getActiveFigureId()
                     + ". activeFigureId: " + groot.getActiveFigureId()
@@ -155,6 +150,28 @@ public class MPlot { // TODO: Loading (Image/Text while getting plots) & close e
 
         Watchdog.debugEcho("[" + Utilities.getExecuteDuration() + "] " + groot.GRootListToString(), 2);
     }
+
+    public void plot3(double[]... dataPoints) {
+        int index = groot.getIndexToActiveFigure();
+        String linespec = "";
+
+        if (index > -1) {
+            if ((dataPoints.length > 0) && ((dataPoints.length % 3) == 0)) {
+                groot.addPlotsToGRoot(index, 3, "MultiplePlots#", dataPoints);
+                Watchdog.debugEcho("[" + Utilities.getExecuteDuration() + "] "
+                        + "New plot created and associated with figure " + groot.getActiveFigureId()
+                        + ". activeFigureId: " + groot.getActiveFigureId()
+                        + ", currentFigureId: " + groot.getCurrentFigureId(), 1);
+            } else {
+                Watchdog.echo("Error! Cannot plot given data.", 0);
+            }
+        } else if (index == (groot.size() - 1)) {
+            Watchdog.echo("Error! No figure created yet.", 0);
+        }
+
+        Watchdog.debugEcho("[" + Utilities.getExecuteDuration() + "] " + groot.GRootListToString(), 2);
+    }
+
 
     /**
      *

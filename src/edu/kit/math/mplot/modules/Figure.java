@@ -83,7 +83,8 @@ public class Figure extends JFrame {
                             bgcolor = new Color(1.0f, 1.0f, 1.0f);
                         } else if ( (propertyValue == "black")   || (propertyValue == "k") ) {
                             bgcolor = new Color(0.0f, 0.0f, 0.0f);
-                        } else if ((propertyValue.indexOf( "[")*propertyValue.indexOf( "]")) < 0) {  // Todo: parse the string better with reg
+                        } else if (java.util.regex.Pattern.matches( "(\\[).+(\\s).+(\\s).+(\\])", propertyValue)) {
+                            //Todo check if string contains numbers and if numbers are in range of new Color
                             String colorString  = propertyValue.replaceAll("\\[", "").replaceAll("\\]", "");
                             String[] colorPart  = colorString.split("[ ]");
                             float r             = Float.parseFloat(colorPart[0]);
@@ -126,7 +127,7 @@ public class Figure extends JFrame {
 
                     /** Location and Size */
                     case "Position" :
-                        if (propertyValue != "") { // Todo: parse the string better with reg
+                        if (java.util.regex.Pattern.matches( "(\\[).+(\\s).+(\\s).+(\\s).+(\\])", propertyValue)) {
                             position = propertyValue;
                         }
 
@@ -182,9 +183,9 @@ public class Figure extends JFrame {
 
         /* Renderer */
 
-        // ToDo: well, we yet just have gral...
+        // well, we yet just have gral and jzy3d
 
-        /* Position */
+        /* Position */ //Todo check if string contains numbers and if numbers are in range of setLocation und setSize
         position = position.replaceAll("\\[", "").replaceAll("\\]", "");
 
         String[] positionString = position.split("[ ]");

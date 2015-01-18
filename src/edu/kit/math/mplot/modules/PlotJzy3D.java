@@ -18,23 +18,23 @@ public class PlotJzy3D extends Plot {
 
     PlotJzy3D (Figure currentFigure, Data[] data, String... args) {
         Chart chart = AWTChartComponentFactory.chart(Quality.Advanced, IChartComponentFactory.Toolkit.awt);
-
         for (int i = 0; i < data.length; i++) {
-            Color[] colors = data[0].getJzy3dDataColor();
-            Coord3d[] points = data[0].getJzy3dDataTable();
+            Color[] colors = data[i].getJzy3dDataColor();
+            Coord3d[] points = data[i].getJzy3dDataTable();
             Scatter scatter = new Scatter(points, colors);
             chart.getScene().add(scatter);
         }
-
         chart.addController(new AWTCameraKeyController());
         chart.addController(new AWTCameraMouseController());
+
         JPanel panel = new JPanel();
-        panel.setLayout(new BorderLayout()); // Use BorderLayout
+        panel.setLayout(new BorderLayout());
         if (chart.getCanvas() instanceof Canvas) {
             panel.add((Canvas) chart.getCanvas());
         } else  {
             panel.add((Panel) chart.getCanvas());
         }
+
         currentFigure.getContentPane().add(panel, BorderLayout.CENTER);
     }
 }
