@@ -13,9 +13,9 @@ UML Diagrams: in doc folder
 # Compile (I think this isn't up to date)
 * compile:
 find -name "*" | grep ".java" > "src/allsrcfiles"
-javac -cp "lib/*" -d "bin/" @"src/allsrcfiles"
+javac -cp "lib/gral/*:lib/jzy3d/*" -d "bin/" @"src/allsrcfiles"
 * run ([test] = martinTest or [test] = markusTest): 
-java -cp "bin/:lib/*" [test]
+java -cp "bin/:lib/gral/*:lib/jzy3d/*" [test]
 
 
 # Structure
