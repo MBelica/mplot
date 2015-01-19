@@ -2,7 +2,7 @@
 
 import edu.kit.math.mplot.MPlot;
 
-public class martinTest { // todo catchjava.lang.NullPointerException für leere daten + todo LEISTUNG!!!! + todo float, long, int double für plots + 3d lineplot and not scatter + linepecs for 3D + resize of axes
+public class martinTest { // todo catchjava.lang.NullPointerException für leere daten + todo LEISTUNG!!!! + todo float, long, int double für plots + 3d lineplot and not scatter + linepecs for 3D + resize of axes + interface as connector between modules
     public static void main(String[] args) throws InterruptedException {
 
         int sleepTime = 3000;

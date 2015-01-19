@@ -14,8 +14,7 @@ import java.awt.geom.Ellipse2D;
 public class PlotGral extends Plot {
 
     PlotGral (Figure currentFigure, Data[] data, String[] args) {
-
-        LineRenderer lines    = null;
+        LineRenderer lines    = null; // todo woher kommt das?
         DataTable[] dataTable = new DataTable[data.length];
 
         for (int i = 0; i < data.length; i++) {
