@@ -2,8 +2,8 @@
 
 import edu.kit.math.mplot.MPlot;
 
-public class martinTest { // todo catchjava.lang.NullPointerException für leere daten + todo LEISTUNG!!!! + todo float, long, int double für plots + 3d lineplot and not scatter + linepecs for 3D + resize of axes
-    public static void main(String[] args) throws InterruptedException {
+public class martinTest { // todo catchjava.lang.NullPointerException für leere daten + todo LEISTUNG!!!! + todo float, long, int double für plots + linepecs for 3D + resize of axes
+    public static void main(String[] args) throws InterruptedException { // TODO figure with -1 when tag is applied clf "all"
 
         int sleepTime = 3000;
         MPlot newPlot = new MPlot();
@@ -18,7 +18,8 @@ public class martinTest { // todo catchjava.lang.NullPointerException für leere
         newPlot.pause(sleepTime);
         newPlot.plot(x, y, "+");
         newPlot.pause(sleepTime);
-
+        newPlot.clf();
+        newPlot.pause(sleepTime);
         System.out.println(newPlot.PI + ", " + newPlot.pi);
         System.out.println(MPlot.PI   + ", " + MPlot.pi);
 
@@ -42,7 +43,8 @@ public class martinTest { // todo catchjava.lang.NullPointerException für leere
         newPlot.pause(sleepTime);
         newPlot.plot3(x3d, y3d, z3d, x32d, y32d, z32d);
         newPlot.pause(sleepTime);
-
+        newPlot.clf();
+        newPlot.pause(sleepTime);
         newPlot.close("all");
     }
 }

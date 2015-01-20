@@ -10,8 +10,9 @@ public class Figure extends JFrame {
     /**
      * Figure properties; for now only some figure appearances
      */
-    public int      id;
-    public String   name;
+    public int      id   = 0;
+    public String   name = "";
+
     public String   position;
     public Color    bgcolor;
     public boolean  numberTitle, visible, resize;
@@ -45,14 +46,11 @@ public class Figure extends JFrame {
     }
 
     private void getDefaultProperties() {
-        id          = 0;
-        name        = "";
-        name        = "";
         position    = "[20 20 600 400]";
         numberTitle = true;
         visible     = true;
         resize      = true;
-        bgcolor     = null;
+        bgcolor     = Color.WHITE;
         renderer2d  = Renderer2d.gral;
         renderer3d  = Renderer3d.jzy3d;
     }

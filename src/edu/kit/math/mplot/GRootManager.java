@@ -129,8 +129,9 @@ class GRootManager {
 
             // CLF figure in this id
             Figure figureToCLF = getFigureToIndex(index);
-            figureToCLF.getContentPane().removeAll();  // ToDo 3D plot clf results in error
+
             figureToCLF.resetFigure();
+            figureToCLF.getContentPane().removeAll();
             figureToCLF.getContentPane().revalidate();
             figureToCLF.getContentPane().repaint();
         }
