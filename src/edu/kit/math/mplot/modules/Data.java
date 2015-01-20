@@ -39,6 +39,7 @@ public class Data {
     @SuppressWarnings("unused")
     public int getDimension() {  return this.dataSet.size();  }
 
+    @SuppressWarnings("unused")
     public int getLength() {  return this.dataSet.get(0).length;  }
 
     @SuppressWarnings("unused")

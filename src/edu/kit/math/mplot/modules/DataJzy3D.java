@@ -22,11 +22,7 @@ class DataJzy3D {
             Double yiD = dataSet.get(i)[1];
             Double ziD = dataSet.get(i)[2];
 
-            float xiF  = xiD.floatValue();
-            float yiF  = yiD.floatValue();
-            float ziF  = ziD.floatValue();
-
-            dataTable[i] = new Coord3d(xiF, yiF, ziF);
+            dataTable[i] = new Coord3d(xiD, yiD, ziD);
         }
 
         sjzy3dDataTable = dataTable;
