@@ -15,6 +15,7 @@ public class MPlot { // TODO: Loading (Image/Text while getting plots) & close e
     static enum outputStyle {console, file, none}
     static enum reportingStyle {silent, normal, loud}
 
+    public static final double pi = Math.PI, PI = Math.PI;
     /**
      * Figure: create a figure or set an existent figure as active
      *

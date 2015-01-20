@@ -3,7 +3,6 @@ package edu.kit.math.mplot.modules;
 //~--- non-JDK imports --------------------------------------------------------
 
 import de.erichseifert.gral.data.DataTable;
-import org.jzy3d.colors.Color;
 import org.jzy3d.maths.Coord3d;
 
 //~--- JDK imports ------------------------------------------------------------
@@ -11,10 +10,10 @@ import org.jzy3d.maths.Coord3d;
 import java.util.ArrayList;
 
 public class Data {
-    ArrayList<Double[]> dataSet = new ArrayList<Double[]>();
+    ArrayList<Double[]> dataSet = new ArrayList<>();
 
-    DataGral gralHandle   = null;
-    DataJzy3D jzy3dHandle = null;
+    DataGral  gralHandle        = null;
+    DataJzy3D jzy3dHandle       = null;
 
     public Data(double[]... xi) {
         for (int j = 0; j < xi[0].length; j++) {
@@ -30,11 +29,6 @@ public class Data {
     public DataTable getGralDataTable() {
         if (gralHandle == null) gralHandle   = new DataGral(dataSet);
         return gralHandle.gralDataTable;
-    }
-
-    public Color[] getJzy3dDataColor() {
-        if (jzy3dHandle == null) jzy3dHandle = new DataJzy3D(dataSet);
-        return jzy3dHandle.sjzy3dDataColor;
     }
 
     public Coord3d[] getJzy3dDataTable() {

@@ -5,7 +5,6 @@ package edu.kit.math.mplot.modules;
 import java.util.ArrayList;
 import de.erichseifert.gral.data.DataTable;
 
-
 class DataGral  {
 
     DataTable gralDataTable = new DataTable(Double.class, Double.class);
