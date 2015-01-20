@@ -16,7 +16,7 @@ class Watchdog {
         if ( reportLevel <= MPlot.echoReportingLevel.ordinal() ) {
             MPlot.outputStyle mode;
             String filename;
-            if (method == "echo") {
+            if (method.equals("echo")) {
                 mode = MPlot.echoOutput;
                 filename = MPlot.systemStartTime + ".echoOutput.txt";
             } else {

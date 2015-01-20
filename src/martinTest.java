@@ -16,12 +16,9 @@ public class martinTest { // todo catchjava.lang.NullPointerException für leere
         }
         newPlot.figure("Name", "Martins Figure", "NumberTitle", "false", "Position", "[100 100 1280 720]", "Color", "[0 1 0.8]");
         newPlot.pause(sleepTime);
-        newPlot.plot(x, y, "+");
+        newPlot.plot(y, "+");
         newPlot.pause(sleepTime);
-        newPlot.clf();
-        newPlot.pause(sleepTime);
-        System.out.println(newPlot.PI + ", " + newPlot.pi);
-        System.out.println(MPlot.PI   + ", " + MPlot.pi);
+
 
         //** 3D Test **//
         // 1. 3D Plot
@@ -43,8 +40,7 @@ public class martinTest { // todo catchjava.lang.NullPointerException für leere
         newPlot.pause(sleepTime);
         newPlot.plot3(x3d, y3d, z3d, x32d, y32d, z32d);
         newPlot.pause(sleepTime);
-        newPlot.clf();
-        newPlot.pause(sleepTime);
+
         newPlot.close("all");
     }
 }

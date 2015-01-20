@@ -1,26 +1,32 @@
 package edu.kit.math.mplot;
 
-public class MPlot { // TODO: Loading (Image/Text while getting plots) & close error + close handle to dispose + improve performance + todo add multiple plots in groot
+public class MPlot { // TODO: Loading (Image/Text while getting plots) & close error + close handle to dispose + improve performance
     private boolean pausingEnabled              = true;
     private GRootManager groot                  = new GRootManager();
 
     static int infPauseSequence                 = 250;
     static long systemStartTime                 = System.nanoTime();
 
+    @SuppressWarnings("unused")
     static outputStyle echoOutput               = outputStyle.console;
+    @SuppressWarnings("unused")
     static outputStyle debugOutput              = outputStyle.console;
-    static reportingStyle echoReportingLevel    = reportingStyle.silent;
-    static reportingStyle debugReportingLevel   = reportingStyle.silent;
-
+    @SuppressWarnings("unused")
+    static reportingStyle echoReportingLevel    = reportingStyle.loud;
+    @SuppressWarnings("unused")
+    static reportingStyle debugReportingLevel   = reportingStyle.loud;
+    @SuppressWarnings("unused")
     static enum outputStyle {console, file, none}
+    @SuppressWarnings("unused")
     static enum reportingStyle {silent, normal, loud}
-
+    @SuppressWarnings("unused")
     public static final double pi = Math.PI, PI = Math.PI;
     /**
      * Figure: create a figure or set an existent figure as active
      *
      * @return integer as figure handle
      */
+    @SuppressWarnings("unused")
     public int figure() {
         return figure(-1, "", true);
     }
@@ -52,14 +58,7 @@ public class MPlot { // TODO: Loading (Image/Text while getting plots) & close e
     }
 
     public int figure(int id, String tag, boolean... varArgsAddWithoutId) {
-        boolean addWithoutId;
-
-        if (varArgsAddWithoutId.length == 0) {
-            addWithoutId = false;
-        } else {
-            addWithoutId = varArgsAddWithoutId[0];
-        }
-
+        boolean addWithoutId = varArgsAddWithoutId.length!=0 && varArgsAddWithoutId[0];
         if (!addWithoutId && (groot.getIndexToId(id) > -1)) {    // user wants to set a figure active
             groot.setFigureActive(id);
             Watchdog.debugEcho("[" + Utilities.getExecuteDuration() + "] "
@@ -91,7 +90,7 @@ public class MPlot { // TODO: Loading (Image/Text while getting plots) & close e
         int index = groot.getIndexToActiveFigure();
 
         if (index > -1) {
-            groot.addPlotsToGRoot(index, 2, linespec, new double[][]{ x, y });
+            groot.addPlotsToGRoot(index, 2, linespec, x, y );
             Watchdog.debugEcho("[" + Utilities.getExecuteDuration() + "] "
                     + "New plot created and associated with figure " + groot.getActiveFigureId()
                     + ". activeFigureId: " + groot.getActiveFigureId()
@@ -105,8 +104,8 @@ public class MPlot { // TODO: Loading (Image/Text while getting plots) & close e
 
     public void plot(double[]... dataPoints) {
         if (dataPoints.length == 1) {
-            double[] x = dataPoints[0];
-            double[] y = Utilities.getIndexVs(x);
+            double[] y = dataPoints[0];
+            double[] x = Utilities.getIndexVs(y);
 
             plot(x, y, "");
         } else if (dataPoints.length == 2) {
@@ -136,11 +135,12 @@ public class MPlot { // TODO: Loading (Image/Text while getting plots) & close e
     /**
      * Plot3: plot x, y, z into active figure. If no linespec is given use standards = ""
      */
+    @SuppressWarnings("unused")
     public void plot3(double[] x, double[] y, double[] z, String linespec) {
         int index = groot.getIndexToActiveFigure();
 
         if (index > -1) {
-            groot.addPlotsToGRoot(index, 3, linespec, new double[][] { x, y, z });
+            groot.addPlotsToGRoot(index, 3, linespec, x, y, z );
             Watchdog.debugEcho("[" + Utilities.getExecuteDuration() + "] "
                     + "New plot created and associated with figure " + groot.getActiveFigureId()
                     + ". activeFigureId: " + groot.getActiveFigureId()
@@ -158,7 +158,7 @@ public class MPlot { // TODO: Loading (Image/Text while getting plots) & close e
 
         if (index > -1) {
             if ((dataPoints.length > 0) && ((dataPoints.length % 3) == 0)) {
-                groot.addPlotsToGRoot(index, 3, "MultiplePlots#", dataPoints);
+                groot.addPlotsToGRoot(index, 3, linespec, dataPoints);
                 Watchdog.debugEcho("[" + Utilities.getExecuteDuration() + "] "
                         + "New plot created and associated with figure " + groot.getActiveFigureId()
                         + ". activeFigureId: " + groot.getActiveFigureId()
@@ -182,10 +182,11 @@ public class MPlot { // TODO: Loading (Image/Text while getting plots) & close e
         clf(groot.getActiveFigureId());
     }
 
+    @SuppressWarnings("unused")
     public void clf(String... varArgs) {
         if (varArgs.length == 2) {
             clf(groot.getIdToTag(varArgs[0]), varArgs[1]);
-        } else if ((varArgs.length == 1) && (varArgs[0] == "reset")) {
+        } else if ( (varArgs.length == 1) && (varArgs[0].equals("reset")) ) {
             clf(groot.getActiveFigureId(), "reset");
         } else {
             clf(groot.getIdToTag(varArgs[0]));
@@ -199,7 +200,7 @@ public class MPlot { // TODO: Loading (Image/Text while getting plots) & close e
             if (indexHandle > -1) {    // > -1 means we found the element
                 boolean reset = false;
 
-                if ((resetVarArgs.length > 0) && (resetVarArgs[0] == "reset")) {
+                if ( (resetVarArgs.length > 0) && (resetVarArgs[0].equals("reset")) ) {
                     reset = true;
                 }
 
@@ -250,7 +251,7 @@ public class MPlot { // TODO: Loading (Image/Text while getting plots) & close e
     }
 
     public int close(String param) {
-        if (param == "all") {
+        if (param.equals("all")) {
             groot.closeAllFigures();
             Watchdog.debugEcho("[" + Utilities.getExecuteDuration() + "] "
                     + "All figures deleted. "
@@ -269,6 +270,7 @@ public class MPlot { // TODO: Loading (Image/Text while getting plots) & close e
      * Pause pauses execution for n seconds before continuing, where n is any nonnegative real number. Pausing must be enabled for this to take effect.
      *
      */
+    @SuppressWarnings("unused")
     public void pause() throws InterruptedException {
         boolean infLoop = true;
 
@@ -276,6 +278,7 @@ public class MPlot { // TODO: Loading (Image/Text while getting plots) & close e
             Watchdog.debugEcho("[" + Utilities.getExecuteDuration() + "] " + "Infinite pausing enabled.", 1);
             Thread.sleep(infPauseSequence);
 
+            if (1 == 0) infLoop = false;
             // ToDo: Add Keylistener to change infLoop to false,
             // depends on where to add the keylistener ...
         }
@@ -290,19 +293,26 @@ public class MPlot { // TODO: Loading (Image/Text while getting plots) & close e
         }
     }
 
+    @SuppressWarnings("unused")
     public String pause(String state) throws InterruptedException {
-        if (state == "newstate") {
+        if (state.equals("newstate")) {
             pausingEnabled ^= true;
             Watchdog.debugEcho("[" + Utilities.getExecuteDuration() + "] " + "Pausing state switched. Pausing now " + pausingEnabled, 1);
 
             if (pausingEnabled) return "off"; // return oldstate
             else return "on";
         } else {
-            if      (state == "on")  pausingEnabled = true;
-            else if (state == "off") pausingEnabled = false;
-            else if (state == "inf") {
-                while (true) { Thread.sleep(infPauseSequence); }
+            switch (state) {
+                case "on":
+                    pausingEnabled = true;
+                    break;
+                case "off":
+                    pausingEnabled = false;
+                    break;
+                case "inf":
+                    while (true) Thread.sleep(infPauseSequence);
             }
+
             Watchdog.debugEcho("[" + Utilities.getExecuteDuration() + "] " + "Pausing state changed. Pausing now " + pausingEnabled, 1);
 
             if (pausingEnabled) return "on";  // return state
@@ -310,6 +320,7 @@ public class MPlot { // TODO: Loading (Image/Text while getting plots) & close e
         }
     }
 
+    @SuppressWarnings("unused")
     public void hold () {
         hold("toggle");
     }
@@ -318,11 +329,13 @@ public class MPlot { // TODO: Loading (Image/Text while getting plots) & close e
         groot.changeHoldState(param);
     }
 
+    @SuppressWarnings("unused")
     public void help() {
 
     }
 
     public void help(String param) {
 
+        Watchdog.echo("[" + Utilities.getExecuteDuration() + "] " + "help: " + param, 0);
     }
 }

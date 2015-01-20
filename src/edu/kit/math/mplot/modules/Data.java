@@ -36,17 +36,12 @@ public class Data {
         return jzy3dHandle.sjzy3dDataTable;
     }
 
+    @SuppressWarnings("unused")
+    public int getDimension() {  return this.dataSet.size();  }
 
-    public int getDimension() {
-        return this.dataSet.size();
-    }
+    public int getLength() {  return this.dataSet.get(0).length;  }
 
-    public int getLength() {
-        return this.dataSet.get(0).length;
-    }
-
-    public int getSize() {
-        return this.dataSet.size();
-    }
+    @SuppressWarnings("unused")
+    public int getSize() {  return this.dataSet.size(); }
 
 }

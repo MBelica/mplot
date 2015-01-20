@@ -23,14 +23,17 @@ public class PlotJzy3D extends Plot {
 
     PlotJzy3D (Figure currentFigure, Data[] data, String... args) {
         Chart chart = AWTChartComponentFactory.chart(Quality.Advanced, IChartComponentFactory.Toolkit.awt);
-        for (int i = 0; i < data.length; i++) {
+
+        for(  Data dataElement :  data) {
+
             org.jzy3d.colors.Color lineColor  = org.jzy3d.colors.Color.BLUE;
-            org.jzy3d.colors.Color pointColor = org.jzy3d.colors.Color.BLACK;
+            //org.jzy3d.colors.Color pointColor = org.jzy3d.colors.Color.BLACK;
 
-            Coord3d[] points = data[i].getJzy3dDataTable();
+            Coord3d[] points = dataElement.getJzy3dDataTable();
 
-            Scatter scatter = new Scatter(points, pointColor);
+            //Scatter scatter = new Scatter(points, pointColor);
 
+            setLineRenderer(args);
             LineStrip ls = new LineStrip(Arrays.asList(points));
             ls.setWireframeColor(lineColor);
 
@@ -48,5 +51,11 @@ public class PlotJzy3D extends Plot {
         }
 
         currentFigure.getContentPane().add(panel, BorderLayout.CENTER);
+    }
+
+    private void setLineRenderer(String... args) {
+        if(!args[0].equals("")) {
+             System.out.println("LineRenderer");
+        }
     }
 }

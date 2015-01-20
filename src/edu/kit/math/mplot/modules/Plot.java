@@ -46,10 +46,10 @@ public class Plot {
     void parseLinespecs(String ls) {
 
         /** Set different linespecs for multiple Plots */
-        if (ls.indexOf("MultiplePlots#") > -1) {
+        if (ls.contains("MultiplePlots#")) {
             int mpIndex = Integer.parseInt(ls.substring(ls.indexOf("#")+1).trim());
-            int colorRendererIndex = mpIndex % 8; // we have 8 colours ...
-            int lineRendererIndex  = ( (int)(mpIndex/8) ) % 4; // ... and 4 different linetypes
+            int colorRendererIndex = mpIndex % 8;           // we have 8 colours ...
+            int lineRendererIndex  = ( (mpIndex/8) ) % 4;   // ... and 4 different linetypes
 
             ls = "";
             if (colorRendererIndex == 1) {
@@ -81,54 +81,54 @@ public class Plot {
         }
 
         /** Line Style Specifiers */
-        if (ls.indexOf("--") > -1) {
+        if (ls.contains("--")) {
             lStyle = lineStyle.dashed;              // Dashed line
-        } else if (ls.indexOf("-.") > -1) {
+        } else if (ls.contains("-.")) {
             lStyle = lineStyle.dashdot;             // Dash-dot line
-        } else if (ls.indexOf(":") > -1) {
+        } else if (ls.contains(":")) {
             lStyle = lineStyle.dotted;              // Dotted line
-        } else if (ls.indexOf(" ") > -1) {
+        } else if (ls.contains(" ")) {
             lStyle = lineStyle.plain;               // Plain
         } else {
             lStyle = lineStyle.solid;               // Solid line (default)
         }
 
         /** Marker Specifiers */
-        if (ls.indexOf("+") > -1) {
+        if (ls.contains("+")) {
             mStyle = markerStyle.plus;              // Plus sign
-        } else if (ls.indexOf("o") > -1) {
+        } else if (ls.contains("o")) {
             mStyle = markerStyle.circle;            // Circle
-        } else if (ls.indexOf("*") > -1) {
+        } else if (ls.contains("*")) {
             mStyle = markerStyle.asterisk;          // Asterisk
-        } else if (ls.indexOf("x") > -1) {
+        } else if (ls.contains("x")) {
             mStyle = markerStyle.cross;             // Cross
-        } else if (ls.indexOf("q") > -1) {
+        } else if (ls.contains("q")) {
             mStyle = markerStyle.dot;               // dot
         } else {
             mStyle = markerStyle.point;             // Point (default)
         }
 
         /** Color Specifiers */
-        if (ls.indexOf("r") > -1) {
+        if (ls.contains("r")) {
             color = new Color(1.0f, 0.0f, 0.0f);    // Red
-        } else if (ls.indexOf("g") > -1) {
+        } else if (ls.contains("g")) {
             color = new Color(0.0f, 1.0f, 0.0f);    // Green
-        } else if (ls.indexOf("b") > -1) {
+        } else if (ls.contains("b")) {
             color = new Color(0.0f, 0.0f, 1.0f);    // Blue
-        } else if (ls.indexOf("c") > -1) {
+        } else if (ls.contains("c")) {
             color = new Color(0.0f, 1.0f, 1.0f);    // Cyan
-        } else if (ls.indexOf("m") > -1) {
+        } else if (ls.contains("m")) {
             color = new Color(1.0f, 0.0f, 1.0f);    // Magenta
-        } else if (ls.indexOf("y") > -1) {
+        } else if (ls.contains("y")) {
             color = new Color(1.0f, 1.0f, 0.0f);    // Yellow
-        } else if (ls.indexOf("w") > -1) {
+        } else if (ls.contains("w")) {
             color = new Color(1.0f, 1.0f, 1.0f);    // White
         } else {
             color = new Color(0.0f, 0.0f, 0.0f);    // Black (default)
         }
     }
 
-    static final Shape drawDiagonalCross(final float l, final float t) {
+    static Shape drawDiagonalCross(final float l, final float t) {
         final GeneralPath p0 = new GeneralPath();
 
         p0.moveTo(-l - t, -l + t);
@@ -148,7 +148,7 @@ public class Plot {
         return p0;
     }
 
-    static final Shape drawAsterisk(final float l, final float t) {
+    static Shape drawAsterisk(final float l, final float t) {
         final GeneralPath p0 = new GeneralPath();
 
         p0.moveTo((-l + t)*SQRT2, -l - t);
@@ -162,7 +162,7 @@ public class Plot {
         return p0;
     }
 
-    static final Shape drawPlus(final float l, final float t) {
+    static Shape drawPlus(final float l, final float t) {
         final GeneralPath p0 = new GeneralPath();
 
         p0.moveTo(-l - t, -l + t);

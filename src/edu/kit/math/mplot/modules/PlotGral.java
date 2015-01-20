@@ -1,5 +1,7 @@
 package edu.kit.math.mplot.modules;
 
+//~--- non-JDK imports --------------------------------------------------------
+
 import de.erichseifert.gral.data.DataTable;
 import de.erichseifert.gral.plots.XYPlot;
 import de.erichseifert.gral.plots.lines.DefaultLineRenderer2D;
@@ -7,12 +9,13 @@ import de.erichseifert.gral.plots.lines.LineRenderer;
 import de.erichseifert.gral.plots.points.PointRenderer;
 import de.erichseifert.gral.ui.InteractivePanel;
 
+//~--- JDK imports ------------------------------------------------------------
+
 import java.awt.*;
 import java.awt.geom.Area;
 import java.awt.geom.Ellipse2D;
 
 public class PlotGral extends Plot {
-
     PlotGral (Figure currentFigure, Data[] data, String[] args) {
         DataTable[] dataTable = new DataTable[data.length];
 
@@ -27,9 +30,9 @@ public class PlotGral extends Plot {
 
         for (int i = 0; i < data.length; i++) {
             super.parseLinespecs(args[i]);
-            LineRenderer lines    = new DefaultLineRenderer2D(); // todo woher kommt das?
+            LineRenderer lines = new DefaultLineRenderer2D();
+            setPointRenderer(dataTable[i], currentPlot);
             setLineRenderer(dataTable[i],  currentPlot, lines);
-            setPointRenderer(dataTable[i], currentPlot, lines);
         }
 
     }
@@ -69,7 +72,7 @@ public class PlotGral extends Plot {
         }
     }
 
-    private void setPointRenderer(DataTable data, XYPlot plot, LineRenderer lines) {
+    private void setPointRenderer(DataTable data, XYPlot plot) {
         PointRenderer pointRenderer = plot.getPointRenderer(data);
 
         switch (mStyle) {

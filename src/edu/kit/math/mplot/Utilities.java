@@ -13,19 +13,16 @@ class Utilities {
     }
 
     protected static double getExecuteDuration() {
-        double time = 0;
         long   t    = (System.nanoTime() - MPlot.systemStartTime);
 
-
-        time =  Math.round(100000.0 * convertLong(t, "n")) / 100000.0;
-        return time;
+        return ( Math.round(100000.0 * convertLong(t, "n")) / 100000.0 );
     }
 
     protected static double convertLong(long t, String... conv) {
-        double factor = 1;
-        double result = t;
+        double factor;
         double[] unitPrefix = new double[2];
 
+        double result = t;
         if (conv.length > 0) {
             for (int i = 0; i < conv.length; i++) {
                 switch (conv[i]) {

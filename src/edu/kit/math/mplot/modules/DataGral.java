@@ -10,10 +10,6 @@ class DataGral  {
     DataTable gralDataTable = new DataTable(Double.class, Double.class);
 
     DataGral(ArrayList<Double[]> dataSet) {
-        int size = dataSet.size();
-
-        for (int i = 0; i < size; i++) {
-            gralDataTable.add(dataSet.get(i));
-        }
+        for( Double[] dataSetElement : dataSet) gralDataTable.add(dataSetElement);
     }
 }
