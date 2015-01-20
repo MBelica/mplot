@@ -1,11 +1,8 @@
 package edu.kit.math.mplot;
 
-public class MPlot { // TODO: Loading (Image/Text while getting plots) & close error + close handle to dispose + improve performance
+public class MPlot { // TODO: Loading (Image/Text while getting plots) & close error + close handle to dispose + improve performance + surface plot
     private boolean pausingEnabled              = true;
     private GRootManager groot                  = new GRootManager();
-
-    static volatile int infPauseSequence        = 250;
-    static volatile long systemStartTime        = System.nanoTime();
 
     static outputStyle echoOutput               = outputStyle.console;
     static outputStyle debugOutput              = outputStyle.console;
@@ -14,6 +11,10 @@ public class MPlot { // TODO: Loading (Image/Text while getting plots) & close e
 
     static enum outputStyle {console, file, none}
     static enum reportingStyle {silent, normal, loud}
+
+    public static volatile int infPauseSequence = 250;
+    public static volatile long systemStartTime = System.nanoTime();
+    public static volatile boolean infLoop      = false;
 
     @SuppressWarnings("unused")
     public static final double pi = Math.PI, PI = Math.PI;
@@ -246,19 +247,15 @@ public class MPlot { // TODO: Loading (Image/Text while getting plots) & close e
 
     /**
      *
-     * Pause pauses execution for n seconds before continuing, where n is any nonnegative real number. Pausing must be enabled for this to take effect.
+     * Pause pauses execution for n seconds before continuing, where n is any non negative real number. Pausing must be enabled for this to take effect.
      *
      */
     public void pause() throws InterruptedException {
-        boolean infLoop = true;
+        infLoop = true;
+        Watchdog.debugEcho("[" + Utilities.getExecuteDuration() + "] " + "Pausing enabled until one presses any key", 1);
 
         while (infLoop) {
-            Watchdog.debugEcho("[" + Utilities.getExecuteDuration() + "] " + "Infinite pausing enabled.", 1);
             Thread.sleep(infPauseSequence);
-
-            if (1 == 0) infLoop = false;
-            // ToDo: Add Keylistener to change infLoop to false,
-            // depends on where to add the keylistener ...
         }
     }
 
@@ -287,6 +284,7 @@ public class MPlot { // TODO: Loading (Image/Text while getting plots) & close e
                     pausingEnabled = false;
                     break;
                 case "inf":
+                    Watchdog.debugEcho("[" + Utilities.getExecuteDuration() + "] " + "Infinite pausing enabled.", 1);
                     while (true) Thread.sleep(infPauseSequence);
             }
 

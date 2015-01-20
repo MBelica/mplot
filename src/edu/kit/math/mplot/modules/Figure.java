@@ -2,10 +2,17 @@ package edu.kit.math.mplot.modules;
 
 //~--- JDK imports ------------------------------------------------------------
 
-import javax.swing.*;
 import java.awt.*;
+import java.awt.Color;
+import javax.swing.JFrame;
+import java.awt.event.KeyEvent;
+import java.awt.event.KeyListener;
 
-public class Figure extends JFrame {
+//~--- JDK imports ------------------------------------------------------------
+
+import edu.kit.math.mplot.*;
+
+public class Figure extends JFrame implements KeyListener {
 
     /**
      * Figure properties; for now only some figure appearances
@@ -25,6 +32,11 @@ public class Figure extends JFrame {
 
     public Figure(int id, String name) {
         super();
+
+        addKeyListener(this);
+        setFocusable(true);
+        setFocusTraversalKeysEnabled(false);
+
         getDefaultProperties();
         this.id   = id;
         this.name = name;
@@ -33,6 +45,11 @@ public class Figure extends JFrame {
 
     public Figure(int id, String... propertyVarArgs) {
         super();
+
+        addKeyListener(this);
+        setFocusable(true);
+        setFocusTraversalKeysEnabled(false);
+
         getDefaultProperties();
         this.id = id;
         getProperties(propertyVarArgs);
@@ -204,4 +221,15 @@ public class Figure extends JFrame {
         /* Resize */
         setResizable(resize);
     }
+
+
+    public void keyPressed(KeyEvent e) {
+        MPlot.infLoop = false;
+    }
+
+    public void keyReleased(KeyEvent e) {
+
+    }
+
+    public void keyTyped(KeyEvent e) {  }
 }

@@ -3,8 +3,7 @@
 import edu.kit.math.mplot.MPlot;
 
 public class martinTest { // todo catchjava.lang.NullPointerException für leere daten + todo LEISTUNG!!!! + linepecs for 3D + resize of axes
-    public static void main(String[] args) throws InterruptedException { // TODO figure with -1 when tag is applied clf "all"
-
+    public static void main(String[] args) throws InterruptedException {
         int sleepTime = 3000;
         MPlot newPlot = new MPlot();
 
@@ -20,10 +19,10 @@ public class martinTest { // todo catchjava.lang.NullPointerException für leere
         newPlot.plot(y, "+");
         newPlot.figure("Name", "Martins Figure", "NumberTitle", "false", "Position", "[100 100 1280 720]", "Color", "[0 1 0.8]");
         newPlot.plot(x, y, "+ ");
+        newPlot.pause();
         newPlot.figure("Name", "Martins Figure", "NumberTitle", "false", "Position", "[100 100 1280 720]", "Color", "[0 1 0.8]");
         newPlot.plot(x, y);
         newPlot.pause(sleepTime);
-
 
         //** 3D Test **//
         // 1. 3D Plot
