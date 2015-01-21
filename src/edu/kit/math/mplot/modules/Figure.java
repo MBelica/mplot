@@ -12,16 +12,22 @@ import java.awt.event.KeyListener;
 
 import edu.kit.math.mplot.*;
 
-public class Figure extends JFrame implements KeyListener {
+interface FigureInterface  {
+
+    public void resetFigure();
+}
+
+public class Figure extends JFrame implements KeyListener, FigureInterface {
 
     /**
      * Figure properties; for now only some figure appearances
      */
-    public int      id;
-    public String   name;
-    public String   position;
-    public Color    bgcolor;
-    public boolean  numberTitle, visible, resize;
+    public int id = 0;
+    public String name = "";
+
+    public String position;
+    public Color bgcolor;
+    public boolean numberTitle, visible, resize;
     public Renderer2d renderer2d;
     public Renderer3d renderer3d;
 
@@ -57,15 +63,12 @@ public class Figure extends JFrame implements KeyListener {
     }
 
     public void resetFigure() {
-        // ToDo save and reset original id and name
-        getDefaultProperties();
+        getDefaultProperties(false);
         setProperties();
     }
 
-    private void getDefaultProperties() {
-        id          = 0;
-        name        = "";
-        position    = "[20 20 600 400]";
+    private void getDefaultProperties(boolean... resetPosition) {
+        if((resetPosition.length == 0) || (resetPosition[0])) position = "[20 20 600 400]";
         numberTitle = true;
         visible     = true;
         resize      = true;
@@ -105,13 +108,27 @@ public class Figure extends JFrame implements KeyListener {
                         } else if ( (propertyValue.equals("black"))   || (propertyValue.equals("k")) ) {
                             bgcolor = new Color(0.0f, 0.0f, 0.0f);
                         } else if (java.util.regex.Pattern.matches( "(\\[).+(\\s).+(\\s).+(\\])", propertyValue)) {
-                            //Todo check if string contains numbers and if numbers are in range of new Color
                             String colorString  = propertyValue.replaceAll("\\[", "").replaceAll("\\]", "");
                             String[] colorPart  = colorString.split("[ ]");
-                            float r             = Float.parseFloat(colorPart[0]);
-                            float g             = Float.parseFloat(colorPart[1]);
-                            float b             = Float.parseFloat(colorPart[2]);
-                            bgcolor = new Color(r, g, b);
+                            try {
+                                int r = Integer.parseInt(colorPart[0]);
+                                int g = Integer.parseInt(colorPart[1]);
+                                int b = Integer.parseInt(colorPart[2]);
+                                bgcolor = new Color(r, g, b);
+                            } catch (IllegalArgumentException e1){
+                                try {
+                                    float r = Float.parseFloat(colorPart[0]);
+                                    float g = Float.parseFloat(colorPart[1]);
+                                    float b = Float.parseFloat(colorPart[2]);
+                                    bgcolor = new Color(r, g, b);
+                                } catch (IllegalArgumentException e2) {
+                                    Watchdog.echo("Argument der Property 'Color' ist nicht legal.", 0);
+                                    System.exit(-1);
+                                }
+                            }
+                        } else {
+                            Watchdog.echo("Argument der Property 'Color' ist nicht legal.", 0);
+                            System.exit(-1);
                         }
                         break;
 
@@ -150,8 +167,10 @@ public class Figure extends JFrame implements KeyListener {
                     case "Position" :
                         if (java.util.regex.Pattern.matches( "(\\[).+(\\s).+(\\s).+(\\s).+(\\])", propertyValue)) {
                             position = propertyValue;
+                        } else {
+                            Watchdog.echo("Argument der Property 'Position' ist nicht legal.", 0);
+                            System.exit(-1);
                         }
-
                         break;
 
                     case "Resize" :
@@ -206,30 +225,33 @@ public class Figure extends JFrame implements KeyListener {
 
         // well, we yet just have gral and jzy3d
 
-        /* Position */ //Todo check if string contains numbers and if numbers are in range of setLocation und setSize
+        /* Position */
         position = position.replaceAll("\\[", "").replaceAll("\\]", "");
 
         String[] positionString = position.split("[ ]");
-        int      left           = Integer.parseInt(positionString[0]);
-        int      bottom         = Integer.parseInt(positionString[1]);
-        int      width          = Integer.parseInt(positionString[2]);
-        int      height         = Integer.parseInt(positionString[3]);
+        try {
+            int left    = Integer.parseInt(positionString[0]);
+            int bottom  = Integer.parseInt(positionString[1]);
+            int width   = Integer.parseInt(positionString[2]);
+            int height  = Integer.parseInt(positionString[3]);
 
-        setLocation(left, bottom);
-        setSize(width, height);
+
+            setLocation(left, bottom);
+            setSize(width, height);
+        } catch (IllegalArgumentException e) {
+            Watchdog.echo("Argument der Property 'Position' ist nicht legal.", 0);
+            System.exit(-1);
+        }
 
         /* Resize */
         setResizable(resize);
     }
 
-
     public void keyPressed(KeyEvent e) {
         MPlot.infLoop = false;
     }
 
-    public void keyReleased(KeyEvent e) {
-
-    }
+    public void keyReleased(KeyEvent e) {  }
 
     public void keyTyped(KeyEvent e) {  }
 }

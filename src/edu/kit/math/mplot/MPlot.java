@@ -1,6 +1,6 @@
 package edu.kit.math.mplot;
 
-public class MPlot { // TODO: Loading (Image/Text while getting plots) & close error + close handle to dispose + improve performance + surface plot
+public class MPlot {
     private boolean pausingEnabled              = true;
     private GRootManager groot                  = new GRootManager();
 
@@ -16,7 +16,6 @@ public class MPlot { // TODO: Loading (Image/Text while getting plots) & close e
     public static volatile long systemStartTime = System.nanoTime();
     public static volatile boolean infLoop      = false;
 
-    @SuppressWarnings("unused")
     public static final double pi = Math.PI, PI = Math.PI;
 
     /**

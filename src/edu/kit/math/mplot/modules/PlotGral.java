@@ -15,29 +15,36 @@ import java.awt.*;
 import java.awt.geom.Area;
 import java.awt.geom.Ellipse2D;
 
-public class PlotGral extends Plot {
+class PlotGral extends Plot {
+
+    private DataTable[] dataTable;
+    private LineRenderer lines;
+    private XYPlot currentPlot;
+
     PlotGral (Figure currentFigure, Data[] data, String[] args) {
-        DataTable[] dataTable = new DataTable[data.length];
+        dataTable = new DataTable[data.length];
 
         for (int i = 0; i < data.length; i++) {
             dataTable[i] = data[i].getGralDataTable();
         }
 
-        XYPlot currentPlot    = new XYPlot(dataTable);
+        currentPlot    = new XYPlot(dataTable);
         currentFigure.getContentPane().add(new InteractivePanel(currentPlot));
         currentPlot.getPlotArea().setBackground(currentFigure.bgcolor);
 
-
         for (int i = 0; i < data.length; i++) {
             super.parseLinespecs(args[i]);
-            LineRenderer lines = new DefaultLineRenderer2D();
+            lines = new DefaultLineRenderer2D();
             setPointRenderer(dataTable[i], currentPlot);
             setLineRenderer(dataTable[i],  currentPlot, lines);
         }
 
     }
 
-    private void setLineRenderer(DataTable data, XYPlot plot, LineRenderer lines) {
+    void _Plot () {
+    }
+
+    private void setLineRenderer(de.erichseifert.gral.data.DataSource data, XYPlot plot, LineRenderer lines) {
         switch (lStyle) {
             case solid :
                 plot.setLineRenderer(data, lines);
@@ -72,7 +79,7 @@ public class PlotGral extends Plot {
         }
     }
 
-    private void setPointRenderer(DataTable data, XYPlot plot) {
+    private void setPointRenderer(de.erichseifert.gral.data.DataSource data, XYPlot plot) {
         PointRenderer pointRenderer = plot.getPointRenderer(data);
 
         switch (mStyle) {

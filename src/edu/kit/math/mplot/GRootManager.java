@@ -31,7 +31,7 @@ class GRootManager {
 
         ArrayList tempArrayList = new ArrayList();
 
-        tempArrayList.add(activeFigureId); // Todo compiler warning for raw type ... use generics?
+        tempArrayList.add(activeFigureId);
         tempArrayList.add(tag);
         tempArrayList.add(newFigure);
         groot.add(tempArrayList);
@@ -52,7 +52,7 @@ class GRootManager {
             newPlotAmount = dataPoints.length / dimension;
 
             if (hold) { //
-                existingPlotAmount = (int) ((groot.get(index).size() - 3) / 3.0);
+                existingPlotAmount = (groot.get(index).size() - 3) / 3;
                 exisitingLineSpecs = getLineSpecsToIndex(index, existingPlotAmount);
                 existingDataTables = getDataToIndex(index, existingPlotAmount);
 
@@ -129,33 +129,34 @@ class GRootManager {
     // clear a figure
     protected void clfFigureWithIndex(int index, boolean reset) {
         if ((groot.size() > index) && (groot.get(index).size() > 2)) {
-            if (groot.get(index).size() > 3) {
-                for (int i = 3; i < groot.get(index).size(); i++) {
-                    groot.get(index).remove(i);
-            }
+            java.util.List listItem = groot.get(index);
+            if (listItem.size() > 3) {
+                for (int i = (listItem.size()-1); i > 2; i--) {
+                    if (listItem.get(i).getClass().equals(Plot.class)) ((Plot) listItem.get(i)).removePlot();
+                    listItem.remove(i);
+                }
             }
 
-            // TODO some error occurs here
-            Figure figureToCLF = getFigureToIndex(index);
-            figureToCLF.resetFigure();
-            figureToCLF.getContentPane().removeAll();
-            figureToCLF.getContentPane().revalidate();
-            figureToCLF.getContentPane().repaint();
+            if (reset) getFigureToIndex(index).resetFigure();
+            getFigureToIndex(index).getContentPane().removeAll();
+            getFigureToIndex(index).getContentPane().revalidate();
+            getFigureToIndex(index).getContentPane().repaint();
+            System.gc();
         }
     }
 
-    protected void closeFigure(int id, int index) {
+    protected void closeFigure(int id, int index, boolean... closeAll) {
 
         // Delete figure in this id
         if ((groot.size() > index) && (groot.get(index).size() > 2)) {
             Figure figureToClose = getFigureToIndex(index);
-
             figureToClose.setVisible(false);
+            clfFigureWithIndex(index, true);
             figureToClose.dispose();
             groot.remove(index);
-
             if (id == activeFigureId)  activeFigureId = getNewestId();
             if (id == currentFigureId) currentFigureId = getHighestId();
+            if ( (closeAll.length > 0) && (!closeAll[0]) ) System.gc();
         } else {
             System.out.println("Error! Figure with index " + index + " could not be deleted.");
         }
@@ -163,21 +164,16 @@ class GRootManager {
 
     // close all active figures
     protected void closeAllFigures() {
-        for( ArrayList grootElement : groot) { // TODO plots are going to be deleted by javas garbage-collector
-            Figure    figureToClose = (Figure) grootElement.get(2);
-
-            figureToClose.setVisible(false);
-            figureToClose.dispose();
-        }
-
-        groot.clear();
+        for( int index = (groot.size() - 1); index >= 0; index--)  closeFigure(getIdToIndex(index), index, true);
         activeFigureId = currentFigureId = -1;
+        groot.clear();
+        System.gc();
     }
 
     protected int getActiveFigureId() { return this.activeFigureId;}
     protected int getCurrentFigureId() { return this.currentFigureId;}
 
-    @SuppressWarnings("unused")
+
     protected Figure getFigureToId(int id) {
         return getFigureToIndex(getIndexToId(id));
     }
@@ -203,6 +199,18 @@ class GRootManager {
         }
 
         return DataTables;
+    }
+
+    protected int getIdToIndex(int index) {
+        int id;
+
+        if ( (index > -1) && (groot.get(index).get(0) != null) ) {
+            id = (Integer) groot.get(index).get(0);
+        } else {
+            id = -1;
+        }
+
+        return id;
     }
 
     protected int getIdToTag(String givenTag) {
@@ -268,7 +276,7 @@ class GRootManager {
         if (groot.size() > 0) {
             int maxValue = 0;
 
-            for( ArrayList grootElement : groot) {
+            for( java.util.List grootElement : groot) {
                 int grootId = (Integer) grootElement.get(0);
                 if (grootId > maxValue) maxValue = grootId;
             }
@@ -302,7 +310,7 @@ class GRootManager {
         grootString += "Current Figures (#" + groot.size() + "): " + System.lineSeparator();
 
         while (li.hasNext()) {
-            ArrayList content = li.next();
+            java.util.List content = li.next();
 
             grootString += "   - Figure with index " + content.get(0);
 
@@ -338,7 +346,6 @@ class GRootManager {
         for (int i = 1; i < xi.length; i++) {
             if (xi[i].length != l) fit = true;
         }
-
         return fit;
     }
 
@@ -348,10 +355,8 @@ class GRootManager {
         int index = getIndexToId(id);
 
         if ((groot.size() > index) && (groot.get(index).size() > 2)) {
-            Figure tempFigure = getFigureToIndex(index);
-
-            tempFigure.toFront();
-            tempFigure.repaint();
+            getFigureToIndex(index).toFront();
+            getFigureToIndex(index).repaint();
         } else {
             Watchdog.debugEcho("[" + Utilities.getExecuteDuration() + "] " + "Unable setting figure active!", 0);
         }

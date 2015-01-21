@@ -9,7 +9,16 @@ import org.jzy3d.maths.Coord3d;
 
 import java.util.ArrayList;
 
-public class Data {
+interface DataInterface  {
+
+    public DataTable getGralDataTable();
+    public Coord3d[] getJzy3dDataTable();
+    public int getDimension();
+    public int getLength();
+    public int getSize();
+}
+
+public class Data implements DataInterface {
     ArrayList<Double[]> dataSet = new ArrayList<>();
 
     DataGral  gralHandle        = null;
@@ -36,13 +45,10 @@ public class Data {
         return jzy3dHandle.sjzy3dDataTable;
     }
 
-    @SuppressWarnings("unused")
     public int getDimension() {  return this.dataSet.size();  }
 
-    @SuppressWarnings("unused")
     public int getLength() {  return this.dataSet.get(0).length;  }
 
-    @SuppressWarnings("unused")
     public int getSize() {  return this.dataSet.size(); }
 
 }

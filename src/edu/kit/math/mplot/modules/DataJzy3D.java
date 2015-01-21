@@ -4,15 +4,11 @@ package edu.kit.math.mplot.modules;
 
 import org.jzy3d.maths.Coord3d;
 
-//~--- JDK imports ------------------------------------------------------------
-
-import java.util.ArrayList;
-
 class DataJzy3D {
 
     Coord3d[] sjzy3dDataTable;
 
-    DataJzy3D(ArrayList<Double[]> dataSet) {
+    DataJzy3D(java.util.List<Double[]> dataSet) {
         int size = dataSet.size();
 
         Coord3d[] dataTable = new Coord3d[size];

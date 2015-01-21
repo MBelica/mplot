@@ -5,8 +5,16 @@ package edu.kit.math.mplot.modules;
 import java.awt.*;
 import java.awt.geom.GeneralPath;
 
-public class Plot {
+interface PlotInterface  {
+
+    public void removePlot();
+}
+
+public class Plot implements PlotInterface {
     private static final float SQRT2 = (float) Math.pow(2.0, 0.5);
+
+    int currentDimension;
+    Object currentPlot;
 
     public Color            color;
     public lineStyle        lStyle;
@@ -19,29 +27,35 @@ public class Plot {
 
     public Plot(Figure currentFigure, int dimension, Data[] data, String... args) {
 
-        if (dimension == 2) {
+        this.currentDimension = dimension;
+
+        if (currentDimension == 2) {
             switch (currentFigure.renderer2d) {
                 case gral:
-                    new PlotGral(currentFigure, data, args);
+                    currentPlot = new PlotGral(currentFigure, data, args);
                     break;
 
                 default:
-                    new PlotGral(currentFigure, data, args);
+                    currentPlot = new PlotGral(currentFigure, data, args);
             }
-        } else if (dimension == 3) {
+        } else if (currentDimension == 3) {
             switch (currentFigure.renderer3d) {
                 case jzy3d:
-                    new PlotJzy3D(currentFigure, data, args);
+                    currentPlot = new PlotJzy3D(currentFigure, data, args);
                     break;
 
                 default:
-                    new PlotJzy3D(currentFigure, data, args);
+                    currentPlot = new PlotJzy3D(currentFigure, data, args);
             }
         }
 
         currentFigure.getContentPane().revalidate();
         currentFigure.getContentPane().repaint();
     }
+
+    public void removePlot() { ((Plot) currentPlot)._Plot(); }
+
+    void _Plot () {  }
 
     void parseLinespecs(String ls) {
 

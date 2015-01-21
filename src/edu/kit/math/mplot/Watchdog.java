@@ -6,11 +6,11 @@ import java.io.BufferedWriter;
 import java.io.FileWriter;
 import java.io.PrintWriter;
 
-class Watchdog {
+public class Watchdog {
 
-    protected static void echo(String ouputText, int reportLevel) { createOutput("echo", reportLevel, ouputText); }
+    public static void echo(String ouputText, int reportLevel) { createOutput("echo", reportLevel, ouputText); }
 
-    protected static  void debugEcho(String debugText, int reportLevel) { createOutput("debug", reportLevel, debugText); }
+    public static  void debugEcho(String debugText, int reportLevel) { createOutput("debug", reportLevel, debugText); }
 
     private static void createOutput(String method, int reportLevel, String text) {
         if ( reportLevel <= MPlot.echoReportingLevel.ordinal() ) {
