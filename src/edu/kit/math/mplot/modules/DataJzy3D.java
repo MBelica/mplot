@@ -5,12 +5,10 @@ package edu.kit.math.mplot.modules;
 import org.jzy3d.maths.Coord3d;
 
 class DataJzy3D {
-
     Coord3d[] sjzy3dDataTable;
 
     DataJzy3D(java.util.List<Double[]> dataSet) {
-        int size = dataSet.size();
-
+        int       size      = dataSet.size();
         Coord3d[] dataTable = new Coord3d[size];
 
         for (int i = 0; i < size; i++) {

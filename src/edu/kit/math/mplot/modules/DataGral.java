@@ -4,11 +4,12 @@ package edu.kit.math.mplot.modules;
 
 import de.erichseifert.gral.data.DataTable;
 
-class DataGral  {
-
+class DataGral {
     DataTable gralDataTable = new DataTable(Double.class, Double.class);
 
     DataGral(java.util.List<Double[]> dataSet) {
-        for( Double[] dataSetElement : dataSet) gralDataTable.add(dataSetElement);
+        for (Double[] dataSetElement : dataSet) {
+            gralDataTable.add(dataSetElement);
+        }
     }
 }

@@ -10,20 +10,26 @@ import java.util.ArrayList;
 import java.util.ListIterator;
 
 class GRootManager {
-    protected ArrayList<ArrayList> groot           = new ArrayList<>();            // contains every figure, data and plot
-    protected boolean              hold            = false;                         //
-    protected int                  activeFigureId  = -1;                            // contains id of active figure
-    protected int                  currentFigureId = -1;                            // contains highest id of all existent figures
+    protected ArrayList<ArrayList> groot           = new ArrayList<>();    // contains every figure, data and plot
+    protected boolean              hold            = false;                //
+    protected int                  activeFigureId  = -1;                   // contains id of active figure
+    protected int                  currentFigureId = -1;    // contains highest id of all existent figures
 
     protected void addNewFigureIntoGRoot(int id, String tag, boolean addWithoutId, String... propertyVarArgs) {
         Figure newFigure;
 
-        if (addWithoutId) activeFigureId = ++currentFigureId;
-        else activeFigureId = id;
-        if (id > currentFigureId)  currentFigureId = id;
+        if (addWithoutId) {
+            activeFigureId = ++currentFigureId;
+        } else {
+            activeFigureId = id;
+        }
+
+        if (id > currentFigureId) {
+            currentFigureId = id;
+        }
 
         if (propertyVarArgs.length > 0) {
-            newFigure = new Figure(activeFigureId , propertyVarArgs);
+            newFigure = new Figure(activeFigureId, propertyVarArgs);
             tag       = newFigure.name;
         } else {
             newFigure = new Figure(activeFigureId, tag);
@@ -40,46 +46,50 @@ class GRootManager {
     // add Plot into GRoot under given ID, for now small but I think necessary if adding more than one plot into one figure
     protected void addPlotsToGRoot(int index, int dimension, String linespecsParam, double[]... dataPoints) {
         if ((groot.size() > index) && (groot.get(index).size() > 2)) {
-
-            int newPlotAmount;
-            int existingPlotAmount;
-
-            Plot newPlot;
-            Data[] data, existingDataTables;
+            int      newPlotAmount;
+            int      existingPlotAmount;
+            Plot     newPlot;
+            Data[]   data, existingDataTables;
             String[] lineSpecs, exisitingLineSpecs;
+            Figure   figureToPlot = getFigureToIndex(index);
 
-            Figure figureToPlot = getFigureToIndex(index);
             newPlotAmount = dataPoints.length / dimension;
 
-            if (hold) { //
+            if (hold) {    //
                 existingPlotAmount = (groot.get(index).size() - 3) / 3;
                 exisitingLineSpecs = getLineSpecsToIndex(index, existingPlotAmount);
                 existingDataTables = getDataToIndex(index, existingPlotAmount);
-
-                data      = new Data[newPlotAmount + existingPlotAmount];
-                lineSpecs = new String[newPlotAmount + existingPlotAmount];
+                data               = new Data[newPlotAmount + existingPlotAmount];
+                lineSpecs          = new String[newPlotAmount + existingPlotAmount];
 
                 for (int i = 0; i < existingPlotAmount; i++) {
-                    data[i] = existingDataTables[i];
+                    data[i]      = existingDataTables[i];
                     lineSpecs[i] = exisitingLineSpecs[i];
                 }
             } else {
                 existingPlotAmount = 0;
-                data      = new Data[newPlotAmount];
-                lineSpecs = new String[newPlotAmount];
-
+                data               = new Data[newPlotAmount];
+                lineSpecs          = new String[newPlotAmount];
 
                 int figureSize = groot.get(index).size();
+
                 if (figureSize > 3) {
-                    for (int i = (figureSize - 1); i >= 3; i--) groot.get(index).remove(i);
+                    for (int i = (figureSize - 1); i >= 3; i--) {
+                        groot.get(index).remove(i);
+                    }
                 }
             }
 
             for (int i = 0; i < (newPlotAmount); i++) {
                 double[][] xi = new double[dimension][];
-                for (int k = 0; k < dimension; k++)  xi[k] = dataPoints[((dimension * i) + k)].clone();
+
+                for (int k = 0; k < dimension; k++) {
+                    xi[k] = dataPoints[((dimension * i) + k)].clone();
+                }
+
                 if (lengthsDiffers(xi)) {
                     Watchdog.echo("Error! Cannot plot given data. (Every) x,y-pair must have same length", 0);
+
                     return;
                 } else {
                     data[existingPlotAmount + i] = new Data(xi);
@@ -94,35 +104,46 @@ class GRootManager {
                         lineSpecs[i] = linespecsParam;
                     }
                 }
+
                 if (data[i].getLength() != dimension) {
-                    Watchdog.debugEcho("[" + Utilities.getExecuteDuration() + "] " + "Dimension of data does not fit. Given dimension: " + data[i].getLength() + ", called dimension: " + dimension, 0);
+                    Watchdog.debugEcho("[" + Utilities.getExecuteDuration() + "] "
+                                       + "Dimension of data does not fit. Given dimension: " + data[i].getLength()
+                                       + ", called dimension: " + dimension, 0);
+
                     return;
                 }
             }
 
             figureToPlot.getContentPane().removeAll();
             newPlot = new Plot(figureToPlot, dimension, data, lineSpecs);
+
             for (int i = existingPlotAmount; i < data.length; i++) {
-                groot.get(index).add(newPlot); // Todo compiler warning for raw type ... use generics?
+                groot.get(index).add(newPlot);    // Todo compiler warning for raw type ... use generics?
                 groot.get(index).add(data[i]);
                 groot.get(index).add(lineSpecs[i]);
             }
         } else {
-            Watchdog.debugEcho("[" + Utilities.getExecuteDuration() + "] " + "Error! Plot could not be added to Figure " + index, 1);
+            Watchdog.debugEcho("[" + Utilities.getExecuteDuration() + "] "
+                               + "Error! Plot could not be added to Figure " + index, 1);
         }
     }
 
     protected void changeHoldState(String param) {
         switch (param) {
-            case "on":
-                hold  = true;
-                break;
-            case "off":
-                hold  = false;
-                break;
-            case "toggle":
-                hold ^= true;
-                break;
+        case "on" :
+            hold = true;
+
+            break;
+
+        case "off" :
+            hold = false;
+
+            break;
+
+        case "toggle" :
+            hold ^= true;
+
+            break;
         }
     }
 
@@ -130,14 +151,21 @@ class GRootManager {
     protected void clfFigureWithIndex(int index, boolean reset) {
         if ((groot.size() > index) && (groot.get(index).size() > 2)) {
             java.util.List listItem = groot.get(index);
+
             if (listItem.size() > 3) {
-                for (int i = (listItem.size()-1); i > 2; i--) {
-                    if (listItem.get(i).getClass().equals(Plot.class)) ((Plot) listItem.get(i)).removePlot();
+                for (int i = (listItem.size() - 1); i > 2; i--) {
+                    if (listItem.get(i).getClass().equals(Plot.class)) {
+                        ((Plot) listItem.get(i)).removePlot();
+                    }
+
                     listItem.remove(i);
                 }
             }
 
-            if (reset) getFigureToIndex(index).resetFigure();
+            if (reset) {
+                getFigureToIndex(index).resetFigure();
+            }
+
             getFigureToIndex(index).getContentPane().removeAll();
             getFigureToIndex(index).getContentPane().revalidate();
             getFigureToIndex(index).getContentPane().repaint();
@@ -150,13 +178,23 @@ class GRootManager {
         // Delete figure in this id
         if ((groot.size() > index) && (groot.get(index).size() > 2)) {
             Figure figureToClose = getFigureToIndex(index);
+
             figureToClose.setVisible(false);
             clfFigureWithIndex(index, true);
             figureToClose.dispose();
             groot.remove(index);
-            if (id == activeFigureId)  activeFigureId = getNewestId();
-            if (id == currentFigureId) currentFigureId = getHighestId();
-            if ( (closeAll.length > 0) && (!closeAll[0]) ) System.gc();
+
+            if (id == activeFigureId) {
+                activeFigureId = getNewestId();
+            }
+
+            if (id == currentFigureId) {
+                currentFigureId = getHighestId();
+            }
+
+            if ((closeAll.length > 0) && (!closeAll[0])) {
+                System.gc();
+            }
         } else {
             System.out.println("Error! Figure with index " + index + " could not be deleted.");
         }
@@ -164,15 +202,22 @@ class GRootManager {
 
     // close all active figures
     protected void closeAllFigures() {
-        for( int index = (groot.size() - 1); index >= 0; index--)  closeFigure(getIdToIndex(index), index, true);
+        for (int index = (groot.size() - 1); index >= 0; index--) {
+            closeFigure(getIdToIndex(index), index, true);
+        }
+
         activeFigureId = currentFigureId = -1;
         groot.clear();
         System.gc();
     }
 
-    protected int getActiveFigureId() { return this.activeFigureId;}
-    protected int getCurrentFigureId() { return this.currentFigureId;}
+    protected int getActiveFigureId() {
+        return this.activeFigureId;
+    }
 
+    protected int getCurrentFigureId() {
+        return this.currentFigureId;
+    }
 
     protected Figure getFigureToId(int id) {
         return getFigureToIndex(getIndexToId(id));
@@ -185,8 +230,9 @@ class GRootManager {
 
     protected String[] getLineSpecsToIndex(int index, int existingPlotAmount) {
         String[] lineSpecs = new String[existingPlotAmount];
-        for(int i = 0; i < existingPlotAmount; i++) {
-            lineSpecs[i] = (String) groot.get(index).get(3 + 3*i + 2); // 3 for id, tag and figure and every plot has plot, data and params
+
+        for (int i = 0; i < existingPlotAmount; i++) {
+            lineSpecs[i] = (String) groot.get(index).get(3 + 3 * i + 2);    // 3 for id, tag and figure and every plot has plot, data and params
         }
 
         return lineSpecs;
@@ -194,8 +240,9 @@ class GRootManager {
 
     protected Data[] getDataToIndex(int index, int existingPlotAmount) {
         Data[] DataTables = new Data[existingPlotAmount];
-        for(int i = 0; i < existingPlotAmount; i++) {
-            DataTables[i] = (Data) groot.get(index).get(3 + 3*i + 1); // 3 for id, tag and figure and every plot has plot, data and params
+
+        for (int i = 0; i < existingPlotAmount; i++) {
+            DataTables[i] = (Data) groot.get(index).get(3 + 3 * i + 1);    // 3 for id, tag and figure and every plot has plot, data and params
         }
 
         return DataTables;
@@ -204,7 +251,7 @@ class GRootManager {
     protected int getIdToIndex(int index) {
         int id;
 
-        if ( (index > -1) && (groot.get(index).get(0) != null) ) {
+        if ((index > -1) && (groot.get(index).get(0) != null)) {
             id = (Integer) groot.get(index).get(0);
         } else {
             id = -1;
@@ -241,7 +288,9 @@ class GRootManager {
         }
     }
 
-    protected int getIndexToActiveFigure() {   return getIndexToId( getActiveFigureId() );   }
+    protected int getIndexToActiveFigure() {
+        return getIndexToId(getActiveFigureId());
+    }
 
     // check which index (position in ArrayList) has the figure with given id
     protected int getIndexToId(int givenId) {
@@ -276,9 +325,12 @@ class GRootManager {
         if (groot.size() > 0) {
             int maxValue = 0;
 
-            for( java.util.List grootElement : groot) {
+            for (java.util.List grootElement : groot) {
                 int grootId = (Integer) grootElement.get(0);
-                if (grootId > maxValue) maxValue = grootId;
+
+                if (grootId > maxValue) {
+                    maxValue = grootId;
+                }
             }
 
             id = maxValue;
@@ -294,7 +346,7 @@ class GRootManager {
         int id;
 
         if (groot.size() > 0) {
-            id = (Integer) groot.get(( groot.size()) - 1).get(0);
+            id = (Integer) groot.get((groot.size()) - 1).get(0);
         } else {
             id = -1;
         }
@@ -324,9 +376,15 @@ class GRootManager {
                 grootString += "     Associated plots: " + System.lineSeparator();
 
                 for (int i = 3; i < content.size(); i += 3) {
-                    grootString +=   "        * " + content.get(i)  + System.lineSeparator();
-                    if (i+1<content.size()) grootString += "              - with DataTable: " + content.get(i+1) + System.lineSeparator();
-                    if (i+2<content.size()) grootString += "              - and Linespecs: "  + content.get(i+2) + System.lineSeparator();
+                    grootString += "        * " + content.get(i) + System.lineSeparator();
+
+                    if (i + 1 < content.size()) {
+                        grootString += "              - with DataTable: " + content.get(i + 1) + System.lineSeparator();
+                    }
+
+                    if (i + 2 < content.size()) {
+                        grootString += "              - and Linespecs: " + content.get(i + 2) + System.lineSeparator();
+                    }
                 }
             } else {
                 grootString += "     No plots associated " + System.lineSeparator();
@@ -339,19 +397,22 @@ class GRootManager {
     }
 
     private boolean lengthsDiffers(double[][] xi) {
-
-        int l = xi[0].length;
+        int     l   = xi[0].length;
         boolean fit = false;
 
         for (int i = 1; i < xi.length; i++) {
-            if (xi[i].length != l) fit = true;
+            if (xi[i].length != l) {
+                fit = true;
+            }
         }
+
         return fit;
     }
 
     // get figure with given index to front
     protected void setFigureActive(int id) {
         activeFigureId = id;
+
         int index = getIndexToId(id);
 
         if ((groot.size() > index) && (groot.get(index).size() > 2)) {
