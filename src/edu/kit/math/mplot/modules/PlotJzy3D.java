@@ -29,7 +29,7 @@ import java.util.Arrays;
 
 import javax.swing.JPanel;
 
-class PlotJzy3D extends Plot {    // todo lineplots surface plot
+class PlotJzy3D extends Plot {
     org.jzy3d.plot3d.rendering.canvas.Quality                rendererQuality = Quality.Advanced;
     org.jzy3d.chart.factories.IChartComponentFactory.Toolkit rendererToolkit = IChartComponentFactory.Toolkit.awt;
     private Chart                                            chart;
@@ -44,7 +44,6 @@ class PlotJzy3D extends Plot {    // todo lineplots surface plot
         points = new Coord3d[data.length][];
         chart  = AWTChartComponentFactory.chart(rendererQuality, rendererToolkit);
         panel  = new JPanel();
-        panel.setLayout(new BorderLayout());
 
         for (int i = 0; i < data.length; i++) {
             points[i] = data[i].getJzy3dDataTable();
@@ -56,6 +55,7 @@ class PlotJzy3D extends Plot {    // todo lineplots surface plot
 
         chart.addController(ckc = new AWTCameraKeyController());
         chart.addController(cmc = new AWTCameraMouseController());
+        panel.setLayout(new BorderLayout());
         panel.add((Component) chart.getCanvas());
         currentFigure.getContentPane().add(panel, BorderLayout.CENTER);
     }
