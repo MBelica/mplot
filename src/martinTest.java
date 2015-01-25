@@ -8,7 +8,7 @@ public class martinTest {
     // ToDo: Loading image with core this is going to
     // ToDo: Interfaces to close and round up
     public static void main(String[] args) throws InterruptedException {
-        int   sleepTime = 3000;
+        int   sleepTime = 1500;
         MPlot newPlot   = new MPlot();
 
         // ** 2D Test **//
@@ -27,7 +27,7 @@ public class martinTest {
         newPlot.figure("Name", "Martins Figure 2D - 2", "NumberTitle", "false", "Position", "[100 100 1280 720]",
                        "Color", "[0.7 0.0 0.2]");
         newPlot.plot(x, y, x, x);
-        newPlot.pause(0);
+        newPlot.pause();
 
         // ** 3D Test **//
         // 1. 3D Plot
@@ -55,7 +55,7 @@ public class martinTest {
 
         newPlot.figure("Name", "Martins 3d Figure", "NumberTitle", "false", "Position", "[250 250 852 480]");
         newPlot.pause(sleepTime);
-        newPlot.plot3(x3d, y3d, z3d, x32d, y32d, z32d);
+        newPlot.plot3(x3d, y3d, z3d);
         newPlot.pause(sleepTime);
         newPlot.pause(sleepTime);
         newPlot.clf();

@@ -98,8 +98,8 @@ class GRootManager {
 
             for (int i = 0; i < data.length; i++) {
                 if (i >= existingPlotAmount) {
-                    if (linespecsParam.equals("MultiplePlots#")) {
-                        lineSpecs[i] = "MultiplePlots#" + i;
+                    if (linespecsParam.contains("MultiplePlots#")) {
+                        lineSpecs[i] = linespecsParam + i;
                     } else {
                         lineSpecs[i] = linespecsParam;
                     }

@@ -98,7 +98,9 @@ public class Plot implements PlotInterface {
         }
 
         /** Line Style Specifiers */
-        if (ls.contains("--")) {
+        if (ls.contains("<>")) {
+            lStyle = lineStyle.surface;    // Surface plot
+        } else if (ls.contains("--")) {
             lStyle = lineStyle.dashed;     // Dashed line
         } else if (ls.contains("-.")) {
             lStyle = lineStyle.dashdot;    // Dash-dot line

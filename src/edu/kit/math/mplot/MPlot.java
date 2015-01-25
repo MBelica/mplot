@@ -75,9 +75,7 @@ public class MPlot {
      * Plot: plot x, y into active figure. If no linespec is given use standards = ""
      */
     public void plot(double[] y, String linespec) {
-        double[] x = Utilities.getIndexVs(y);
-
-        plot(linespec, x, y);
+        plot(linespec, Utilities.getIndexVs(y), y);
     }
 
     public void plot(double[] x, double[] y, String linespec) {
@@ -85,17 +83,15 @@ public class MPlot {
     }
 
     public void plot(double[]... dataPoints) {
-        String linespec = "MultiplePlots#";
+        if (dataPoints.length > 0) {
+            if (dataPoints.length == 1) {
+                double[] y = dataPoints[0];
+                double[] x = Utilities.getIndexVs(y);
 
-        if (dataPoints.length == 1) {
-            double[] y = dataPoints[0];
-            double[] x = Utilities.getIndexVs(y);
-
-            plot(linespec, x, y);
-        } else if ((dataPoints.length > 0) && ((dataPoints.length & 1) == 0)) {
-            plot(linespec, dataPoints);
-        } else {
-            Watchdog.echo("Error! Cannot plot given data.", 0);
+                plot("MultiplePlots#", x, y);
+            } else {
+                plot("MultiplePlots#", dataPoints);
+            }
         }
     }
 
@@ -107,11 +103,15 @@ public class MPlot {
         int index = groot.getIndexToActiveFigure();
 
         if (index > -1) {    // if we've found an index (entry in groot) we are going to plot
-            groot.addPlotsToGRoot(index, 2, linespec, dataPoints);
-            Watchdog.debugEcho("[" + Utilities.getExecuteDuration() + "] "
-                               + "New plots created and associated with figure " + groot.getActiveFigureId()
-                               + ". activeFigureId: " + groot.getActiveFigureId() + ", currentFigureId: "
-                               + groot.getCurrentFigureId(), 1);
+            if ((dataPoints.length > 0) && ((dataPoints.length % 2) == 0)) {
+                groot.addPlotsToGRoot(index, 2, linespec, dataPoints);
+                Watchdog.debugEcho("[" + Utilities.getExecuteDuration() + "] "
+                                   + "New plots created and associated with figure " + groot.getActiveFigureId()
+                                   + ". activeFigureId: " + groot.getActiveFigureId() + ", currentFigureId: "
+                                   + groot.getCurrentFigureId(), 1);
+            } else {
+                Watchdog.echo("Error! Cannot plot given data.", 0);
+            }
         } else if (index == (groot.size() - 1)) {
             Watchdog.debugEcho("[" + Utilities.getExecuteDuration() + "] " + "Error! Could not get active figure.", 0);
         }
@@ -123,24 +123,19 @@ public class MPlot {
      * Plot3: plot x, y, z into active figure. If no linespec is given use standards = ""
      */
     public void plot3(double[] x, double[] y, double[] z, String linespec) {
-        int index = groot.getIndexToActiveFigure();
-
-        if (index > -1) {
-            groot.addPlotsToGRoot(index, 3, linespec, x, y, z);
-            Watchdog.debugEcho("[" + Utilities.getExecuteDuration() + "] "
-                               + "New plot created and associated with figure " + groot.getActiveFigureId()
-                               + ". activeFigureId: " + groot.getActiveFigureId() + ", currentFigureId: "
-                               + groot.getCurrentFigureId(), 1);
-        } else if (index == (groot.size() - 1)) {
-            Watchdog.echo("Error! No figure created yet.", 0);
-        }
-
-        Watchdog.debugEcho("[" + Utilities.getExecuteDuration() + "] " + groot.GRootListToString(), 2);
+        plot3(linespec, x, y, z);
     }
 
     public void plot3(double[]... dataPoints) {
-        int    index    = groot.getIndexToActiveFigure();
-        String linespec = "";
+        plot3("MultiplePlots#", dataPoints);
+    }
+
+    private void plot3(String linespec, double[]... dataPoints) {
+        if (groot.activeFigureId == -1) {
+            figure();
+        }
+
+        int index = groot.getIndexToActiveFigure();
 
         if (index > -1) {
             if ((dataPoints.length > 0) && ((dataPoints.length % 3) == 0)) {

@@ -83,7 +83,7 @@ class PlotJzy3D extends Plot {
 
             break;
 
-        case surface :
+        case surface : // paused this module....
             Mapper mapper = new Mapper() {
                 public double f(double x, double y) {
                     return x * Math.sin(x * y);
