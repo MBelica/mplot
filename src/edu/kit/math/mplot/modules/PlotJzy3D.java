@@ -7,7 +7,6 @@ import org.jzy3d.chart.controllers.keyboard.camera.AWTCameraKeyController;
 import org.jzy3d.chart.controllers.mouse.camera.AWTCameraMouseController;
 import org.jzy3d.chart.factories.AWTChartComponentFactory;
 import org.jzy3d.chart.factories.IChartComponentFactory;
-import org.jzy3d.colors.*;
 import org.jzy3d.colors.Color;
 import org.jzy3d.colors.colormaps.ColorMapRainbow;
 import org.jzy3d.maths.Coord3d;
@@ -15,17 +14,28 @@ import org.jzy3d.maths.Range;
 import org.jzy3d.plot3d.builder.Builder;
 import org.jzy3d.plot3d.builder.Mapper;
 import org.jzy3d.plot3d.builder.concrete.OrthonormalGrid;
-import org.jzy3d.plot3d.primitives.*;
+import org.jzy3d.plot3d.primitives.LineStrip;
 import org.jzy3d.plot3d.primitives.Scatter;
 import org.jzy3d.plot3d.primitives.Shape;
 import org.jzy3d.plot3d.rendering.canvas.Quality;
+import org.jzy3d.colors.ColorMapper;
+import org.jzy3d.maths.TicToc;
+import org.jzy3d.maths.Utils;
+import org.jzy3d.plot3d.primitives.AbstractDrawable;
+import org.jzy3d.plot3d.primitives.Point;
+import org.jzy3d.plot3d.primitives.Polygon;
+import org.jzy3d.plot3d.rendering.view.Renderer2d;
 
 //~--- JDK imports ------------------------------------------------------------
 
-import java.awt.*;
+import java.awt.Graphics;
+import java.awt.Graphics2D;
+import java.awt.Component;
 import java.awt.BorderLayout;
 
+import java.util.List;
 import java.util.Arrays;
+import java.util.ArrayList;
 
 import javax.swing.JPanel;
 
@@ -84,17 +94,24 @@ class PlotJzy3D extends Plot {
             break;
 
         case surface : // paused this module....
-            Mapper mapper = new Mapper() {
-                public double f(double x, double y) {
-                    return x * Math.sin(x * y);
+            double [][]distDataProp = new double[][] {{.25,.45, .20},{.56, .89, .45}, {.6, .3,.7}};
+            List<Polygon> polygons = new ArrayList<Polygon>();
+            for(int i = 0; i < distDataProp.length -1; i++){
+                for(int j = 0; j < distDataProp[i].length -1; j++){
+                    Polygon polygon = new Polygon();
+                    polygon.add(new Point( new Coord3d(i, j, distDataProp[i][j]) ));
+                    polygon.add(new Point( new Coord3d(i, j+1, distDataProp[i][j+1]) ));
+                    polygon.add(new Point( new Coord3d(i+1, j+1, distDataProp[i+1][j+1]) ));
+                    polygon.add(new Point( new Coord3d(i+1, j, distDataProp[i+1][j]) ));
+                    polygons.add(polygon);
                 }
-            };
-            Range       range   = new Range(-3, 3);
-            int         steps   = 80;
-            final Shape surface = Builder.buildOrthonormal(new OrthonormalGrid(range, steps, range, steps), mapper);
+            }
 
-            surface.setColorMapper(new ColorMapper(new ColorMapRainbow(), surface.getBounds().getZmin(),
-                    surface.getBounds().getZmax(), new Color(1, 1, 1, .5f)));
+            // Creates the 3d object
+            Shape surface = new Shape(polygons);
+            surface.setColorMapper(new ColorMapper(new ColorMapRainbow(), surface.getBounds().getZmin(), surface.getBounds().getZmax(), new org.jzy3d.colors.Color(1,1,1,1f)));
+            surface.setWireframeDisplayed(true);
+            surface.setWireframeColor(org.jzy3d.colors.Color.BLACK);
             surface.setFaceDisplayed(true);
             surface.setWireframeDisplayed(false);
             chart.getScene().getGraph().add(surface);

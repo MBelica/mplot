@@ -154,6 +154,12 @@ public class MPlot {
         Watchdog.debugEcho("[" + Utilities.getExecuteDuration() + "] " + groot.GRootListToString(), 2);
     }
 
+    public void surf () {
+        int index = groot.getIndexToActiveFigure();
+        System.out.println("");
+        groot.addPlotsToGRoot(index, 100, "<>MultiplePlots#", new double[] {1.0, 2.0, 3.0});
+    }
+
     /**
      *
      * Clf: clear a figure, i.e. removing all plots inside etc, without parameter clf active else clf given

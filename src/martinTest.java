@@ -20,11 +20,11 @@ public class martinTest {
             y[i] = Math.pow(x[i], 2);
         }
 
-        newPlot.figure("Name", "Martins Figure 2D - 1", "NumberTitle", "false", "Position", "[100 100 1280 720]",
+        newPlot.figure("Name", "Martins 2D Figure #1", "NumberTitle", "false", "Position", "[100 100 1280 720]",
                        "Color", "[0.0 1.00 1.0]");
         newPlot.plot(y);
         newPlot.pause(sleepTime);
-        newPlot.figure("Name", "Martins Figure 2D - 2", "NumberTitle", "false", "Position", "[100 100 1280 720]",
+        newPlot.figure("Name", "Martins 2D Figure #2", "NumberTitle", "false", "Position", "[100 100 1280 720]",
                        "Color", "[0.7 0.0 0.2]");
         newPlot.plot(x, y, x, x);
         newPlot.pause();
@@ -53,12 +53,16 @@ public class martinTest {
             z32d[i] = (float) i;
         }
 
-        newPlot.figure("Name", "Martins 3d Figure", "NumberTitle", "false", "Position", "[250 250 852 480]");
+        newPlot.figure("Name", "Martins 3D Figure #1", "NumberTitle", "false", "Position", "[250 250 852 480]");
         newPlot.pause(sleepTime);
         newPlot.plot3(x3d, y3d, z3d);
         newPlot.pause(sleepTime);
-        newPlot.pause(sleepTime);
         newPlot.clf();
+        newPlot.pause(sleepTime);
+
+        newPlot.figure("Name", "Martins 3D Surf", "NumberTitle", "false", "Position", "[100 100 1280 720]",
+                "Color", "[0.0 1.00 1.0]");
+        newPlot.surf();
         newPlot.pause(sleepTime);
         newPlot.close("all");
     }
